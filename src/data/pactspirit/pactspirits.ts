@@ -3940,4 +3940,42 @@ export const Pactspirits = [
     affix6:
       "Inflicts Paralysis or Weaken on enemies within 10m in turn. Cooldown: 4 s\nFor every type of crowd control effect the enemy has, you and your Minions deal +3% additional damage to them\n+4% additional damage",
   },
+  // === SS13 New Pactspirit ===
+  {
+    type: "Spell",
+    rarity: "Legendary",
+    name: "Frost Mirror",
+    innerRing1: {
+      name: "Terra Mastery I",
+      affix: "+15% Terra Skill Damage",
+    },
+    innerRing2: {
+      name: "Terra Mastery I",
+      affix: "+15% Terra Skill Damage",
+    },
+    innerRing3: { name: "Spell Damage I", affix: "+12% Spell Damage" },
+    innerRing4: { name: "Spell Damage I", affix: "+12% Spell Damage" },
+    innerRing5: {
+      name: "Lightning Damage I",
+      affix: "+12% Lightning Damage",
+    },
+    innerRing6: {
+      name: "Lightning Damage I",
+      affix: "+12% Lightning Damage",
+    },
+    midRing1: { name: "Terra Duration II", affix: "+20% Terra Skill Duration\n+15% additional Skill Area for Terra Skills" },
+    midRing2: { name: "Terra Duration II", affix: "+20% Terra Skill Duration\n+15% additional Skill Area for Terra Skills" },
+    midRing3: { name: "Terra Charge II", affix: "+30% Terra Charge generation rate\n+1 max Terra Charge" },
+    affix1: "+5% additional Terra Skill Damage",
+    affix2:
+      "+5% additional Terra Skill Damage\n+10% additional Damage while any Terra Skill is active",
+    affix3:
+      "+5% additional Terra Skill Damage\n+10% additional Damage while any Terra Skill is active\nTerra Skills follow the character",
+    affix4:
+      "+5% additional Terra Skill Damage\n+10% additional Damage while any Terra Skill is active\nTerra Skills follow the character\n+15% additional Cast Speed while any Terra Skill is active",
+    affix5:
+      "+7% additional Terra Skill Damage\n+15% additional Damage while any Terra Skill is active\nTerra Skills follow the character\n+20% additional Cast Speed while any Terra Skill is active",
+    affix6:
+      "+10% additional Terra Skill Damage\n+20% additional Damage while any Terra Skill is active\nTerra Skills follow the character\n+25% additional Cast Speed while any Terra Skill is active\nFor every Terra Charge consumed, +5% additional Damage for 4s, stacking up to 7 times",
+  },
 ] as const satisfies readonly Pactspirit[];

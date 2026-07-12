@@ -1575,4 +1575,65 @@ export const MagnificentSupportSkills = [
     supportTarget: "Wilting Beam",
     manaCostMultiplierPct: 110,
   },
+  // === SS13 New Magnificent Supports ===
+  {
+    type: "Support (Magnificent)",
+    name: "Thunderstorm Zone: Bombardment (Magnificent)",
+    tags: ["Lightning"],
+    description: [
+      "Supports Thunderstorm Zone.\nThis skill can only be installed in the third Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill\nThe supported skill's currents are replaced with bombardment: Every 0.8s, drops lightning bolts on up to 8 targets within the zone, dealing Spell Lightning Damage.\nMultiple lightning bolts can hit the same target. Shotgun Effect falloff coefficient: 70%.",
+      "The supported skill's currents are replaced with bombardment lightning bolts.\nMultiple lightning bolts can hit the same target. Shotgun Effect falloff coefficient: 70%.",
+      "+(12–14)% additional damage for the supported skill",
+    ],
+    supportTarget: "Thunderstorm Zone",
+    manaCostMultiplierPct: 110,
+  },
+  {
+    type: "Support (Magnificent)",
+    name: "Thorn Domain: Entangle (Magnificent)",
+    tags: ["Physical"],
+    description: [
+      "Supports Thorn Domain.\nThis skill can only be installed in the third Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill\nThe supported skill's thorns entangle enemies, reducing their Movement Speed by 30%.\nEntangled enemies take +15% additional Damage Over Time.",
+      "The supported skill's thorns entangle enemies, reducing Movement Speed by 30%.\nEntangled enemies take +15% additional Damage Over Time.",
+      "+(12–14)% additional damage for the supported skill",
+    ],
+    supportTarget: "Thorn Domain",
+    manaCostMultiplierPct: 110,
+  },
+  {
+    type: "Support (Magnificent)",
+    name: "Tidal Spring: Undercurrent (Magnificent)",
+    tags: ["Cold"],
+    description: [
+      "Supports Tidal Spring.\nThis skill can only be installed in the third Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill\nThe supported skill generates an undercurrent that pulls enemies toward the center.\n+1 torrent count for the supported skill.",
+      "Generates an undercurrent pulling enemies toward center.\n+1 torrent count for the supported skill.",
+      "+(12–14)% additional damage for the supported skill",
+    ],
+    supportTarget: "Tidal Spring",
+    manaCostMultiplierPct: 110,
+  },
+  {
+    type: "Support (Magnificent)",
+    name: "Meteor: Cataclysm (Magnificent)",
+    tags: ["Physical"],
+    description: [
+      "Supports Meteor.\nThis skill can only be installed in the third Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill\n+2 comet count for the supported skill.\nComets leave burning ground dealing Persistent Fire Damage for 2s.",
+      "+2 comet count for the supported skill.\nComets leave burning ground dealing Persistent Fire Damage for 2s.",
+      "+(12–14)% additional damage for the supported skill",
+    ],
+    supportTarget: "Meteor",
+    manaCostMultiplierPct: 110,
+  },
+  {
+    type: "Support (Magnificent)",
+    name: "Abyssal Hands: Devouring (Magnificent)",
+    tags: ["Erosion"],
+    description: [
+      "Supports Abyssal Hands.\nThis skill can only be installed in the third Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill\nThe supported skill's reap threshold increased from 10% to 15% Life.\nReaping an enemy grants +5% additional Damage for 4s, stacking up to 10 times.",
+      "Reap threshold: 10% → 15% Life.\nReaping an enemy grants +5% additional Damage for 4s, up to 10 stacks.",
+      "+(12–14)% additional damage for the supported skill",
+    ],
+    supportTarget: "Abyssal Hands",
+    manaCostMultiplierPct: 110,
+  },
 ] as const satisfies readonly BaseMagnificentSupportSkill[];

@@ -1714,4 +1714,65 @@ export const NobleSupportSkills = [
     supportTarget: "Wilting Beam",
     manaCostMultiplierPct: 110,
   },
+  // === SS13 New Noble Supports ===
+  {
+    type: "Support (Noble)",
+    name: "Thunderstorm Zone: Conduction (Noble)",
+    tags: ["Lightning"],
+    description: [
+      "Supports Thunderstorm Zone.\nThis skill can only be installed in the fifth Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill",
+      "When the supported skill's current hits the player or player's minions, +8% additional Skill Damage for 3s, stacking up to 5 times.\nWhen current hits 5+ targets, the lightning bolt deals +(40–50)% additional damage.",
+      "+(42–44)% additional damage for the supported skill",
+    ],
+    supportTarget: "Thunderstorm Zone",
+    manaCostMultiplierPct: 110,
+  },
+  {
+    type: "Support (Noble)",
+    name: "Thorn Domain: Blood Roots (Noble)",
+    tags: ["Physical"],
+    description: [
+      "Supports Thorn Domain.\nThis skill can only be installed in the fifth Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill",
+      "The supported skill heals the character for 2% of damage dealt per second.\nFor every 1% of missing Life, +0.5% Skill Damage, up to +40%.",
+      "+(42–44)% additional damage for the supported skill",
+    ],
+    supportTarget: "Thorn Domain",
+    manaCostMultiplierPct: 110,
+  },
+  {
+    type: "Support (Noble)",
+    name: "Tidal Spring: Tsunami (Noble)",
+    tags: ["Cold"],
+    description: [
+      "Supports Tidal Spring.\nThis skill can only be installed in the fifth Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill",
+      "+1 torrent count for the supported skill.\n+(41–43)% additional Duration for the supported skill.",
+      "+(42–44)% additional damage for the supported skill",
+    ],
+    supportTarget: "Tidal Spring",
+    manaCostMultiplierPct: 110,
+  },
+  {
+    type: "Support (Noble)",
+    name: "Meteor: Starfall (Noble)",
+    tags: ["Physical"],
+    description: [
+      "Supports Meteor.\nThis skill can only be installed in the fifth Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill",
+      "+2 comet count for the supported skill.\n80% of Bombardment per-wave damage increase also applies to additional Skill Damage.",
+      "+(42–44)% additional damage for the supported skill",
+    ],
+    supportTarget: "Meteor",
+    manaCostMultiplierPct: 110,
+  },
+  {
+    type: "Support (Noble)",
+    name: "Abyssal Hands: Engulfing (Noble)",
+    tags: ["Erosion"],
+    description: [
+      "Supports Abyssal Hands.\nThis skill can only be installed in the fifth Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill",
+      "The supported skill's zone radius +30%.\nAbyssal hands pull speed +50%.\n+(41–43)% additional Duration for the supported skill.",
+      "+(42–44)% additional damage for the supported skill",
+    ],
+    supportTarget: "Abyssal Hands",
+    manaCostMultiplierPct: 110,
+  },
 ] as const satisfies readonly BaseNobleSupportSkill[];

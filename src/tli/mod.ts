@@ -139,6 +139,7 @@ export const Stackables = [
   "num_enemies_nearby",
   "enemy_numbed_stacks",
   "enemy_curse_count",
+  "enemy_ailment_count",
   "active_tangle",
   "self_curse_count",
   "eternal_morale",
@@ -276,6 +277,10 @@ export const ResolvedConditions = [
   "have_both_sealed_mana_and_life",
   "at_max_focus_blessing",
   "at_max_feline_stimulant_stacks",
+  // "max stacks of X blessing is not lower than (current) stacks of other blessings"
+  "focus_max_not_lower_than_other_blessings",
+  "agility_max_not_lower_than_other_blessings",
+  "tenacity_max_not_lower_than_other_blessings",
 ] as const;
 
 export type ResolvedCondition = (typeof ResolvedConditions)[number];
@@ -549,6 +554,7 @@ interface ModDefinitions {
   TangleDurationPct: { value: number; addn?: boolean };
   TangleAttachRangePct: { value: number };
   AdditionalTangleOnTrigger: { value: number };
+  TangleCritRating: { value: number };
   // infiltrations
   InflictsInfiltration: { infiltrationType: InfiltrationType };
   InfiltrationEffPct: {

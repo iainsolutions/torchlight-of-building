@@ -642,6 +642,18 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
             min={0}
           />
 
+          <label className="text-right text-zinc-50">
+            Enemy Ailment Count
+            <InfoTooltip text="Number of damaging ailments (Trauma/Ignite/Wilt) stacked on the target. Used by Bone Worm's Daughter pactspirit." />
+          </label>
+          <NumberInput
+            value={config.numEnemyAilments}
+            onChange={(v) =>
+              v !== undefined && onUpdate({ numEnemyAilments: v })
+            }
+            min={0}
+          />
+
           <label className="text-right text-zinc-50">Enemies Nearby</label>
           <NumberInput
             value={config.numEnemiesNearby}

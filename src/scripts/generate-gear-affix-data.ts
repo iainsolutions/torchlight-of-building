@@ -286,7 +286,7 @@ const mapLibraryToPool = (library: string): CraftingPool => {
 
 /**
  * Parse craft affixes from #XXXCraft section
- * Extracts T0 through T4 affixes
+ * Extracts all tiers (0, 0+, 1-7) from each table.
  * Table structure: Tier, Modifier, Lv, Weight, Library
  * Two tables: Pre-fix and Suffix (identified by caption)
  */
@@ -314,29 +314,28 @@ const parseCraftAffixes = (
       return; // Skip unknown tables
     }
 
-    // Filter for T0 through T4
-    $table
-      .find(
-        'tbody tr[data-tier="0"], tbody tr[data-tier="1"], tbody tr[data-tier="2"], tbody tr[data-tier="3"], tbody tr[data-tier="4"]',
-      )
-      .each((_, row) => {
-        const $row = $(row);
-        const tds = $row.find("td");
-        if (tds.length < 5) return;
+    // All tier rows: 0, 0+, 1-7. Exclude the JS placeholder row that uses
+    // data-tier="'+this.value+'" (a template literal left in the HTML).
+    $table.find("tbody tr[data-tier]").each((_, row) => {
+      const $row = $(row);
+      const tier = $row.attr("data-tier") ?? "";
+      if (tier === "" || tier.includes("this.value")) return;
 
-        const tier = $(tds[0]).text().trim();
-        const modifier = parseModifierText($(tds[1]), $);
-        const library = $(tds[4]).text().trim();
+      const tds = $row.find("td");
+      if (tds.length < 5) return;
 
-        affixes.push({
-          equipmentSlot: slot,
-          equipmentType,
-          affixType,
-          craftingPool: mapLibraryToPool(library),
-          tier,
-          craftableAffix: modifier,
-        });
+      const modifier = parseModifierText($(tds[1]), $);
+      const library = $(tds[4]).text().trim();
+
+      affixes.push({
+        equipmentSlot: slot,
+        equipmentType,
+        affixType,
+        craftingPool: mapLibraryToPool(library),
+        tier,
+        craftableAffix: modifier,
       });
+    });
   });
 
   return affixes;

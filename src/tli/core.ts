@@ -128,6 +128,8 @@ export interface Configuration {
   numSecondsWithEliteNearby: number;
   // default to false
   enemyHasAilment: boolean;
+  // default to 0 — number of damaging ailments stacked on the target
+  numEnemyAilments: number;
   // default to false
   hasCritRecently: boolean;
   // default fo false
@@ -284,6 +286,7 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   hasElitesNearby: false,
   numSecondsWithEliteNearby: 0,
   enemyHasAilment: false,
+  numEnemyAilments: 0,
   hasCritRecently: false,
   channeling: false,
   channeledStacks: undefined,

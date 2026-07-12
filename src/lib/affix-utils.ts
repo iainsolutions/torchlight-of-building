@@ -1,5 +1,6 @@
 import { ALL_BASE_GEAR } from "@/src/data/gear-base/all-base-gear";
 import { ALL_GEAR_AFFIXES } from "@/src/tli/all-affixes";
+import { craft } from "@/src/tli/crafting/craft";
 import type {
   BaseGear,
   BaseGearAffix,
@@ -172,6 +173,27 @@ export const getPercentageWithinTier = (
   const tierIndex = getTierIndexFromPercentage(percentage, tierCount);
   const tierStart = tierIndex * tierWidth;
   return ((percentage - tierStart) / tierWidth) * 100;
+};
+
+// Given the flat affix list and a selection (affixIndex pointing to any tier in a group,
+// plus a 0-100 slider), returns the crafted affix string. Picks the tier from the slider
+// position and interpolates the value within that tier.
+export const craftGroupedAffix = (
+  allAffixes: BaseGearAffix[],
+  affixIndex: number,
+  percentage: number,
+): string => {
+  const groups = groupAffixesByBaseName(allAffixes, allAffixes);
+  const group = groups.find((g) => g.originalIndices.includes(affixIndex));
+  if (group === undefined) {
+    return craft(allAffixes[affixIndex], percentage);
+  }
+  const tierAffix = getAffixForPercentage(percentage, group.affixes);
+  const percentageWithinTier = getPercentageWithinTier(
+    percentage,
+    group.affixes.length,
+  );
+  return craft(tierAffix, percentageWithinTier);
 };
 
 export const getSortedGroups = (affixGroups: CollapsedAffixGroup[]) => {

@@ -7,7 +7,7 @@ Torchlight Infinite character build planner and dps calculator.
 ```bash
 pnpm install
 pnpm lingui:compile
-pnpm dev
+pnpm dev!
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
