@@ -1,0 +1,464 @@
+{
+  "equipmentPage": {
+    "equippedGear": {
+      "helmet": {
+        "id": "9eec96f3-084d-4c0c-a106-2f71b6fc1629"
+      },
+      "chest": {
+        "id": "ed378f5d-05a3-4d47-bfbb-d1f8a1530c62"
+      },
+      "neck": {
+        "id": "7496ac9e-63f1-42a1-8ac1-f6e35c82988c"
+      },
+      "gloves": {
+        "id": "0d916afc-149c-44f2-b7f2-d2746dc1c190"
+      },
+      "belt": {
+        "id": "ca036e9d-2c19-4ed2-9972-8d569b2123f9"
+      },
+      "boots": {
+        "id": "ff1d0193-7662-4ed9-b0bf-019edb752e85"
+      },
+      "leftRing": {
+        "id": "d4b8b49c-df4d-4529-b5ee-53317a8023c5"
+      },
+      "rightRing": {
+        "id": "7cf87f7c-3a35-4363-995e-9f0bfea7a61b"
+      },
+      "mainHand": {
+        "id": "87d4f5e7-d7c7-46a7-8cd5-2aee56028a77"
+      },
+      "offHand": {}
+    },
+    "inventory": [
+      {
+        "id": "7496ac9e-63f1-42a1-8ac1-f6e35c82988c",
+        "equipmentType": "Necklace",
+        "rarity": "legendary",
+        "legendaryName": "Old Grudge",
+        "baseStats": "+5 Intelligence",
+        "baseGearName": "Shaman's Necklace",
+        "legendaryAffixes": [
+          "+20% Max Life, Max Mana, and Max Energy Shield",
+          "+1 Max Tangle Quantity\n+15% Tangle Damage Enhancement",
+          "+45% Tangle Duration",
+          "+200 Tangle Critical Strike Rating"
+        ]
+      },
+      {
+        "id": "0d916afc-149c-44f2-b7f2-d2746dc1c190",
+        "equipmentType": "Gloves (DEX)",
+        "rarity": "legendary",
+        "legendaryName": "Wings of Light",
+        "baseStats": "+1615 gear Evasion",
+        "baseGearName": "Hands of Calamity",
+        "legendaryAffixes": [
+          "+30% Intimidating effect",
+          "+150 Max Life",
+          "Immune to Slow",
+          "Intimidated enemies take +29% additional Spell and Ailment Damage for each type of Crowd Control effect, up to 6 times"
+        ]
+      },
+      {
+        "id": "87d4f5e7-d7c7-46a7-8cd5-2aee56028a77",
+        "equipmentType": "Two-Handed Staff",
+        "rarity": "legendary",
+        "legendaryName": "Martyr's Staff",
+        "baseStats": "+40% Spell Damage",
+        "baseGearName": "Ancestral Staff",
+        "legendaryAffixes": [
+          "+1500 Max Life",
+          "+30% Injury Buffer",
+          "+20% additional damage taken at Full Life",
+          "Reduces Mana cost by 40%"
+        ]
+      },
+      {
+        "id": "9eec96f3-084d-4c0c-a106-2f71b6fc1629",
+        "equipmentType": "Helmet (DEX)",
+        "baseStats": "+1615 gear Evasion",
+        "baseGearName": "Mask of Calamity",
+        "prefixes": [
+          "+550 gear Evasion",
+          "+80 Max Life",
+          "+2 Projectile Skill Level"
+        ],
+        "suffixes": [
+          "+50% Critical Strike Rating",
+          "+18% Cold Resistance",
+          "+15% Projectile Speed"
+        ]
+      },
+      {
+        "id": "ed378f5d-05a3-4d47-bfbb-d1f8a1530c62",
+        "equipmentType": "Chest Armor (DEX)",
+        "baseStats": "+1200 gear Evasion",
+        "baseGearName": "All Magic Secret Robe",
+        "prefixes": [
+          "+350 gear Evasion",
+          "+250 Max Life",
+          "+120 Max Mana"
+        ],
+        "suffixes": [
+          "+25% Cold Resistance",
+          "+25% Lightning Resistance",
+          "+20% Fire Resistance"
+        ]
+      },
+      {
+        "id": "ca036e9d-2c19-4ed2-9972-8d569b2123f9",
+        "equipmentType": "Belt",
+        "baseStats": "+140 Max Energy Shield",
+        "baseGearName": "Elder Sage Girdle",
+        "prefixes": [
+          "+75% damage",
+          "+250 Max Life",
+          "+18% Projectile Damage"
+        ],
+        "suffixes": [
+          "+28% Cold Resistance",
+          "+22% Erosion Resistance",
+          "+20% Fire Resistance"
+        ]
+      },
+      {
+        "id": "ff1d0193-7662-4ed9-b0bf-019edb752e85",
+        "equipmentType": "Boots (DEX)",
+        "baseStats": "+146 gear Evasion",
+        "baseGearName": "Wanderer's Boots",
+        "prefixes": [
+          "+210 Max Life",
+          "+1 Projectile Skill Level",
+          "+200 gear Evasion"
+        ],
+        "suffixes": [
+          "+15% Movement Speed",
+          "+40% Critical Strike Rating",
+          "+20% Projectile Speed"
+        ]
+      },
+      {
+        "id": "d4b8b49c-df4d-4529-b5ee-53317a8023c5",
+        "equipmentType": "Ring",
+        "baseStats": "+11% Cold Resistance",
+        "baseGearName": "Punished Cold Ring",
+        "prefixes": [
+          "+30% damage",
+          "+15% Critical Strike Damage",
+          "+80 Max Life"
+        ],
+        "suffixes": [
+          "+50% Critical Strike Rating",
+          "+18% Cold Resistance",
+          "+12% Projectile Speed"
+        ]
+      },
+      {
+        "id": "7cf87f7c-3a35-4363-995e-9f0bfea7a61b",
+        "equipmentType": "Ring",
+        "baseStats": "+11% Erosion Resistance",
+        "baseGearName": "Punished Erosion Ring",
+        "prefixes": [
+          "+28% damage",
+          "+18% Critical Strike Damage",
+          "+75 Max Life"
+        ],
+        "suffixes": [
+          "+48% Critical Strike Rating",
+          "+15% Erosion Penetration",
+          "+10% Projectile Speed"
+        ]
+      },
+      {
+        "id": "1c67aa35-672f-4ccf-bb61-f0c76e7e22ae",
+        "equipmentType": "Bow",
+        "rarity": "legendary",
+        "legendaryName": "Stray Bird's Return",
+        "baseStats": "+40% Attack Speed",
+        "baseGearName": "Silver Wing Bow",
+        "legendaryAffixes": [
+          "Stray Bird\n+100% additional Returning Projectile Damage",
+          "Normal Projectiles no longer Attack. Projectiles return after reaching the target and hit enemies again on their path",
+          "+30% Projectile Damage",
+          "Projectiles have +50% reduced additional damage"
+        ]
+      }
+    ]
+  },
+  "talentPage": {
+    "talentTrees": {
+      "slot_1": {
+        "tree": "Gale",
+        "allocated": []
+      },
+      "slot_2": {
+        "tree": "Warlock",
+        "allocated": []
+      },
+      "slot_3": {
+        "tree": "Steel Vanguard",
+        "allocated": []
+      },
+      "slot_4": {
+        "tree": "Marksman",
+        "allocated": []
+      }
+    },
+    "inventory": {
+      "prismList": [],
+      "inverseImageList": []
+    }
+  },
+  "skillPage": {
+    "activeSkills": {
+      "1": {
+        "skillName": "Chromatic Shot",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Chromatic Shot: Splendor (Noble)",
+            "level": 20
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Multiple Projectiles",
+            "level": 20
+          },
+          "3": {
+            "skillType": "support",
+            "name": "Piercing",
+            "level": 20
+          },
+          "4": {
+            "skillType": "support",
+            "name": "Critical Strike",
+            "level": 20
+          },
+          "5": {
+            "skillType": "support",
+            "name": "Amplified Damage",
+            "level": 20
+          }
+        }
+      },
+      "2": {
+        "skillName": "Dormant Entanglement",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Preparation",
+            "level": 20
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Extended Duration",
+            "level": 20
+          }
+        }
+      },
+      "3": {
+        "skillName": "Blink",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Magic Dash",
+            "level": 20
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Quick Mobility",
+            "level": 20
+          }
+        }
+      }
+    },
+    "passiveSkills": {
+      "1": {
+        "skillName": "Projectile Amplification",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {}
+      },
+      "2": {
+        "skillName": "Cold Amplification",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {}
+      },
+      "3": {
+        "skillName": "Critical Amplification",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {}
+      },
+      "4": {
+        "skillName": "Spell Amplification",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {}
+      }
+    }
+  },
+  "heroPage": {
+    "selectedHero": "Scent Weaver Sage: Licorice Note (#1)",
+    "traits": {
+      "level1": {
+        "name": "Licorice Note"
+      },
+      "level45": {
+        "name": "Pungent Stimulant Salt"
+      },
+      "level60": {
+        "name": "Elixir of Immortality"
+      },
+      "level60b": {
+        "name": "Scent of Ambition"
+      },
+      "level75": {
+        "name": "Everlasting Nectar"
+      },
+      "level75b": {
+        "name": "Licorice Tincture Blend"
+      }
+    },
+    "memorySlots": {
+      "slot45": {
+        "id": "a831ce6e-a901-473c-9f9c-2df5c553cb21"
+      },
+      "slot60": {
+        "id": "6183a340-c944-4063-8c64-288a5c131e2a"
+      },
+      "slot75": {
+        "id": "f46e4246-74ee-4fa0-a80d-dec20cc0abf6"
+      }
+    },
+    "memoryInventory": [
+      {
+        "id": "a831ce6e-a901-473c-9f9c-2df5c553cb21",
+        "memoryType": "Memory of Origin",
+        "baseStat": "+75 Dexterity",
+        "rarity": "epic",
+        "level": 30,
+        "fixedAffixes": [
+          "+40% Aura Effect",
+          "+15% Projectile Damage"
+        ],
+        "randomAffixes": [
+          "+35% Cold Critical Strike Damage"
+        ]
+      },
+      {
+        "id": "6183a340-c944-4063-8c64-288a5c131e2a",
+        "memoryType": "Memory of Discipline",
+        "baseStat": "+435 Max Life",
+        "rarity": "epic",
+        "level": 30,
+        "fixedAffixes": [
+          "+40% Critical Strike Rating",
+          "+25% Projectile Speed"
+        ],
+        "randomAffixes": [
+          "+45% Spell Critical Strike Damage"
+        ]
+      },
+      {
+        "id": "f46e4246-74ee-4fa0-a80d-dec20cc0abf6",
+        "memoryType": "Memory of Progress",
+        "baseStat": "+19 Movement Speed",
+        "rarity": "epic",
+        "level": 30,
+        "fixedAffixes": [
+          "+8% Cast Speed",
+          "+45% damage"
+        ],
+        "randomAffixes": [
+          "+40% Lightning Critical Strike Damage"
+        ]
+      }
+    ]
+  },
+  "pactspiritPage": {
+    "slot1": {
+      "pactspiritName": "Iron Line",
+      "level": 1,
+      "rings": {
+        "innerRing1": {},
+        "innerRing2": {},
+        "innerRing3": {},
+        "innerRing4": {},
+        "innerRing5": {},
+        "innerRing6": {},
+        "midRing1": {},
+        "midRing2": {},
+        "midRing3": {}
+      }
+    },
+    "slot2": {
+      "pactspiritName": "Poisoned Omen",
+      "level": 1,
+      "rings": {
+        "innerRing1": {},
+        "innerRing2": {},
+        "innerRing3": {},
+        "innerRing4": {},
+        "innerRing5": {},
+        "innerRing6": {},
+        "midRing1": {},
+        "midRing2": {},
+        "midRing3": {}
+      }
+    },
+    "slot3": {
+      "pactspiritName": "Starcatcher",
+      "level": 1,
+      "rings": {
+        "innerRing1": {},
+        "innerRing2": {},
+        "innerRing3": {},
+        "innerRing4": {},
+        "innerRing5": {},
+        "innerRing6": {},
+        "midRing1": {},
+        "midRing2": {},
+        "midRing3": {}
+      }
+    }
+  },
+  "divinityPage": {
+    "placedSlates": [
+      {
+        "slateId": "0ce0060f-eb0b-43f9-a60c-10d2e2baad9b",
+        "position": {
+          "row": 2,
+          "col": 0
+        }
+      }
+    ],
+    "inventory": [
+      {
+        "id": "0ce0060f-eb0b-43f9-a60c-10d2e2baad9b",
+        "rotation": 0,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "+15% Aura Effect",
+          "+40% Projectile Damage",
+          "+35% Critical Strike Damage",
+          "Gale"
+        ],
+        "isLegendary": true,
+        "legendaryName": "Pedigree of Gods"
+      }
+    ]
+  },
+  "configurationPage": {},
+  "calculationsPage": {
+    "selectedSkillName": "Chromatic Shot"
+  }
+}

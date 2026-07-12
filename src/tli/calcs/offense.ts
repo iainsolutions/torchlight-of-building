@@ -121,6 +121,8 @@ export interface OffenseSlashStrikeDpsSummary {
 interface TangleSummary {
   maxTangles: number;
   maxTanglesPerEnemy: number;
+  // Factor by which damage is amplified by tangles (min(activeTangles, perEnemyCap)).
+  dmgMultiplier: number;
 }
 
 export interface OffenseComboDpsSummary {
@@ -140,6 +142,10 @@ interface OffenseSummary {
   persistentDpsSummary?: PersistentDpsSummary;
   totalReapDpsSummary?: TotalReapDpsSummary;
   totalDps: number;
+  // Estimated single-cast DPS excluding tangle triggering (matches game
+  // tooltip "Spell DPS" more closely). Does not strip enemy debuffs — those
+  // are also applied to the tooltip in-game.
+  tooltipDps: number;
   movementSpeedBonusPct: number;
   tangleSummary?: TangleSummary;
   resolvedMods: Mod[];
@@ -1826,7 +1832,9 @@ const resolveModsForOffenseSkill = (
     focusBlessings,
     maxFocusBlessings,
     agilityBlessings,
+    maxAgilityBlessings,
     tenacityBlessings,
+    maxTenacityBlessings,
     additionalMaxChanneledStacks,
     desecration,
   } = resourcePool;
@@ -1924,20 +1932,32 @@ const resolveModsForOffenseSkill = (
     //   (Triggers Lv X CurseName Curse on hit) that are tagged "Curse",
     //   capped by max curse cap. Manual override takes precedence if > 0.
     const autoMaxCurses = 1 + sumByValue(filterMods(mods, "AddnCurse"));
-    const triggeredCurseNames = new Set<string>();
+    const curseNames = new Set<string>();
+    // Curses cast as active skills in the skill panel
+    for (const slot of listActiveSkillSlots(loadout)) {
+      if (!slot.enabled || slot.skillName === undefined) continue;
+      const skill = ActiveSkills.find((s) => s.name === slot.skillName);
+      if (skill?.tags?.includes("Curse" as never)) {
+        curseNames.add(slot.skillName);
+      }
+    }
+    // Curses triggered by gear/talents on hit
     for (const m of filterMods(mods, "TriggersSkill")) {
       const skill = ActiveSkills.find((s) => s.name === m.skillName);
       if (skill?.tags?.includes("Curse" as never)) {
-        triggeredCurseNames.add(m.skillName);
+        curseNames.add(m.skillName);
       }
     }
-    const autoEnemyCurses = Math.min(triggeredCurseNames.size, autoMaxCurses);
+    const autoEnemyCurses = Math.min(curseNames.size, autoMaxCurses);
     const effectiveEnemyCurses =
       config.enemyCurseCount > 0 ? config.enemyCurseCount : autoEnemyCurses;
     normalize("enemy_curse_count", effectiveEnemyCurses);
     // Self-curse count: assume same number of self curses as enemy
     // (Keen Intellect prism auto-curses player on curse-skill hit)
     normalize("self_curse_count", effectiveEnemyCurses);
+    // Damaging ailments on target. Config-driven (manual) only — no auto-derive
+    // because in-game ailment count fluctuates with proc/duration.
+    normalize("enemy_ailment_count", config.numEnemyAilments);
 
     // Active tangles: derive from gear (capped by per-enemy limit) when user
     // hasn't manually set a value. Manual override takes precedence if > 1.
@@ -2450,6 +2470,41 @@ const resolveModsForOffenseSkill = (
       "any_blessing",
       tenacityBlessings + focusBlessings + agilityBlessings,
     );
+    // Providential Grace-style affixes: "max stacks of X is not lower than
+    // (current) stacks of other blessings". Compare each blessing's max cap
+    // against the other two blessings' current stack counts.
+    if (
+      maxFocusBlessings >= agilityBlessings &&
+      maxFocusBlessings >= tenacityBlessings
+    ) {
+      pm(
+        ...resolvedCondMods.filter(
+          (m) => m.resolvedCond === "focus_max_not_lower_than_other_blessings",
+        ),
+      );
+    }
+    if (
+      maxAgilityBlessings >= focusBlessings &&
+      maxAgilityBlessings >= tenacityBlessings
+    ) {
+      pm(
+        ...resolvedCondMods.filter(
+          (m) =>
+            m.resolvedCond === "agility_max_not_lower_than_other_blessings",
+        ),
+      );
+    }
+    if (
+      maxTenacityBlessings >= focusBlessings &&
+      maxTenacityBlessings >= agilityBlessings
+    ) {
+      pm(
+        ...resolvedCondMods.filter(
+          (m) =>
+            m.resolvedCond === "tenacity_max_not_lower_than_other_blessings",
+        ),
+      );
+    }
 
     const changeTenacity = findMod(mods, "ChangeTenacityToAddnDmgPct");
     if (changeTenacity !== undefined) {
@@ -2473,12 +2528,18 @@ const resolveModsForOffenseSkill = (
     const autoActive = Math.min(maxTangles, maxTanglesPerEnemy);
     const activeTangles =
       config.numActiveTangles > 1 ? config.numActiveTangles : autoActive;
-    if (activeTangles > 1) {
+    // Each Tangle attached to the enemy independently triggers the supported
+    // skill, so N tangles → N × base DPS. addn:true here is a per-mod
+    // multiplier (1 + value/100), so value=(N-1)×100 produces a ×N global
+    // multiplier on top of all other multipliers.
+    // Single-target only stacks up to maxTanglesPerEnemy.
+    const dmgTangles = Math.min(activeTangles, maxTanglesPerEnemy);
+    if (dmgTangles > 1) {
       mods.push({
         type: "DmgPct",
         dmgModType: "global",
         addn: true,
-        value: (activeTangles - 1) * 100,
+        value: (dmgTangles - 1) * 100,
         src: "Tangle",
       });
     }
@@ -2494,7 +2555,11 @@ const resolveModsForOffenseSkill = (
         });
       }
     }
-    return { maxTangles, maxTanglesPerEnemy };
+    return {
+      maxTangles,
+      maxTanglesPerEnemy,
+      dmgMultiplier: Math.max(dmgTangles, 1),
+    };
   };
   const pushBerserkingBlade = (): void => {
     step("berserkingBlade");
@@ -3763,6 +3828,67 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       (persistentDpsSummary?.total ?? 0) +
       (totalReapDpsSummary?.totalReapDps ?? 0);
 
+    // Tooltip DPS approximates the in-game tooltip Spell DPS — single-cast
+    // damage against a neutral target. Strip:
+    //   1. Enemy debuff mods (Timid hit dmg, Corruption erosion-taken, etc.)
+    //   2. Mods gated on enemy state (cursed / ailment / nearby / etc.)
+    //   3. Tangle damage multiplier (tooltip is per-cast)
+    const enemyConds = new Set([
+      "enemy_has_ailment",
+      "enemy_has_desecration",
+      "enemy_has_desecration_and_cc",
+      "enemy_has_trauma",
+      "enemy_is_cursed",
+      "enemy_numbed",
+      "enemy_frozen",
+      "enemy_frostbitten",
+      "enemy_paralyzed",
+      "enemy_at_max_affliction",
+      "enemy_has_cold_infiltration",
+      "enemy_has_fire_infiltration",
+      "enemy_has_lightning_infiltration",
+      "target_enemy_is_nearby",
+      "target_enemy_is_distant",
+      "target_enemy_is_elite",
+      "target_enemy_is_in_proximity",
+      "target_enemy_frozen_recently",
+    ]);
+    const enemyStackables = new Set([
+      "enemy_curse_count",
+      "enemy_ailment_count",
+      "enemy_numbed_stacks",
+    ]);
+    const tooltipMods = mods.filter((m) => {
+      // Only some mod types have isEnemyDebuff; check via property lookup
+      if ((m as { isEnemyDebuff?: boolean }).isEnemyDebuff === true)
+        return false;
+      if (m.src === "Tangle") return false;
+      const cond = (m as { cond?: string }).cond;
+      if (typeof cond === "string" && enemyConds.has(cond)) return false;
+      const per = (m as { per?: { stackable: string } }).per;
+      if (per !== undefined && enemyStackables.has(per.stackable)) return false;
+      return true;
+    });
+    const tooltipSpellDps = calcAvgSpellDps(
+      tooltipMods,
+      loadout,
+      perSkillContext,
+      skillLevel,
+      derivedCtx,
+      config,
+    );
+    const tooltipAttackDps = calcAvgAttackDps(
+      tooltipMods,
+      loadout,
+      perSkillContext,
+      skillLevel,
+      derivedOffenseCtx,
+      derivedCtx,
+      config,
+    );
+    const tooltipDps =
+      (tooltipSpellDps?.avgDps ?? 0) + (tooltipAttackDps?.avgDps ?? 0);
+
     skills[slot.skillName as ImplementedActiveSkillName] = {
       attackDpsSummary: attackHitSummary,
       slashStrikeDpsSummary,
@@ -3772,6 +3898,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       persistentDpsSummary,
       totalReapDpsSummary,
       totalDps,
+      tooltipDps,
       movementSpeedBonusPct,
       tangleSummary,
       resolvedMods: mods,

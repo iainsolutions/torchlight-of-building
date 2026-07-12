@@ -280,6 +280,12 @@ export const StatsPanel = (): React.ReactNode => {
               value={formatStatValue.dps(offenseSummary.totalDps)}
               highlight
             />
+            {offenseSummary.tooltipDps !== offenseSummary.totalDps && (
+              <StatLine
+                label="Tooltip DPS"
+                value={formatStatValue.dps(offenseSummary.tooltipDps)}
+              />
+            )}
 
             {offenseSummary.attackDpsSummary !== undefined && (
               <>

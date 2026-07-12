@@ -44,6 +44,7 @@ export const ConfigurationPageSchema = z
     hasElitesNearby: z.boolean().catch(d.hasElitesNearby),
     numSecondsWithEliteNearby: z.number().catch(d.numSecondsWithEliteNearby),
     enemyHasAilment: z.boolean().catch(d.enemyHasAilment),
+    numEnemyAilments: z.number().catch(d.numEnemyAilments),
     hasCritRecently: z.boolean().catch(d.hasCritRecently),
     channeling: z.boolean().catch(d.channeling),
     channeledStacks: z.number().optional().catch(d.channeledStacks),

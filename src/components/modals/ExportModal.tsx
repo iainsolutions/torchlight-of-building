@@ -22,9 +22,11 @@ export const ExportModal = ({
   const [copiedType, setCopiedType] = useState<CopiedType>(undefined);
   const [codeExpanded, setCodeExpanded] = useState(false);
 
+  // Uses hash fragment so the build code bypasses URL-path length limits
+  // that break `/import/<code>` for bigger builds.
   const shareUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/import/${buildCode}`
+      ? `${window.location.origin}/import#${buildCode}`
       : "";
 
   const handleCopyUrl = async (): Promise<void> => {

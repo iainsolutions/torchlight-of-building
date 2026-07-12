@@ -2,6 +2,7 @@ import { i18n } from "@lingui/core";
 import { Trans } from "@lingui/react/macro";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  craftGroupedAffix,
   type FilterAffixType,
   getBaseGear,
   getFilteredAffixes,
@@ -452,7 +453,7 @@ export const EditGearModal = ({
         newBaseAffixes.push(slot.value);
       } else if (slot.type === "new" && slot.affixIndex !== undefined) {
         newBaseAffixes.push(
-          craft(baseAffixOptions[slot.affixIndex], slot.percentage),
+          craftGroupedAffix(baseAffixOptions, slot.affixIndex, slot.percentage),
         );
       }
     }
@@ -509,7 +510,7 @@ export const EditGearModal = ({
         newPrefixes.push(slot.value);
       } else if (slot.type === "new" && slot.affixIndex !== undefined) {
         newPrefixes.push(
-          craft(prefixAffixes[slot.affixIndex], slot.percentage),
+          craftGroupedAffix(prefixAffixes, slot.affixIndex, slot.percentage),
         );
       }
     }
@@ -521,7 +522,7 @@ export const EditGearModal = ({
         newSuffixes.push(slot.value);
       } else if (slot.type === "new" && slot.affixIndex !== undefined) {
         newSuffixes.push(
-          craft(suffixAffixes[slot.affixIndex], slot.percentage),
+          craftGroupedAffix(suffixAffixes, slot.affixIndex, slot.percentage),
         );
       }
     }
@@ -597,15 +598,21 @@ export const EditGearModal = ({
     }));
   };
 
-  // Equipment type options for creation mode
+  // Equipment type options for creation mode.
+  // Ordered by gear slot so related types stay together (e.g. Ring + Spirit Ring),
+  // not alphabetically. Within each slot, types preserve their declared order.
   const allEquipmentTypes = useMemo(() => {
-    const types = new Set<EquipmentType>();
+    const types: EquipmentType[] = [];
+    const seen = new Set<EquipmentType>();
     for (const slotTypes of Object.values(SLOT_TO_VALID_EQUIPMENT_TYPES)) {
       for (const type of slotTypes) {
-        types.add(type);
+        if (!seen.has(type)) {
+          seen.add(type);
+          types.push(type);
+        }
       }
     }
-    return Array.from(types).sort();
+    return types;
   }, []);
 
   const equipmentTypeOptions = useMemo(

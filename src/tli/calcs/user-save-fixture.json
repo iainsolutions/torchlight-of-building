@@ -1,0 +1,1014 @@
+{
+  "equipmentPage": {
+    "equippedGear": {
+      "helmet": {
+        "id": "16892954-c27e-48d0-ad4d-ba101ae203e7"
+      },
+      "chest": {
+        "id": "75a66dab-9ce1-4d92-8ef2-f41f31a0c092"
+      },
+      "neck": {
+        "id": "94dccd16-7bab-44b2-9d27-b12f946422f0"
+      },
+      "gloves": {
+        "id": "bd8ff762-289f-4e4c-b950-5c926193953e"
+      },
+      "belt": {
+        "id": "d8847fb8-b6c2-4970-b262-33cca2d60690"
+      },
+      "boots": {
+        "id": "40959ade-a5a8-4371-837d-697734fd01b3"
+      },
+      "leftRing": {
+        "id": "fb607c98-a5d7-4eaf-8888-7c766cdceae5"
+      },
+      "rightRing": {
+        "id": "d25d7ce2-ddeb-44cb-a145-7e80cfa84505"
+      },
+      "mainHand": {
+        "id": "d51226fb-16a2-428f-98af-21dded958344"
+      },
+      "offHand": {
+        "id": "9c15c5ca-d2c0-42cb-bb7c-d61943ad2b7f"
+      }
+    },
+    "inventory": [
+      {
+        "id": "16892954-c27e-48d0-ad4d-ba101ae203e7",
+        "equipmentType": "Helmet (DEX)",
+        "rarity": "legendary",
+        "legendaryName": "Opening Heart",
+        "baseStats": "+1615 gear Evasion",
+        "baseGearName": "Mask of Calamity",
+        "legendaryAffixes": [
+          "+550 gear Evasion",
+          "+45 Max Life",
+          "Have Fervor",
+          "+11% additional damage dealt by Nearby enemies\n+25% additional damage taken by Nearby enemies"
+        ]
+      },
+      {
+        "id": "75a66dab-9ce1-4d92-8ef2-f41f31a0c092",
+        "equipmentType": "Chest Armor (INT)",
+        "rarity": "legendary",
+        "legendaryName": "Undying Faith",
+        "baseStats": "+140 gear Energy Shield",
+        "baseGearName": "All Magic Secret Robe",
+        "legendaryAffixes": [
+          "+191 gear Energy Shield",
+          "+1 Passive Skill Level",
+          "+14% Sealed Mana Compensation",
+          "+16% additional damage at Low Life"
+        ]
+      },
+      {
+        "id": "94dccd16-7bab-44b2-9d27-b12f946422f0",
+        "equipmentType": "Necklace",
+        "rarity": "legendary",
+        "legendaryName": "Old Grudge",
+        "baseStats": "+5 Intelligence",
+        "baseGearName": "Shaman's Necklace",
+        "legendaryAffixes": [
+          "+16% Max Life, Max Mana, and Max Energy Shield",
+          "+1 Max Tangle Quantity",
+          "+30% Tangle Duration",
+          "+128 Tangle Critical Strike Rating"
+        ]
+      },
+      {
+        "id": "bd8ff762-289f-4e4c-b950-5c926193953e",
+        "equipmentType": "Gloves (INT)",
+        "rarity": "legendary",
+        "legendaryName": "Providential Grace",
+        "baseStats": "+120 gear Energy Shield",
+        "baseGearName": "All Magic Grip",
+        "legendaryAffixes": [
+          "+13% Elemental Resistance",
+          "+1 to Max Tenacity Blessing Stacks",
+          "-9% additional damage taken if the max stacks of Tenacity Blessing is not lower than the stacks of other Blessings",
+          "+9% additional Attack and Cast Speed if the max stacks of Agility Blessing is not lower than the stacks of other Blessings",
+          "+9% additional damage if the max stacks of Focus Blessing is not lower than the stacks of other Blessings"
+        ]
+      },
+      {
+        "id": "d8847fb8-b6c2-4970-b262-33cca2d60690",
+        "equipmentType": "Belt",
+        "baseStats": "+140 Max Energy Shield",
+        "baseGearName": "Elder Sage Girdle",
+        "prefixes": [
+          "+57% damage",
+          "+26% Deterioration Chance",
+          "+268 Max Energy Shield"
+        ],
+        "suffixes": [
+          "+28% Focus Speed",
+          "+18% Erosion Resistance",
+          "+22% Fire Resistance"
+        ]
+      },
+      {
+        "id": "40959ade-a5a8-4371-837d-697734fd01b3",
+        "equipmentType": "Boots (INT)",
+        "baseStats": "+146 gear Energy Shield",
+        "baseGearName": "Long Night Sorcerer's Boots",
+        "prefixes": [
+          "+210 Max Life",
+          "+1 Erosion Skill Level",
+          "+222 gear Energy Shield"
+        ],
+        "suffixes": [
+          "Restores 2% Energy Shield per second while moving",
+          "+53% Critical Strike Rating",
+          "+8% Movement Speed"
+        ]
+      },
+      {
+        "id": "d25d7ce2-ddeb-44cb-a145-7e80cfa84505",
+        "equipmentType": "Ring",
+        "baseStats": "+11% Lightning Resistance",
+        "baseGearName": "Punished Lightning Ring",
+        "prefixes": [
+          "+10% Attack and Spell Block Chance",
+          "+17% Deterioration Chance",
+          "+27% damage"
+        ],
+        "suffixes": [
+          "+46% Critical Strike Rating",
+          "+16% Erosion Resistance",
+          "+13% Cold Resistance"
+        ]
+      },
+      {
+        "id": "d51226fb-16a2-428f-98af-21dded958344",
+        "equipmentType": "Wand",
+        "baseStats": "500 Critical Strike Rating\n1.2 Attack Speed\n+40% Spell Damage",
+        "baseGearName": "Headless Cleric Wand",
+        "prefixes": [
+          "+111 Max Mana",
+          "Adds 23 - 29 Erosion Damage to Spells",
+          "+2 Erosion Skill Level"
+        ],
+        "suffixes": [
+          "+11% Energy Shield Regain",
+          "+16% Cast Speed\n+16% Minion Cast Speed",
+          "+54 Spell Critical Strike Rating"
+        ]
+      },
+      {
+        "id": "9c15c5ca-d2c0-42cb-bb7c-d61943ad2b7f",
+        "equipmentType": "Wand",
+        "baseStats": "500 Critical Strike Rating\n1.2 Attack Speed\n+40% Spell Damage",
+        "baseGearName": "Headless Cleric Wand",
+        "prefixes": [
+          "+54% Spell Damage",
+          "Adds 44 - 53 Erosion Damage to Spells",
+          "+2 Erosion Skill Level"
+        ],
+        "suffixes": [
+          "+60% Erosion Damage",
+          "+14% Affliction Effect",
+          "+14% Life Regain"
+        ]
+      },
+      {
+        "id": "fb607c98-a5d7-4eaf-8888-7c766cdceae5",
+        "equipmentType": "Ring",
+        "baseStats": "+12% Lightning Resistance",
+        "baseGearName": "Thunder Tempered Lightning Ring",
+        "prefixes": [
+          "+48% damage",
+          "+211 Max Energy Shield",
+          "Adds 44 - 58 Erosion Damage to Attacks and Spells"
+        ],
+        "suffixes": [
+          "+17% Lightning Resistance",
+          "+20% Erosion Resistance",
+          "+21% Critical Strike Damage"
+        ]
+      }
+    ]
+  },
+  "talentPage": {
+    "talentTrees": {
+      "tree1": {
+        "name": "Goddess_of_Knowledge",
+        "allocatedNodes": [
+          {
+            "x": 0,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 1,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 1,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 2,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 3,
+            "y": 3,
+            "points": 3
+          },
+          {
+            "x": 4,
+            "y": 3,
+            "points": 1
+          },
+          {
+            "x": 5,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 1,
+            "points": 1
+          },
+          {
+            "x": 6,
+            "y": 0,
+            "points": 2
+          },
+          {
+            "x": 5,
+            "y": 3,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 3,
+            "points": 1
+          }
+        ],
+        "selectedCoreTalents": [
+          "Peculiar Vibe",
+          "Acquaintance"
+        ]
+      },
+      "tree2": {
+        "name": "Magister",
+        "allocatedNodes": [
+          {
+            "x": 0,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 1,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 1,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 2,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 4,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 2,
+            "points": 1
+          },
+          {
+            "x": 5,
+            "y": 3,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 3,
+            "points": 1
+          },
+          {
+            "x": 4,
+            "y": 4,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 4,
+            "points": 1
+          },
+          {
+            "x": 6,
+            "y": 4,
+            "points": 1
+          }
+        ],
+        "selectedCoreTalents": [
+          "Shell"
+        ]
+      },
+      "tree3": {
+        "name": "Shadowmaster",
+        "allocatedNodes": [
+          {
+            "x": 0,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 3,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 4,
+            "y": 1,
+            "points": 1
+          },
+          {
+            "x": 4,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 2,
+            "points": 1
+          },
+          {
+            "x": 2,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 3,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 1,
+            "y": 3,
+            "points": 3
+          },
+          {
+            "x": 2,
+            "y": 3,
+            "points": 2
+          },
+          {
+            "x": 4,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 1,
+            "points": 1
+          }
+        ],
+        "selectedCoreTalents": [
+          "Twisted Belief"
+        ]
+      },
+      "tree4": {
+        "name": "Lich",
+        "allocatedNodes": [
+          {
+            "x": 0,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 4,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 0,
+            "points": 1
+          },
+          {
+            "x": 5,
+            "y": 3,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 3,
+            "points": 1
+          },
+          {
+            "x": 1,
+            "y": 3,
+            "points": 3
+          },
+          {
+            "x": 2,
+            "y": 3,
+            "points": 3
+          },
+          {
+            "x": 3,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 4,
+            "y": 1,
+            "points": 3
+          }
+        ],
+        "selectedCoreTalents": [
+          "Off The Beaten Track"
+        ]
+      }
+    },
+    "inventory": {
+      "prismList": [],
+      "inverseImageList": []
+    }
+  },
+  "skillPage": {
+    "activeSkills": {
+      "1": {
+        "skillName": "Shackles of Malice",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Spell Tangle",
+            "level": 20
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Manifold Entanglement",
+            "level": 20
+          },
+          "3": {
+            "skillType": "magnificent_support",
+            "name": "Shackles of Malice: Vendetta (Magnificent)",
+            "tier": 2,
+            "rank": 1,
+            "craftedAffix": "+6% additional damage for the supported skill",
+            "value": 0
+          },
+          "4": {
+            "skillType": "support",
+            "name": "Passivation",
+            "level": 20
+          },
+          "5": {
+            "skillType": "support",
+            "name": "Spell Concentration",
+            "level": 20
+          }
+        }
+      },
+      "2": {
+        "skillName": "Corruption",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Terrain of Malice",
+            "level": 20
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Preparation",
+            "level": 20
+          },
+          "3": {
+            "skillType": "support",
+            "name": "Extended Duration",
+            "level": 20
+          }
+        }
+      },
+      "3": {
+        "skillName": "Blink",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Magic Dash",
+            "level": 20
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Quick Mobility",
+            "level": 20
+          },
+          "3": {
+            "skillType": "support",
+            "name": "Cooldown Reduction",
+            "level": 20
+          },
+          "4": {
+            "skillType": "support",
+            "name": "Periodic Burst",
+            "level": 20
+          }
+        }
+      },
+      "4": {
+        "skillName": "Timid",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {
+          "1": {
+            "skillType": "activation_medium",
+            "name": "Activation Medium: Preparation",
+            "tier": 3,
+            "affixes": [
+              "Prepares the supported skill every 8 s",
+              "The supported skill -25% additional Cooldown Recovery Speed"
+            ]
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Terrain of Malice",
+            "level": 20
+          },
+          "3": {
+            "skillType": "support",
+            "name": "Extended Duration",
+            "level": 20
+          },
+          "4": {
+            "skillType": "support",
+            "name": "Increased Area",
+            "level": 20
+          }
+        }
+      },
+      "5": {
+        "skillName": "Mana Boil",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Preparation",
+            "level": 20
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Mass Effect",
+            "level": 20
+          }
+        }
+      }
+    },
+    "passiveSkills": {
+      "1": {
+        "skillName": "Spell Amplification",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Restrain",
+            "level": 20
+          }
+        }
+      },
+      "2": {
+        "skillName": "Domain Expansion",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Restrain",
+            "level": 20
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Aura Amplification",
+            "level": 20
+          }
+        }
+      },
+      "3": {
+        "skillName": "Precise: Erosion Amplification",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Restrain",
+            "level": 20
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Seal Conversion",
+            "level": 20
+          },
+          "3": {
+            "skillType": "support",
+            "name": "Aura Amplification",
+            "level": 20
+          }
+        }
+      },
+      "4": {
+        "skillName": "Precise: Corrosion Focus",
+        "enabled": true,
+        "level": 20,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Focus Buff",
+            "level": 20
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Focus Acceleration",
+            "level": 20
+          }
+        }
+      }
+    }
+  },
+  "heroPage": {
+    "selectedHero": "Oracle Thea: Blasphemer (#3)",
+    "traits": {
+      "level1": {
+        "name": "Blasphemer"
+      },
+      "level45": {
+        "name": "Unholy Baptism"
+      },
+      "level60": {
+        "name": "Tarnished Sage"
+      },
+      "level75": {
+        "name": "Onset of Depravity"
+      }
+    },
+    "memorySlots": {
+      "slot45": {
+        "id": "3b8828c2-3bf9-4cff-a4c5-33b1fa34f105",
+        "memoryType": "Memory of Origin",
+        "baseStat": "+75 Intelligence",
+        "rarity": "epic",
+        "level": 30,
+        "fixedAffixes": [
+          "+12% Attack Block Chance",
+          "+5% Max Energy Shield"
+        ],
+        "randomAffixes": [
+          "+6% Attack and Cast Speed\n+6% Minion Attack and Cast Speed"
+        ]
+      },
+      "slot60": {
+        "id": "5a5b13c3-8534-46d4-bd9c-024135352171",
+        "memoryType": "Memory of Discipline",
+        "baseStat": "+435 Max Energy Shield",
+        "rarity": "epic",
+        "level": 30,
+        "fixedAffixes": [
+          "+8% Spell Block Chance",
+          "+40% Critical Strike Rating"
+        ],
+        "randomAffixes": [
+          "+36% Cold Skill Critical Strike Damage"
+        ]
+      },
+      "slot75": {
+        "id": "422d4e8a-fb07-41f7-9c20-c62f7c5c1e8a",
+        "memoryType": "Memory of Progress",
+        "baseStat": "+19 Movement Speed",
+        "rarity": "rare",
+        "level": 30,
+        "fixedAffixes": [
+          "+6% Cast Speed",
+          "+36% damage"
+        ],
+        "randomAffixes": []
+      }
+    },
+    "memoryInventory": [
+      {
+        "id": "3b8828c2-3bf9-4cff-a4c5-33b1fa34f105",
+        "memoryType": "Memory of Origin",
+        "baseStat": "+75 Intelligence",
+        "rarity": "epic",
+        "level": 30,
+        "fixedAffixes": [
+          "+12% Attack Block Chance",
+          "+5% Max Energy Shield"
+        ],
+        "randomAffixes": [
+          "+6% Attack and Cast Speed\n+6% Minion Attack and Cast Speed"
+        ]
+      },
+      {
+        "id": "5a5b13c3-8534-46d4-bd9c-024135352171",
+        "memoryType": "Memory of Discipline",
+        "baseStat": "+435 Max Energy Shield",
+        "rarity": "epic",
+        "level": 30,
+        "fixedAffixes": [
+          "+8% Spell Block Chance",
+          "+40% Critical Strike Rating"
+        ],
+        "randomAffixes": [
+          "+36% Cold Skill Critical Strike Damage"
+        ]
+      },
+      {
+        "id": "422d4e8a-fb07-41f7-9c20-c62f7c5c1e8a",
+        "memoryType": "Memory of Progress",
+        "baseStat": "+19 Movement Speed",
+        "rarity": "rare",
+        "level": 30,
+        "fixedAffixes": [
+          "+6% Cast Speed",
+          "+36% damage"
+        ],
+        "randomAffixes": []
+      }
+    ]
+  },
+  "pactspiritPage": {
+    "slot1": {
+      "pactspiritName": "Poisoned Omen",
+      "level": 1,
+      "rings": {
+        "innerRing1": {},
+        "innerRing2": {},
+        "innerRing3": {},
+        "innerRing4": {},
+        "innerRing5": {},
+        "innerRing6": {},
+        "midRing1": {},
+        "midRing2": {},
+        "midRing3": {}
+      }
+    },
+    "slot2": {
+      "pactspiritName": "Preserver of Eternity",
+      "level": 1,
+      "rings": {
+        "innerRing1": {},
+        "innerRing2": {},
+        "innerRing3": {},
+        "innerRing4": {},
+        "innerRing5": {},
+        "innerRing6": {},
+        "midRing1": {},
+        "midRing2": {},
+        "midRing3": {}
+      }
+    },
+    "slot3": {
+      "pactspiritName": "Starcatcher",
+      "level": 1,
+      "rings": {
+        "innerRing1": {},
+        "innerRing2": {},
+        "innerRing3": {},
+        "innerRing4": {},
+        "innerRing5": {},
+        "innerRing6": {},
+        "midRing1": {},
+        "midRing2": {},
+        "midRing3": {}
+      }
+    }
+  },
+  "divinityPage": {
+    "placedSlates": [
+      {
+        "slateId": "ba254a57-230a-4c86-aee5-f2e3891b0de1",
+        "position": {
+          "row": 0,
+          "col": 2
+        }
+      },
+      {
+        "slateId": "b92a7af7-1355-4433-980f-a37c8b0bc67e",
+        "position": {
+          "row": 2,
+          "col": 0
+        }
+      },
+      {
+        "slateId": "b383497a-ef1a-429e-bc68-b912319347da",
+        "position": {
+          "row": 2,
+          "col": 5
+        }
+      },
+      {
+        "slateId": "d6753bef-9cde-4188-9777-8243de0f9881",
+        "position": {
+          "row": 1,
+          "col": 1
+        }
+      },
+      {
+        "slateId": "1c452d74-d239-42fc-94ae-21fbbd03475f",
+        "position": {
+          "row": 1,
+          "col": 3
+        }
+      },
+      {
+        "slateId": "5afad506-da3d-433b-83ab-89eaa7328636",
+        "position": {
+          "row": 4,
+          "col": 2
+        }
+      }
+    ],
+    "inventory": [
+      {
+        "id": "ba254a57-230a-4c86-aee5-f2e3891b0de1",
+        "rotation": 90,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "+8% Sealed Mana Compensation (Max Divinity Effect: 1)",
+          "+40% Barrier Shield"
+        ],
+        "isLegendary": true,
+        "legendaryName": "A Corner of Divinity"
+      },
+      {
+        "id": "b92a7af7-1355-4433-980f-a37c8b0bc67e",
+        "rotation": 0,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "+8% Barrier Shield",
+          "+15% Critical Strike Rating",
+          "+6% Max Energy Shield",
+          "Verbal Abuse"
+        ],
+        "isLegendary": true,
+        "legendaryName": "Pedigree of Gods"
+      },
+      {
+        "id": "b383497a-ef1a-429e-bc68-b912319347da",
+        "rotation": 0,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "1.5% Blur Effect",
+          "+3% Attack and Cast Speed",
+          "+6% Max Life\n+6% Max Energy Shield",
+          "+16% damage against Cursed enemies\n+16% Curse Skill Area"
+        ],
+        "isLegendary": true,
+        "legendaryName": "Fallen Starlight"
+      },
+      {
+        "id": "d6753bef-9cde-4188-9777-8243de0f9881",
+        "god": "Deception",
+        "shape": "Z",
+        "rotation": 0,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "+8% additional damage against Cursed enemies",
+          "+8% Max Mana",
+          "+10 Dexterity\n+10 Intelligence",
+          "+6% Max Life",
+          "+18% Erosion Damage\n+18% Minion Erosion Damage"
+        ]
+      },
+      {
+        "id": "1c452d74-d239-42fc-94ae-21fbbd03475f",
+        "god": "Knowledge",
+        "shape": "L",
+        "rotation": 0,
+        "flippedH": true,
+        "flippedV": false,
+        "affixes": [
+          "+18% Spell Damage",
+          "Gains 1 stack(s) of Focus Blessing when activating Spell Burst or generating Tangle (Max Divinity Effect: 1)",
+          "+20% Critical Strike Rating\n+5% Critical Strike Damage",
+          "+16 Intelligence",
+          "+20% Critical Strike Rating\n+5% Critical Strike Damage"
+        ]
+      },
+      {
+        "id": "5afad506-da3d-433b-83ab-89eaa7328636",
+        "god": "War",
+        "shape": "Z",
+        "rotation": 0,
+        "flippedH": true,
+        "flippedV": false,
+        "affixes": [
+          "+18% damage",
+          "Immediately starts Charging Energy Shield on attack Critical Strike. Interval: 2 s (Max Divinity Effect: 1)",
+          "+4% Attack Block Chance\n+4% Spell Block Chance",
+          "+6% Attack and Cast Speed",
+          "+6% Max Life\n+6% Max Energy Shield"
+        ]
+      }
+    ]
+  },
+  "configurationPage": {
+    "level": 96,
+    "fervorEnabled": false,
+    "enemyFrostbittenEnabled": false,
+    "hasFocusBlessing": true,
+    "hasAgilityBlessing": true,
+    "hasTenacityBlessing": true,
+    "hasFullMana": false,
+    "hasLowMana": false,
+    "enemyParalyzed": false,
+    "enemyNumbed": false,
+    "targetEnemyIsElite": false,
+    "targetEnemyIsNearby": false,
+    "targetEnemyIsDistant": false,
+    "targetEnemyIsInProximity": false,
+    "targetEnemyHasFrail": false,
+    "targetEnemyHasWhimsySignal": false,
+    "targetEnemyMarked": false,
+    "targetEnemyIsCursed": true,
+    "enemyCurseCount": 2,
+    "numEnemiesNearby": 2,
+    "numEnemiesAffectedByWarcry": 0,
+    "hasBlockedRecently": false,
+    "hasElitesNearby": false,
+    "numSecondsWithEliteNearby": 0,
+    "enemyHasAilment": false,
+    "hasCritRecently": false,
+    "channeling": false,
+    "sagesInsightFireActivated": false,
+    "sagesInsightColdActivated": false,
+    "sagesInsightLightningActivated": false,
+    "sagesInsightErosionActivated": false,
+    "enemyHasAffliction": true,
+    "enemyHasDesecration": true,
+    "enemyHasTrauma": false,
+    "tormentStacks": 0,
+    "hasBlur": false,
+    "blurEndedRecently": false,
+    "hasSquidnova": false,
+    "targetEnemyIsFrozen": false,
+    "targetEnemyFrozenRecently": false,
+    "targetEnemyHasColdInfiltration": false,
+    "targetEnemyHasLightningInfiltration": false,
+    "targetEnemyHasFireInfiltration": false,
+    "hasHitEnemyWithElementalDmgRecently": 0,
+    "numSpellSkillsUsedRecently": 0,
+    "hasUsedMobilitySkillRecently": false,
+    "hasMovedRecently": false,
+    "isMoving": false,
+    "notHitRecently": false,
+    "takingDamageOverTime": false,
+    "hasCastCurseRecently": true,
+    "hasAttackAggression": false,
+    "hasSpellAggression": false,
+    "numMainSpellSkillsCastRecently": 0,
+    "numMaxMultistrikesRecently": 0,
+    "numTimesRegainedRecently": 0,
+    "currentLifePct": 16,
+    "realmOfMercuryEnabled": false,
+    "numEnemiesInsideRealmOfMercury": 0,
+    "baptismOfPurityEnabled": false,
+    "frostbittenHeartIsActive": false,
+    "numActiveTangles": 4,
+    "focusBlessings": 3,
+    "agilityBlessings": 3,
+    "tenacityBlessings": 3
+  },
+  "calculationsPage": {
+    "selectedSkillName": "Shackles of Malice"
+  }
+}

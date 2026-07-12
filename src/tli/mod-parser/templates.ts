@@ -2776,6 +2776,69 @@ export const allParsers = [
     spec((c) => ({ type: "MaxLifePct", value: c.value, addn: false })),
     spec((c) => ({ type: "MaxManaPct", value: c.value, addn: false })),
   ]),
+  // Bone Worm's Daughter pactspirit: scaling per ailment on enemies.
+  t(
+    "{value:+int} spell critical strike rating per ailment on enemies, up to {limit:+int}",
+  ).output((c) => ({
+    type: "FlatCritRating",
+    value: c.value,
+    modType: "spell",
+    per: { stackable: "enemy_ailment_count", valueLimit: c.limit },
+  })),
+  t(
+    "{value:+dec%} critical strike damage per ailment on enemies, up to {limit:+dec%}",
+  ).output((c) => ({
+    type: "CritDmgPct",
+    value: c.value,
+    addn: true,
+    modType: "global",
+    per: { stackable: "enemy_ailment_count", valueLimit: c.limit },
+  })),
+  t("{value:+dec%} max life, max mana, and max energy shield").outputMany([
+    spec((c) => ({ type: "MaxLifePct", value: c.value, addn: false })),
+    spec((c) => ({ type: "MaxManaPct", value: c.value, addn: false })),
+    spec((c) => ({ type: "MaxEnergyShieldPct", value: c.value, addn: false })),
+  ]),
+  t("{value:+int} tangle critical strike rating").output((c) => ({
+    type: "TangleCritRating",
+    value: c.value,
+  })),
+  // Providential Grace conditional buffs: "max stacks of X blessing is not lower
+  // than the stacks of other blessings". Resolved at calc time by comparing
+  // each blessing's max cap against the other two blessings' current stacks.
+  t(
+    "{value:+dec%} additional damage if the max stacks of focus blessing is not lower than the stacks of other blessings",
+  ).output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: "global",
+    addn: true,
+    resolvedCond: "focus_max_not_lower_than_other_blessings",
+  })),
+  t(
+    "{value:+dec%} additional attack and cast speed if the max stacks of agility blessing is not lower than the stacks of other blessings",
+  ).outputMany([
+    spec((c) => ({
+      type: "AspdPct",
+      value: c.value,
+      addn: true,
+      resolvedCond: "agility_max_not_lower_than_other_blessings",
+    })),
+    spec((c) => ({
+      type: "CspdPct",
+      value: c.value,
+      addn: true,
+      resolvedCond: "agility_max_not_lower_than_other_blessings",
+    })),
+  ]),
+  t(
+    "{value:+dec%} additional damage taken if the max stacks of tenacity blessing is not lower than the stacks of other blessings",
+  ).output((c) => ({
+    type: "DmgTakenPct",
+    value: c.value,
+    addn: true,
+    resolvedCond: "tenacity_max_not_lower_than_other_blessings",
+  })),
   t("minions can cast {value:int} additional curse(s)").output((c) => ({
     type: "AddnCurse",
     value: c.value,

@@ -7367,4 +7367,73 @@ export const Legendaries: readonly Legendary[] = [
     equipmentSlot: "Boots",
     equipmentType: "Boots (DEX)",
   },
+  // === SS13 New Legendaries ===
+  {
+    baseItem: "Silent Monologue",
+    baseStat: "+1920 gear Armor",
+    name: "Silent Monologue",
+    normalAffixes: [
+      "+(1-2) Terra Skill Level",
+      "Terra Skills gain +30% additional Base Radius",
+      "While any Terra Skill is active, +25% additional Spell Damage and +15% additional Cast Speed",
+    ],
+    corruptionAffixes: [
+      "+(1-3) Terra Skill Level",
+      "Terra Skills gain +50% additional Base Radius",
+      "While any Terra Skill is active, +40% additional Spell Damage and +25% additional Cast Speed",
+    ],
+    equipmentSlot: "Body Armor",
+    equipmentType: "Body Armor (INT)",
+  },
+  {
+    baseItem: "Mourning God",
+    baseStat: "+480 gear Armor",
+    name: "Mourning God",
+    normalAffixes: [
+      "+(1-2) Lightning Skill Level",
+      "+30% additional Lightning Damage",
+      "Lightning Skills have +(15-20)% chance to Shock. Shocked enemies take +20% additional damage from Terra Skills.",
+    ],
+    corruptionAffixes: [
+      "+(1-3) Lightning Skill Level",
+      "+50% additional Lightning Damage",
+      "Lightning Skills have +(25-35)% chance to Shock. Shocked enemies take +35% additional damage from Terra Skills.",
+    ],
+    equipmentSlot: "Helmet",
+    equipmentType: "Helmet (INT)",
+  },
+  {
+    baseItem: "Crimson Severance",
+    baseStat: "+240 gear Armor",
+    name: "Crimson Severance",
+    normalAffixes: [
+      "+(1-2) Spell Skill Level",
+      "+20% additional Terra Charge generation rate",
+      "When consuming Terra Charges, +(5-8)% additional Damage per charge consumed for 4s",
+    ],
+    corruptionAffixes: [
+      "+(1-3) Spell Skill Level",
+      "+40% additional Terra Charge generation rate",
+      "When consuming Terra Charges, +(8-12)% additional Damage per charge consumed for 4s",
+    ],
+    equipmentSlot: "Gloves",
+    equipmentType: "Gloves (INT)",
+  },
+  {
+    baseItem: "Below the Styx",
+    baseStat: "+480 gear Armor",
+    name: "Below the Styx",
+    normalAffixes: [
+      "+(1-2) Area Skill Level",
+      "Terra Skills gain +(20-30)% additional Duration",
+      "+15% additional Damage for every active Terra Skill, up to +45%",
+    ],
+    corruptionAffixes: [
+      "+(1-3) Area Skill Level",
+      "Terra Skills gain +(35-50)% additional Duration",
+      "+25% additional Damage for every active Terra Skill, up to +75%",
+    ],
+    equipmentSlot: "Boots",
+    equipmentType: "Boots (INT)",
+  },
 ];
