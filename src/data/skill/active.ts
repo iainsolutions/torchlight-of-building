@@ -3527,18 +3527,8 @@ export const ActiveSkills = [
     name: "Thunderstorm Zone",
     tags: ["Spell", "Lightning", "Area", "Persistent", "Terra", "Hit"],
     description: [
-      "Casts the skill and generates a Thunderstorm Zone at the target spot. Every 0.8s, generates currents dealing 164-304 Spell Lightning Damage to enemies within its range.
-If the current hits 3 or more targets, generates a lightning bolt dealing 205-380 Spell Lightning Damage to the targets hit by the current.
-The current can hit up to 8 targets. For every target hit, +3% Skill Damage.
-The player and the player's minions can also serve as current targets but will not take hit damage from the current.
-For every Terra Charge consumed, +26% additional Damage for this cast.",
-      "Thunderstorm Zone:
-Deals 164-304 Spell Lightning Damage
-Generates currents every 0.8s
-Current hits up to 8 targets
-For every target hit, +3% Skill Damage
-Lightning bolt: Deals 205-380 Spell Lightning Damage (triggers when current hits 3+ targets)
-Lasts 6s",
+      "Casts the skill and generates a Thunderstorm Zone at the target spot. Every 0.8s, generates currents dealing 164-304 Spell Lightning Damage to enemies within its range.\nIf the current hits 3 or more targets, generates a lightning bolt dealing 205-380 Spell Lightning Damage to the targets hit by the current.\nThe current can hit up to 8 targets. For every target hit, +3% Skill Damage.\nThe player and the player's minions can also serve as current targets but will not take hit damage from the current.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
+      "Thunderstorm Zone:\nDeals 164-304 Spell Lightning Damage\nGenerates currents every 0.8s\nCurrent hits up to 8 targets\nFor every target hit, +3% Skill Damage\nLightning bolt: Deals 205-380 Spell Lightning Damage (triggers when current hits 3+ targets)\nLasts 6s",
       "For every Terra Charge consumed, +26% additional Damage for this cast",
     ],
     mainStats: ["dex", "int"],
@@ -3549,15 +3539,8 @@ Lasts 6s",
     name: "Thorn Domain",
     tags: ["Spell", "Physical", "Area", "Persistent", "Terra"],
     description: [
-      "Casts the skill and generates a Thorn Domain at the target spot, dealing 902 Persistent Physical Damage per second.
-For every 100 Max Life, +1% Skill Damage, up to +40%.
-While the Terra persists, the character takes 20% of Max Life as True Damage per second.
-For every Terra Charge consumed, +26% additional Damage for this cast.",
-      "Thorn Domain:
-Deals 902 Persistent Physical Damage per second
-For every 100 Max Life, +1% Skill Damage, up to +40%
-While Terra persists, character takes 20% Max Life as True Damage per second
-Lasts 6s",
+      "Casts the skill and generates a Thorn Domain at the target spot, dealing 902 Persistent Physical Damage per second.\nFor every 100 Max Life, +1% Skill Damage, up to +40%.\nWhile the Terra persists, the character takes 20% of Max Life as True Damage per second.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
+      "Thorn Domain:\nDeals 902 Persistent Physical Damage per second\nFor every 100 Max Life, +1% Skill Damage, up to +40%\nWhile Terra persists, character takes 20% Max Life as True Damage per second\nLasts 6s",
       "For every Terra Charge consumed, +26% additional Damage for this cast",
     ],
     mainStats: ["str"],
@@ -3568,16 +3551,8 @@ Lasts 6s",
     name: "Tidal Spring",
     tags: ["Spell", "Cold", "Area", "Persistent", "Terra", "Hit"],
     description: [
-      "Casts the skill and generates a water zone at the target spot. Every 1.5s, applies Slow to enemies within it.
-Every 0.8s, the water zone erupts 2 torrents beneath enemies, dealing 507-942 Spell Cold Damage.
-Multiple torrents can hit the same enemy. The Shotgun Effect falloff coefficient is 70%.
-For every Terra Charge consumed, +26% additional Damage for this cast.",
-      "Tidal Spring:
-Deals 507-942 Spell Cold Damage
-Erupts 2 torrents every 0.8s
-Applies Slow every 1.5s
-Shotgun Effect falloff coefficient: 70%
-Lasts 6s",
+      "Casts the skill and generates a water zone at the target spot. Every 1.5s, applies Slow to enemies within it.\nEvery 0.8s, the water zone erupts 2 torrents beneath enemies, dealing 507-942 Spell Cold Damage.\nMultiple torrents can hit the same enemy. The Shotgun Effect falloff coefficient is 70%.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
+      "Tidal Spring:\nDeals 507-942 Spell Cold Damage\nErupts 2 torrents every 0.8s\nApplies Slow every 1.5s\nShotgun Effect falloff coefficient: 70%\nLasts 6s",
       "For every Terra Charge consumed, +26% additional Damage for this cast",
     ],
     mainStats: ["int"],
@@ -3588,16 +3563,8 @@ Lasts 6s",
     name: "Meteor",
     tags: ["Spell", "Physical", "Area", "Persistent", "Terra", "Bombardment", "Hit"],
     description: [
-      "Casts the skill and generates a Meteor zone at the target spot. Every 0.8s, 3 comets fall on enemies within, dealing Spell Physical Damage.
-Multiple comets can hit the same enemy. The Shotgun Effect falloff coefficient is 70%.
-80% of the Bombardment per-wave damage increase is also applied to additional Skill Damage.
-For every Terra Charge consumed, +26% additional Damage for this cast.",
-      "Meteor:
-Deals Spell Physical Damage
-3 comets fall every 0.8s
-Shotgun Effect falloff coefficient: 70%
-80% of Bombardment per-wave damage increase applies to additional Skill Damage
-Lasts 6s",
+      "Casts the skill and generates a Meteor zone at the target spot. Every 0.8s, 3 comets fall on enemies within, dealing Spell Physical Damage.\nMultiple comets can hit the same enemy. The Shotgun Effect falloff coefficient is 70%.\n80% of the Bombardment per-wave damage increase is also applied to additional Skill Damage.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
+      "Meteor:\nDeals Spell Physical Damage\n3 comets fall every 0.8s\nShotgun Effect falloff coefficient: 70%\n80% of Bombardment per-wave damage increase applies to additional Skill Damage\nLasts 6s",
       "For every Terra Charge consumed, +26% additional Damage for this cast",
     ],
     mainStats: ["int"],
@@ -3608,15 +3575,8 @@ Lasts 6s",
     name: "Abyssal Hands",
     tags: ["Spell", "Erosion", "Area", "Persistent", "Terra"],
     description: [
-      "Casts the skill and generates an abyssal zone at the target spot, dealing Persistent Erosion Damage per second.
-Every 0.5s, abyssal hands hit enemies dealing Spell Erosion Damage, knocking enemies back toward the center.
-When reaping enemies in the center area, eliminates enemies below 10% Life.
-For every Terra Charge consumed, +26% additional Damage for this cast.",
-      "Abyssal Hands:
-Deals Persistent Erosion Damage per second
-Abyssal hands hit every 0.5s, knocking enemies toward center
-Eliminates enemies below 10% Life in center area when reaping
-Lasts 6s",
+      "Casts the skill and generates an abyssal zone at the target spot, dealing Persistent Erosion Damage per second.\nEvery 0.5s, abyssal hands hit enemies dealing Spell Erosion Damage, knocking enemies back toward the center.\nWhen reaping enemies in the center area, eliminates enemies below 10% Life.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
+      "Abyssal Hands:\nDeals Persistent Erosion Damage per second\nAbyssal hands hit every 0.5s, knocking enemies toward center\nEliminates enemies below 10% Life in center area when reaping\nLasts 6s",
       "For every Terra Charge consumed, +26% additional Damage for this cast",
     ],
     mainStats: ["int"],
@@ -3627,13 +3587,8 @@ Lasts 6s",
     name: "Commander Warcry",
     tags: ["Warcry", "Area", "Persistent"],
     description: [
-      "Casts the skill and releases a Warcry: Taunts nearby enemies.
-For every enemy affected, +6% additional Minion Damage, up to 8 stacks.
-Lasts 3s.",
-      "Commander Warcry:
-Taunts nearby enemies
-For every enemy affected, +6% additional Minion Damage, up to 8 stacks
-Lasts 3s",
+      "Casts the skill and releases a Warcry: Taunts nearby enemies.\nFor every enemy affected, +6% additional Minion Damage, up to 8 stacks.\nLasts 3s.",
+      "Commander Warcry:\nTaunts nearby enemies\nFor every enemy affected, +6% additional Minion Damage, up to 8 stacks\nLasts 3s",
     ],
     mainStats: ["str"],
     kinds: ["deal_damage"],
@@ -3644,10 +3599,7 @@ Lasts 3s",
     tags: ["Elixir", "Persistent"],
     description: [
       "Lasts 3s. +56% Aggravation Effect, +56% Damage Over Time.",
-      "Pain Elixir:
-+56% Aggravation Effect
-+56% Damage Over Time
-Lasts 3s",
+      "Pain Elixir:\n+56% Aggravation Effect\n+56% Damage Over Time\nLasts 3s",
     ],
     mainStats: ["int"],
     kinds: ["deal_damage", "dot"],
@@ -3658,10 +3610,7 @@ Lasts 3s",
     tags: ["Elixir", "Persistent"],
     description: [
       "Lasts 3s. Spell Skills gain +24% Elemental Resistance Penetration. Spell Skills inflict all Infiltration effects (Cold Infiltration, Fire Infiltration, Lightning Infiltration) when dealing damage.",
-      "Rainbow Butterfly Essence:
-+24% Elemental Resistance Penetration for Spell Skills
-Spell Skills inflict all Infiltration effects when dealing damage
-Lasts 3s",
+      "Rainbow Butterfly Essence:\n+24% Elemental Resistance Penetration for Spell Skills\nSpell Skills inflict all Infiltration effects when dealing damage\nLasts 3s",
     ],
     mainStats: ["int"],
     kinds: ["deal_damage"],
