@@ -2,7 +2,7 @@
 import { describe, expect, test } from "vitest";
 import { decodeBuildCode, encodeBuildCode } from "@/src/lib/build-code";
 import type { SaveData } from "@/src/lib/save-data";
-import { getGearAffixes } from "../calcs/affix-collectors";
+import { getGearAffixes, getPactspiritAffixes } from "../calcs/affix-collectors";
 import { DEFAULT_CONFIGURATION, getAffixMods, getAffixText } from "../core";
 import { buildSupportSkillAffixes, loadSave } from "./load-save";
 
@@ -701,6 +701,188 @@ describe("buildSupportSkillAffixes", () => {
     expect(affixes).toHaveLength(1);
     expect(affixes[0].text).toBe(
       "Adds 28 - 3 Cold Damage to the supported skill",
+    );
+  });
+});
+
+describe("installed destiny resolution", () => {
+  const pactspiritPageWith = (
+    ringOverrides: Record<string, unknown>,
+    undeterminedFate?: unknown,
+  ) => ({
+    slot1: {
+      pactspiritName: "Abyssal King Soul",
+      level: 1,
+      rings: { ...createEmptyRings(), ...ringOverrides },
+      ...(undeterminedFate !== undefined ? { undeterminedFate } : {}),
+    },
+    slot2: { level: 1, rings: createEmptyRings() },
+    slot3: { level: 1, rings: createEmptyRings() },
+  });
+
+  test("resolves destiny by name when resolvedAffix is empty", () => {
+    const saveData = createMinimalSaveData({
+      pactspiritPage: pactspiritPageWith({
+        innerRing1: {
+          installedDestiny: {
+            destinyName: "Attack Damage",
+            destinyType: "Micro Fate",
+            resolvedAffix: "",
+          },
+        },
+      }) as SaveData["pactspiritPage"],
+    });
+
+    const loadout = loadSave(saveData);
+    const installed =
+      loadout.pactspiritPage.slot1!.rings.innerRing1.installedDestiny!;
+    expect(getAffixText(installed.affix)).toBe("+16% Attack Damage");
+    expect(getAffixMods(installed.affix).length).toBeGreaterThan(0);
+  });
+
+  test("preserves user-provided resolvedAffix override", () => {
+    const saveData = createMinimalSaveData({
+      pactspiritPage: pactspiritPageWith({
+        innerRing1: {
+          installedDestiny: {
+            destinyName: "Attack Damage",
+            destinyType: "Micro Fate",
+            resolvedAffix: "+18% Attack Damage",
+          },
+        },
+      }) as SaveData["pactspiritPage"],
+    });
+
+    const loadout = loadSave(saveData);
+    const installed =
+      loadout.pactspiritPage.slot1!.rings.innerRing1.installedDestiny!;
+    expect(getAffixText(installed.affix)).toBe("+18% Attack Damage");
+  });
+
+  test("resolves by name AND type (Medium Fate variant)", () => {
+    const saveData = createMinimalSaveData({
+      pactspiritPage: pactspiritPageWith({
+        midRing1: {
+          installedDestiny: {
+            destinyName: "Spell Damage",
+            destinyType: "Medium Fate",
+            resolvedAffix: "",
+          },
+        },
+      }) as SaveData["pactspiritPage"],
+    });
+
+    const loadout = loadSave(saveData);
+    const installed =
+      loadout.pactspiritPage.slot1!.rings.midRing1.installedDestiny!;
+    expect(getAffixText(installed.affix)).toBe(
+      "+32% Spell Damage\n+32% Minion Damage",
+    );
+  });
+
+  test("resolves destinies in undetermined fate slots", () => {
+    const saveData = createMinimalSaveData({
+      pactspiritPage: pactspiritPageWith(
+        {},
+        {
+          numMicroSlots: 1,
+          numMediumSlots: 1,
+          microSlots: [
+            {
+              installedDestiny: {
+                destinyName: "Attack Damage",
+                destinyType: "Micro Fate",
+                resolvedAffix: "",
+              },
+            },
+          ],
+          mediumSlots: [
+            {
+              installedDestiny: {
+                destinyName: "Spell Damage",
+                destinyType: "Medium Fate",
+                resolvedAffix: "",
+              },
+            },
+          ],
+        },
+      ) as SaveData["pactspiritPage"],
+    });
+
+    const loadout = loadSave(saveData);
+    const fate = loadout.pactspiritPage.slot1!.undeterminedFate!;
+    const micro = fate.slots.find((s) => s.slotType === "micro")!;
+    const medium = fate.slots.find((s) => s.slotType === "medium")!;
+    expect(getAffixMods(micro.installedDestiny!.affix).length).toBeGreaterThan(
+      0,
+    );
+    expect(getAffixMods(medium.installedDestiny!.affix).length).toBeGreaterThan(
+      0,
+    );
+  });
+
+  test("unknown destiny name falls back without crash", () => {
+    const saveData = createMinimalSaveData({
+      pactspiritPage: pactspiritPageWith({
+        innerRing1: {
+          installedDestiny: {
+            destinyName: "Nonexistent",
+            destinyType: "Micro Fate",
+            resolvedAffix: "",
+          },
+        },
+      }) as SaveData["pactspiritPage"],
+    });
+
+    const loadout = loadSave(saveData);
+    const installed =
+      loadout.pactspiritPage.slot1!.rings.innerRing1.installedDestiny!;
+    expect(getAffixMods(installed.affix)).toHaveLength(0);
+  });
+
+  test("resolved destiny replaces original ring affix in collector output", () => {
+    const saveData = createMinimalSaveData({
+      pactspiritPage: pactspiritPageWith({
+        innerRing1: {
+          installedDestiny: {
+            destinyName: "Attack Damage",
+            destinyType: "Micro Fate",
+            resolvedAffix: "",
+          },
+        },
+      }) as SaveData["pactspiritPage"],
+    });
+
+    const loadout = loadSave(saveData);
+    const affixes = getPactspiritAffixes(loadout.pactspiritPage);
+    const texts = affixes.map((a) => getAffixText(a));
+    expect(texts).toContain("+16% Attack Damage");
+    // innerRing1's original "+5% Reaping Recovery Speed" must be replaced,
+    // but innerRing2 carries the same original text, so count occurrences.
+    expect(
+      texts.filter((t) => t === "+5% Reaping Recovery Speed"),
+    ).toHaveLength(1);
+  });
+
+  test("resolves decimal destiny ranges at midpoint", () => {
+    const saveData = createMinimalSaveData({
+      pactspiritPage: pactspiritPageWith({
+        innerRing1: {
+          installedDestiny: {
+            destinyName: "Life Regeneration",
+            destinyType: "Micro Fate",
+            resolvedAffix: "",
+          },
+        },
+      }) as SaveData["pactspiritPage"],
+    });
+
+    const loadout = loadSave(saveData);
+    const installed =
+      loadout.pactspiritPage.slot1!.rings.innerRing1.installedDestiny!;
+    expect(getAffixText(installed.affix)).not.toContain("(5-7.5)");
+    expect(getAffixText(installed.affix)).toBe(
+      "+6.3% Life Regeneration Speed",
     );
   });
 });

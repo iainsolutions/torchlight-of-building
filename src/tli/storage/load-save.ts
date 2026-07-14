@@ -4,6 +4,7 @@ import {
   type CoreTalentName,
   CoreTalentNames,
 } from "@/src/data/core-talent/types";
+import { Destinies } from "@/src/data/destiny/destinies";
 import type { HeroName, HeroTraitName } from "@/src/data/hero-trait/types";
 import {
   type HyperlinkName,
@@ -31,6 +32,7 @@ import {
   getTargetAreaPositions,
   reflectPosition,
 } from "@/src/lib/inverse-image-utils";
+import { craftDestinyAffix } from "@/src/lib/pactspirit-utils";
 import {
   extractAdditionalEffect,
   extractReplacementName,
@@ -46,6 +48,7 @@ import type {
   GearPage as SaveDataGearPage,
   HeroMemory as SaveDataHeroMemory,
   HeroPage as SaveDataHeroPage,
+  InstalledDestiny as SaveDataInstalledDestiny,
   PactspiritPage as SaveDataPactspiritPage,
   PactspiritSlot as SaveDataPactspiritSlot,
   PlacedInverseImage as SaveDataPlacedInverseImage,
@@ -734,6 +737,34 @@ const getPactspiritByName = (name: string): Pactspirit | undefined =>
 
 const UNDETERMINED_FATE_DEFAULT_TEXT = "+6% damage\n+6% minion damage";
 
+// Save data normally carries the resolved affix text (the UI resolves ranges
+// at install time). If it's blank (e.g. programmatically generated saves),
+// resolve from destiny data by name+type at the midpoint roll. Name alone is
+// ambiguous: many destiny names exist as both Micro and Medium Fate.
+const resolveDestinyAffixText = (
+  installed: SaveDataInstalledDestiny,
+): string => {
+  if (installed.resolvedAffix.trim() !== "") {
+    return installed.resolvedAffix;
+  }
+  const destiny = Destinies.find(
+    (d) => d.name === installed.destinyName && d.type === installed.destinyType,
+  );
+  if (destiny === undefined) {
+    return installed.resolvedAffix;
+  }
+  return craftDestinyAffix(destiny.affix, 50);
+};
+
+const convertInstalledDestiny = (
+  installed: SaveDataInstalledDestiny,
+  src: string,
+): InstalledDestiny => ({
+  destinyName: installed.destinyName,
+  destinyType: installed.destinyType,
+  affix: convertAffix(resolveDestinyAffixText(installed), src),
+});
+
 const convertUndeterminedFate = (
   saveDataFate: SaveDataUndeterminedFate,
   slotIndex: number,
@@ -748,11 +779,7 @@ const convertUndeterminedFate = (
     let installedDestiny: InstalledDestiny | undefined;
 
     if (saveSlot?.installedDestiny !== undefined) {
-      installedDestiny = {
-        destinyName: saveSlot.installedDestiny.destinyName,
-        destinyType: saveSlot.installedDestiny.destinyType,
-        affix: convertAffix(saveSlot.installedDestiny.resolvedAffix, src),
-      };
+      installedDestiny = convertInstalledDestiny(saveSlot.installedDestiny, src);
     }
 
     slots.push({ slotType: "micro", installedDestiny, defaultAffix });
@@ -765,11 +792,10 @@ const convertUndeterminedFate = (
     let installedDestiny: InstalledDestiny | undefined;
 
     if (saveSlot?.installedDestiny !== undefined) {
-      installedDestiny = {
-        destinyName: saveSlot.installedDestiny.destinyName,
-        destinyType: saveSlot.installedDestiny.destinyType,
-        affix: convertAffix(saveSlot.installedDestiny.resolvedAffix, src),
-      };
+      installedDestiny = convertInstalledDestiny(
+        saveSlot.installedDestiny,
+        src,
+      );
     }
 
     slots.push({ slotType: "medium", installedDestiny, defaultAffix });
@@ -799,11 +825,10 @@ const convertPactspiritSlot = (
     let installedDestiny: InstalledDestiny | undefined;
 
     if (saveDataRing.installedDestiny) {
-      installedDestiny = {
-        destinyName: saveDataRing.installedDestiny.destinyName,
-        destinyType: saveDataRing.installedDestiny.destinyType,
-        affix: convertAffix(saveDataRing.installedDestiny.resolvedAffix, src),
-      };
+      installedDestiny = convertInstalledDestiny(
+        saveDataRing.installedDestiny,
+        src,
+      );
     }
 
     const originalRingName = pactspirit[ringKey].name;

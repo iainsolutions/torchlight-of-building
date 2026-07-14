@@ -7382,8 +7382,8 @@ export const Legendaries: readonly Legendary[] = [
       "Terra Skills gain +50% additional Base Radius",
       "While any Terra Skill is active, +40% additional Spell Damage and +25% additional Cast Speed",
     ],
-    equipmentSlot: "Body Armor",
-    equipmentType: "Body Armor (INT)",
+    equipmentSlot: "Chest Armor",
+    equipmentType: "Chest Armor (INT)",
   },
   {
     baseItem: "Mourning God",
