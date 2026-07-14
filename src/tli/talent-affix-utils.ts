@@ -5,7 +5,7 @@ import {
 } from "@/src/data/talent-tree";
 import { getAreaFromDimensions, type PrismArea } from "@/src/lib/prism-utils";
 import type { Affix, AffixLine, PlacedPrism, PrismAffix } from "./core";
-import { parseMod } from "./mod-parser/index";
+import { parseModKeyed } from "./mod-parser/index";
 
 export type TreeSlot = "tree1" | "tree2" | "tree3" | "tree4";
 
@@ -30,7 +30,7 @@ export const convertAffixTextToAffix = (
 ): Affix => {
   const lines = affixText.split(/\n/);
   const affixLines: AffixLine[] = lines.map((lineText) => {
-    const mods = parseMod(lineText);
+    const mods = parseModKeyed(lineText);
     return { text: lineText, mods: mods?.map((mod) => ({ ...mod, src })) };
   });
 

@@ -2,7 +2,10 @@
 import { describe, expect, test } from "vitest";
 import { decodeBuildCode, encodeBuildCode } from "@/src/lib/build-code";
 import type { SaveData } from "@/src/lib/save-data";
-import { getGearAffixes, getPactspiritAffixes } from "../calcs/affix-collectors";
+import {
+  getGearAffixes,
+  getPactspiritAffixes,
+} from "../calcs/affix-collectors";
 import { DEFAULT_CONFIGURATION, getAffixMods, getAffixText } from "../core";
 import { buildSupportSkillAffixes, loadSave } from "./load-save";
 
@@ -881,8 +884,6 @@ describe("installed destiny resolution", () => {
     const installed =
       loadout.pactspiritPage.slot1!.rings.innerRing1.installedDestiny!;
     expect(getAffixText(installed.affix)).not.toContain("(5-7.5)");
-    expect(getAffixText(installed.affix)).toBe(
-      "+6.3% Life Regeneration Speed",
-    );
+    expect(getAffixText(installed.affix)).toBe("+6.3% Life Regeneration Speed");
   });
 });

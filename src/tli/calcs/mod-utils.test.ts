@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import type { Mod } from "../mod";
-import { assertModInvariants, normalizeStackables } from "./mod-utils";
+import {
+  assertModInvariants,
+  calculateAddn,
+  normalizeStackables,
+} from "./mod-utils";
 
 describe("assertModInvariants", () => {
   it("accepts a plain mod", () => {
@@ -180,5 +184,53 @@ describe("normalizeStackables", () => {
     const result = normalizeStackables([mod], "focus_blessing", 3);
     expect(result).toHaveLength(1);
     expect((result[0] as Extract<Mod, { value: number }>).value).toBe(30);
+  });
+});
+
+describe("calculateAddn", () => {
+  it("adds same-affixKey bonuses into one bucket", () => {
+    // Two rolls of the same affix: 1.4, not 1.2 * 1.2 = 1.44
+    expect(
+      calculateAddn([
+        { value: 20, affixKey: "+#% additional lightning damage" },
+        { value: 20, affixKey: "+#% additional lightning damage" },
+      ]),
+    ).toBeCloseTo(1.4);
+  });
+
+  it("adds same-key bonuses at different rolls", () => {
+    expect(
+      calculateAddn([
+        { value: 18, affixKey: "k" },
+        { value: 20, affixKey: "k" },
+      ]),
+    ).toBeCloseTo(1.38);
+  });
+
+  it("multiplies distinct affixKeys", () => {
+    expect(
+      calculateAddn([
+        { value: 20, affixKey: "a" },
+        { value: 20, affixKey: "b" },
+      ]),
+    ).toBeCloseTo(1.44);
+  });
+
+  it("multiplies keyless bonuses individually", () => {
+    expect(calculateAddn([{ value: 50 }, { value: 20 }])).toBeCloseTo(1.8);
+  });
+
+  it("handles mixed keyed and keyless bonuses", () => {
+    expect(
+      calculateAddn([
+        { value: 10, affixKey: "a" },
+        { value: 20, affixKey: "a" },
+        { value: 50 },
+      ]),
+    ).toBeCloseTo(1.95); // 1.3 * 1.5
+  });
+
+  it("returns 1 for empty input", () => {
+    expect(calculateAddn([])).toBe(1);
   });
 });

@@ -303,7 +303,10 @@ export interface ConditionThreshold {
 // `normalizeStackables` / the condThreshold gate, so combining them silently
 // skips the per-stackable or threshold logic. The union below makes the
 // combination a type error.
-type ModBase = { src?: string } & (
+// `affixKey` identifies the source affix line (roll-invariant, see
+// affixLineKey). Additional bonuses sharing an affixKey add together into one
+// multiplier bucket (TLI same-affix rule); keyless mods multiply individually.
+type ModBase = { src?: string; affixKey?: string } & (
   | {
       resolvedCond?: undefined;
       per?: PerStackable;

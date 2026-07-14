@@ -415,7 +415,7 @@ export const calculateDmgInc = (mods: ModT<"DmgPct">[]): number => {
 };
 
 export const calculateDmgAddn = (mods: ModT<"DmgPct">[]): number => {
-  return calculateAddn(mods.filter((m) => m.addn).map((m) => m.value));
+  return calculateAddn(mods.filter((m) => m.addn));
 };
 
 // === Damage Pool Calculations ===
@@ -585,6 +585,7 @@ export function applyDmgBonusesAndPen(
         cond: m.cond,
         condThreshold: m.condThreshold,
         src: m.src,
+        affixKey: m.affixKey,
       });
     }
   }
@@ -838,7 +839,7 @@ export const calculateCritDmg = (
     modTypes.includes(m.modType),
   );
   const inc = calculateInc(mods.filter((m) => !m.addn).map((v) => v.value));
-  const addn = calculateAddn(mods.filter((m) => m.addn).map((v) => v.value));
+  const addn = calculateAddn(mods.filter((m) => m.addn));
 
   return (1.5 + inc) * addn;
 };

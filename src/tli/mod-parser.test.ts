@@ -1,5 +1,5 @@
-import { expect, test } from "vitest";
-import { parseMod } from "./mod-parser/index";
+import { describe, expect, test } from "vitest";
+import { affixLineKey, parseMod, parseModKeyed } from "./mod-parser/index";
 
 test("parse basic damage without type (global)", () => {
   const result = parseMod("+9% damage");
@@ -4470,4 +4470,28 @@ test("parse flat damage for every stat", () => {
       per: { stackable: "dex", amt: 10 },
     },
   ]);
+});
+
+describe("parseModKeyed / affixLineKey", () => {
+  test("stamps roll-invariant affixKey on parsed mods", () => {
+    const mods = parseModKeyed("+20% additional lightning damage");
+    expect(mods?.[0]?.affixKey).toBe("#% additional lightning damage");
+  });
+
+  test("different rolls of the same affix share a key", () => {
+    const a = parseModKeyed("+18% additional lightning damage");
+    const b = parseModKeyed("+20% additional lightning damage");
+    expect(a?.[0]?.affixKey).toBe(b?.[0]?.affixKey);
+  });
+
+  test("decimal rolls are masked", () => {
+    expect(affixLineKey("+7.5% Life Regeneration Speed")).toBe(
+      "#% life regeneration speed",
+    );
+  });
+
+  test("parseMod output remains keyless", () => {
+    const mods = parseMod("+20% additional lightning damage");
+    expect(mods?.[0]).not.toHaveProperty("affixKey");
+  });
 });

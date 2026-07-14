@@ -97,7 +97,7 @@ import type {
   UndeterminedFate,
   UndeterminedFateSlotState,
 } from "../core";
-import { parseMod } from "../mod-parser/index";
+import { parseModKeyed } from "../mod-parser/index";
 import { parseSupportAffixes } from "../skills/support-mod-templates";
 import {
   convertAffixTextToAffix,
@@ -121,7 +121,7 @@ const convertBaseStats = (
 ): BaseStats => {
   const lines = baseStatText.split(/\n/);
   const baseStatLines = lines.map((lineText) => {
-    const mods = parseMod(lineText);
+    const mods = parseModKeyed(lineText);
     return { text: lineText, mods: mods?.map((mod) => ({ ...mod, src })) };
   });
   return { name, baseStatLines, src };
@@ -208,7 +208,7 @@ const convertAffix = (
           voraxLegendaryName,
           affixLines: talentLines.map((text) => ({
             text,
-            mods: parseMod(text)?.map((mod) => ({ ...mod, src })),
+            mods: parseModKeyed(text)?.map((mod) => ({ ...mod, src })),
           })),
           src,
           maxDivinity,
@@ -221,7 +221,7 @@ const convertAffix = (
       const description = Hyperlinks[hyperlinkName];
       const descriptionLines = description.split("\n");
       const affixLines: AffixLine[] = descriptionLines.map((lineText) => {
-        const mods = parseMod(lineText);
+        const mods = parseModKeyed(lineText);
         return { text: lineText, mods: mods?.map((mod) => ({ ...mod, src })) };
       });
       return {
@@ -238,7 +238,7 @@ const convertAffix = (
     // Strip per-line bracket prefix (e.g. blendAffix has "[Malign Embrace] ..."
     // on every line, but extractBracketPrefix above only removed it from the first).
     const { text: cleanedLine } = extractBracketPrefix(lineText);
-    const mods = parseMod(cleanedLine);
+    const mods = parseModKeyed(cleanedLine);
     return { text: lineText, mods: mods?.map((mod) => ({ ...mod, src })) };
   });
 
@@ -282,7 +282,7 @@ const convertCoreTalent = (
   const lines = talent.affix.split("\n");
   const affixLines: AffixLine[] = lines.map((text) => ({
     text,
-    mods: parseMod(text)?.map((mod) => ({ ...mod, src })),
+    mods: parseModKeyed(text)?.map((mod) => ({ ...mod, src })),
   }));
   return { specialName: talentName, affixLines, src };
 };
@@ -290,7 +290,7 @@ const convertCoreTalent = (
 const convertCustomAffixLines = (lines: string[] | undefined): AffixLine[] => {
   if (lines === undefined || lines.length === 0) return [];
   return lines.map((lineText) => {
-    const mods = parseMod(lineText);
+    const mods = parseModKeyed(lineText);
     return {
       text: lineText,
       mods: mods?.map((mod) => ({ ...mod, src: "CustomAffix" })),
@@ -437,7 +437,7 @@ const extractReplacementCoreTalent = (
     .split("\n")
     .map((text) => ({
       text,
-      mods: parseMod(text)?.map((mod) => ({ ...mod, src })),
+      mods: parseModKeyed(text)?.map((mod) => ({ ...mod, src })),
     }));
   return { specialName: hyperlinkName, affixLines, src };
 };
@@ -779,7 +779,10 @@ const convertUndeterminedFate = (
     let installedDestiny: InstalledDestiny | undefined;
 
     if (saveSlot?.installedDestiny !== undefined) {
-      installedDestiny = convertInstalledDestiny(saveSlot.installedDestiny, src);
+      installedDestiny = convertInstalledDestiny(
+        saveSlot.installedDestiny,
+        src,
+      );
     }
 
     slots.push({ slotType: "micro", installedDestiny, defaultAffix });
