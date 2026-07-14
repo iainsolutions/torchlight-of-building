@@ -6453,3 +6453,235 @@ describe("combo attack damage ([Test] Combo Attack)", () => {
     expect(summary.avgDps).toBeCloseTo(baseSummary.avgDps * 2, 0);
   });
 });
+
+describe("curse cap enforcement", () => {
+  test("enemyCurseCount config is clamped to curse cap (base 1)", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          dmgModType: "global",
+          addn: true,
+          value: 25,
+          per: { stackable: "enemy_curse_count", multiplicative: true },
+        },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, enemyCurseCount: 5 },
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    // Cap is 1 (no AddnCurse mods): 100 * 1.25, not 100 * 1.25^5
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(125);
+  });
+
+  test("AddnCurse mods raise the clamp", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          dmgModType: "global",
+          addn: true,
+          value: 25,
+          per: { stackable: "enemy_curse_count", multiplicative: true },
+        },
+        { type: "AddnCurse", value: 2 },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, enemyCurseCount: 5 },
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    // Cap 3: 100 * 1.25^3 = 195.31
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(195.31, 1);
+  });
+
+  test("manual enemyCurseCount below cap is respected", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          dmgModType: "global",
+          addn: true,
+          value: 25,
+          per: { stackable: "enemy_curse_count", multiplicative: true },
+        },
+        { type: "AddnCurse", value: 2 },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, enemyCurseCount: 2 },
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    // 100 * 1.25^2 = 156.25
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(156.25);
+  });
+
+  test("self_curse_count clamped identically", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          dmgModType: "global",
+          addn: true,
+          value: 25,
+          per: { stackable: "self_curse_count", multiplicative: true },
+        },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, enemyCurseCount: 5 },
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(125);
+  });
+
+  test("duplicate TriggersSkill curse applies debuff once", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        { type: "TriggersSkill", skillName: "Timid", level: 20 },
+        { type: "TriggersSkill", skillName: "Timid", level: 20 },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    const timidMods = actual?.resolvedMods.filter(
+      (m) =>
+        m.type === "DmgPct" &&
+        m.dmgModType === "hit" &&
+        m.addn === true &&
+        m.isEnemyDebuff === true,
+    );
+    expect(timidMods).toHaveLength(1);
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(139);
+  });
+
+  test("curse debuffs capped at 1+AddnCurse across distinct curses", () => {
+    const twoCurses = affixLines([
+      { type: "TriggersSkill", skillName: "Timid", level: 20 },
+      { type: "TriggersSkill", skillName: "Entangled Pain", level: 20 },
+    ]);
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: twoCurses,
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    // Cap 1: only Timid (first in mod order) applies
+    const timidMod = actual?.resolvedMods.find(
+      (m) =>
+        m.type === "DmgPct" && m.dmgModType === "hit" && m.isEnemyDebuff,
+    );
+    const entangledMod = actual?.resolvedMods.find(
+      (m) =>
+        m.type === "DmgPct" &&
+        m.dmgModType === "damage_over_time" &&
+        m.isEnemyDebuff,
+    );
+    expect(timidMod).toBeDefined();
+    expect(entangledMod).toBeUndefined();
+
+    // With +1 curse cap, both apply
+    const loadout2 = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: [
+        ...twoCurses,
+        ...affixLines([{ type: "AddnCurse", value: 1 }]),
+      ],
+    });
+    const results2 = calculateOffense({
+      loadout: loadout2,
+      configuration: defaultConfiguration,
+    });
+    const actual2 = results2.skills["[Test] Simple Attack"];
+    expect(
+      actual2?.resolvedMods.find(
+        (m) =>
+          m.type === "DmgPct" && m.dmgModType === "hit" && m.isEnemyDebuff,
+      ),
+    ).toBeDefined();
+    expect(
+      actual2?.resolvedMods.find(
+        (m) =>
+          m.type === "DmgPct" &&
+          m.dmgModType === "damage_over_time" &&
+          m.isEnemyDebuff,
+      ),
+    ).toBeDefined();
+  });
+
+  test("active-slot curse takes priority over triggered curse", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: {
+        activeSkills: {
+          1: {
+            skillName: "[Test] Simple Attack" as const,
+            enabled: true,
+            level: 20,
+            supportSkills: {},
+          },
+          2: {
+            skillName: "Entangled Pain" as const,
+            enabled: true,
+            level: 20,
+            supportSkills: {},
+          },
+        },
+        passiveSkills: {},
+      },
+      customAffixLines: affixLines([
+        { type: "TriggersSkill", skillName: "Timid", level: 20 },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    // Cap 1: Entangled Pain (active slot) wins over triggered Timid
+    expect(
+      actual?.resolvedMods.find(
+        (m) =>
+          m.type === "DmgPct" &&
+          m.dmgModType === "damage_over_time" &&
+          m.isEnemyDebuff,
+      ),
+    ).toBeDefined();
+    expect(
+      actual?.resolvedMods.find(
+        (m) =>
+          m.type === "DmgPct" && m.dmgModType === "hit" && m.isEnemyDebuff,
+      ),
+    ).toBeUndefined();
+  });
+});

@@ -1115,6 +1115,12 @@ const resolveBuffSkillMods = (
   ];
   const resolvedMods: Mod[] = [];
 
+  // TLI: only 1 curse (+ AddnCurse mods) can be active on a target, and the
+  // same curse cannot stack with itself. Cap/dedupe curse buff application.
+  // Slot order gives active-slot curses priority over triggered ones.
+  const maxCurses = 1 + sumByValue(filterMods(loadoutMods, "AddnCurse"));
+  const appliedCurseNames = new Set<string>();
+
   const numAuraSkills = passiveSkillSlots.filter((slot) => {
     if (!slot.enabled || slot.skillName === undefined) {
       return false;
@@ -1137,6 +1143,11 @@ const resolveBuffSkillMods = (
       continue;
     }
     const buffSkillType = calcBuffSkillType(skill);
+    if (buffSkillType === "curse") {
+      if (appliedCurseNames.has(skill.name)) continue; // same curse can't stack
+      if (appliedCurseNames.size >= maxCurses) continue; // curse cap reached
+      appliedCurseNames.add(skill.name);
+    }
 
     // Get support skill mods (includes SkillEffPct, AuraEffPct, etc.)
     const supportMods = resolveSelectedSkillSupportMods(
@@ -1949,8 +1960,11 @@ const resolveModsForOffenseSkill = (
       }
     }
     const autoEnemyCurses = Math.min(curseNames.size, autoMaxCurses);
+    // Manual override is still subject to the in-game curse cap.
     const effectiveEnemyCurses =
-      config.enemyCurseCount > 0 ? config.enemyCurseCount : autoEnemyCurses;
+      config.enemyCurseCount > 0
+        ? Math.min(config.enemyCurseCount, autoMaxCurses)
+        : autoEnemyCurses;
     normalize("enemy_curse_count", effectiveEnemyCurses);
     // Self-curse count: assume same number of self curses as enemy
     // (Keen Intellect prism auto-curses player on curse-skill hit)

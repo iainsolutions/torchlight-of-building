@@ -3898,6 +3898,11 @@ test("parse you can cast additional curses", () => {
   expect(result).toEqual([{ type: "AddnCurse", value: 1 }]);
 });
 
+test("parse corrosion necklace plural curse affix", () => {
+  const result = parseMod("You can cast 1 additional Curses");
+  expect(result).toEqual([{ type: "AddnCurse", value: 1 }]);
+});
+
 test("parse restores energy shield on block (empty)", () => {
   const result = parseMod("Restores 3% Energy Shield on Block. Interval: 0.3s");
   expect(result).toEqual([]);
