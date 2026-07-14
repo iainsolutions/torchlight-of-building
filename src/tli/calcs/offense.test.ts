@@ -6865,10 +6865,7 @@ describe("at_max_channeled_stacks condition", () => {
 });
 
 describe("eternal stack buffs", () => {
-  const eternalInput = (
-    generator: Mod,
-    config?: Partial<Configuration>,
-  ) => ({
+  const eternalInput = (generator: Mod, config?: Partial<Configuration>) => ({
     loadout: initLoadout({
       gearPage: { equippedGear: {}, inventory: [] },
       skillPage: simplePersistentSpellSkillPage(),
@@ -6890,9 +6887,10 @@ describe("eternal stack buffs", () => {
 
   test("Eternal Morale respects configured stack count", () => {
     const results = calculateOffense(
-      eternalInput({ type: "GeneratesEternalMorale" }, {
-        eternalMoraleStacks: 10,
-      }),
+      eternalInput(
+        { type: "GeneratesEternalMorale" },
+        { eternalMoraleStacks: 10 },
+      ),
     );
     expect(
       results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
@@ -6902,9 +6900,10 @@ describe("eternal stack buffs", () => {
 
   test("Eternal Morale at 0 stacks contributes nothing", () => {
     const results = calculateOffense(
-      eternalInput({ type: "GeneratesEternalMorale" }, {
-        eternalMoraleStacks: 0,
-      }),
+      eternalInput(
+        { type: "GeneratesEternalMorale" },
+        { eternalMoraleStacks: 0 },
+      ),
     );
     expect(
       results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
@@ -6914,9 +6913,10 @@ describe("eternal stack buffs", () => {
 
   test("Eternal Morale stack config clamps to 50", () => {
     const results = calculateOffense(
-      eternalInput({ type: "GeneratesEternalMorale" }, {
-        eternalMoraleStacks: 999,
-      }),
+      eternalInput(
+        { type: "GeneratesEternalMorale" },
+        { eternalMoraleStacks: 999 },
+      ),
     );
     expect(
       results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
@@ -6937,14 +6937,149 @@ describe("eternal stack buffs", () => {
 
   test("Eternal Reign respects configured stacks", () => {
     const results = calculateOffense(
-      eternalInput({ type: "GeneratesEternalReign" }, {
-        eternalReignStacks: 4,
-      }),
+      eternalInput(
+        { type: "GeneratesEternalReign" },
+        { eternalReignStacks: 4 },
+      ),
     );
     // 100 * 1.1^4 ≈ 146.41
     expect(
       results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
         ?.total,
     ).toBeCloseTo(146.41, 1);
+  });
+});
+
+describe("unmodeled ailment mods", () => {
+  const withMods = (mods: Mod[]) =>
+    calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: simpleAttackSkillPage(),
+        customAffixLines: affixLines(mods),
+      }),
+      configuration: defaultConfiguration,
+    });
+
+  test("ailment DmgPct does not change attack DPS, reported unmodeled", () => {
+    const baseline = withMods([]);
+    const withAilment = withMods([
+      { type: "DmgPct", value: 50, dmgModType: "ailment", addn: true },
+    ]);
+    const skill = "[Test] Simple Attack";
+    expect(withAilment.skills[skill]?.attackDpsSummary?.avgDps).toBeCloseTo(
+      baseline.skills[skill]?.attackDpsSummary?.avgDps ?? Number.NaN,
+    );
+    expect(withAilment.skills[skill]?.unmodeledMods).toHaveLength(1);
+    expect(baseline.skills[skill]?.unmodeledMods).toHaveLength(0);
+  });
+
+  test("area_ailment and slash_strike_skill_ailment reported unmodeled", () => {
+    const results = withMods([
+      { type: "DmgPct", value: 30, dmgModType: "area_ailment", addn: true },
+      {
+        type: "DmgPct",
+        value: 30,
+        dmgModType: "slash_strike_skill_ailment",
+        addn: true,
+      },
+    ]);
+    expect(results.skills["[Test] Simple Attack"]?.unmodeledMods).toHaveLength(
+      2,
+    );
+  });
+
+  test("applied mods are not reported as unmodeled", () => {
+    const results = withMods([
+      { type: "DmgPct", value: 100, dmgModType: "global", addn: false },
+    ]);
+    const skill = results.skills["[Test] Simple Attack"];
+    expect(skill?.unmodeledMods).toHaveLength(0);
+    expect(skill?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(200);
+  });
+
+  test("damage_over_time modifier applies to persistent damage", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: simplePersistentSpellSkillPage(),
+        customAffixLines: affixLines([
+          {
+            type: "DmgPct",
+            value: 50,
+            dmgModType: "damage_over_time",
+            addn: true,
+          },
+        ]),
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+});
+
+describe("skill data warnings", () => {
+  test("enabled skill without per-level data produces a warning", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: {
+          activeSkills: {
+            1: {
+              skillName: "Aimed Shot" as const,
+              enabled: true,
+              level: 20,
+              supportSkills: {},
+            },
+          },
+          passiveSkills: {},
+        },
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(
+      results.warnings.some((w) => /Aimed Shot.*no per-level/.test(w)),
+    ).toBe(true);
+    expect(Object.keys(results.skills).includes("Aimed Shot" as never)).toBe(
+      false,
+    );
+  });
+
+  test("placeholder skill reports levelDataQuality without warning", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: simpleAttackSkillPage(),
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(results.skills["[Test] Simple Attack"]?.levelDataQuality).toBe(
+      "placeholder",
+    );
+    expect(results.warnings).toHaveLength(0);
+  });
+
+  test("measured skill reports measured quality", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: {
+          activeSkills: {
+            1: {
+              skillName: "Frost Spike" as const,
+              enabled: true,
+              level: 20,
+              supportSkills: {},
+            },
+          },
+          passiveSkills: {},
+        },
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(results.skills["Frost Spike"]?.levelDataQuality).toBe("measured");
   });
 });

@@ -4495,3 +4495,10 @@ describe("parseModKeyed / affixLineKey", () => {
     expect(mods?.[0]).not.toHaveProperty("affixKey");
   });
 });
+
+test("parse ailment damage enhancement (unmodeled ailment bucket)", () => {
+  const result = parseMod("+10% Ailment Damage Enhancement");
+  expect(result).toEqual([
+    { type: "DmgPct", value: 10, dmgModType: "ailment", addn: true },
+  ]);
+});

@@ -63,7 +63,12 @@ import {
   emptyDmgRanges,
   multDRs,
   type NumDmgValues,
+  UNMODELED_DMG_MOD_TYPES,
 } from "./damage-calc";
+import {
+  getSkillLevelDataQuality,
+  type SkillLevelDataQuality,
+} from "../skills/level-data-quality";
 import {
   assertModInvariants,
   calcEffMult,
@@ -152,6 +157,13 @@ interface OffenseSummary {
   // Mods that didn't apply because their condition wasn't met. Lets the UI
   // show "could gain X damage if you enable Y" hints.
   unmetConditionMods: Mod[];
+  // Resolved mods whose dmgModType has no calculation path yet (ailment DPS
+  // not modeled). Contribute 0 to all displayed numbers.
+  unmodeledMods: Mod[];
+  // Whether the skill's per-level base-damage tables are real ("measured"),
+  // flat placeholders ("placeholder" — +level results understated), or
+  // absent ("missing").
+  levelDataQuality: SkillLevelDataQuality;
 }
 
 // === Stats Types and Calculations ===
@@ -786,6 +798,9 @@ export interface HeroTraitLevel {
 
 export interface OffenseResults {
   errors: string[];
+  // Non-fatal calculation caveats (e.g. skills skipped for missing
+  // per-level data). Shown to the user, unlike errors today.
+  warnings: string[];
   skills: Partial<Record<ImplementedActiveSkillName, OffenseSummary>>;
   resourcePool: ResourcePool;
   defenses: Defenses;
@@ -1994,7 +2009,10 @@ const resolveModsForOffenseSkill = (
     // per-stack mods must be normalized here explicitly: normalize() only
     // processes prenormMods (affix-parsed), never mods pushed afterwards.
     if (modExists(mods, "GeneratesEternalMorale")) {
-      const stacks = Math.max(0, Math.min(config.eternalMoraleStacks ?? 50, 50));
+      const stacks = Math.max(
+        0,
+        Math.min(config.eternalMoraleStacks ?? 50, 50),
+      );
       normalize("eternal_morale", stacks);
       mods.push(
         ...normalizeStackables(
@@ -2058,7 +2076,10 @@ const resolveModsForOffenseSkill = (
       );
     }
     if (modExists(mods, "GeneratesEternalShadow")) {
-      const stacks = Math.max(0, Math.min(config.eternalShadowStacks ?? 50, 50));
+      const stacks = Math.max(
+        0,
+        Math.min(config.eternalShadowStacks ?? 50, 50),
+      );
       normalize("eternal_shadow", stacks);
       mods.push(
         ...normalizeStackables(
@@ -3739,6 +3760,7 @@ const calcAvgSpellBurstDps = (
 // Calculates offense for all enabled implemented skills
 export const calculateOffense = (input: OffenseInput): OffenseResults => {
   const errors: string[] = [];
+  const warnings: string[] = [];
   const { loadout, configuration: config } = input;
   const heroTraitResult = calculateHeroTraitMods(loadout);
   const loadoutMods = [...collectMods(loadout), ...heroTraitResult.mods];
@@ -3789,7 +3811,12 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       resourcePool,
     );
     if (perSkillContext === undefined) {
-      continue; // Skip non-implemented skills
+      // Skip non-implemented skills — but tell the user instead of
+      // silently omitting the skill from results.
+      warnings.push(
+        `${slot.skillName}: no per-level skill data — DPS not calculated`,
+      );
+      continue;
     }
     const skillLevel =
       (slot.level || 20) +
@@ -3947,6 +3974,11 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
     const tooltipDps =
       (tooltipSpellDps?.avgDps ?? 0) + (tooltipAttackDps?.avgDps ?? 0);
 
+    const unmodeledMods = mods.filter(
+      (m) =>
+        m.type === "DmgPct" && UNMODELED_DMG_MOD_TYPES.includes(m.dmgModType),
+    );
+
     skills[slot.skillName as ImplementedActiveSkillName] = {
       attackDpsSummary: attackHitSummary,
       slashStrikeDpsSummary,
@@ -3961,11 +3993,14 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       tangleSummary,
       resolvedMods: mods,
       unmetConditionMods: derivedOffenseCtx.unmetConditionMods,
+      unmodeledMods,
+      levelDataQuality: getSkillLevelDataQuality(perSkillContext.skill),
     };
   }
 
   return {
     errors,
+    warnings,
     skills,
     resourcePool,
     defenses,

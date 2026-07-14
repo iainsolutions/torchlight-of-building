@@ -386,6 +386,14 @@ const DMG_MOD_TYPE_RULES: Record<DmgModType, DmgModTypeRule> = {
   ailment: "never", // todo
 };
 
+// Dmg mod types that are parsed but not applied anywhere yet (no ailment DPS
+// path). Surfaced to the UI as "not modeled" instead of silently dropped.
+export const UNMODELED_DMG_MOD_TYPES: DmgModType[] = (
+  Object.entries(DMG_MOD_TYPE_RULES) as [DmgModType, DmgModTypeRule][]
+)
+  .filter(([, rule]) => rule === "never")
+  .map(([t]) => t);
+
 export const dmgModTypesForSkill = (skill: BaseActiveSkill): DmgModType[] => {
   const result: DmgModType[] = [];
   for (const [type, rule] of Object.entries(DMG_MOD_TYPE_RULES)) {
