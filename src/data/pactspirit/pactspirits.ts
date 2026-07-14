@@ -3945,37 +3945,35 @@ export const Pactspirits = [
     type: "Spell",
     rarity: "Legendary",
     name: "Frost Mirror",
-    innerRing1: {
-      name: "Terra Mastery I",
-      affix: "+15% Terra Skill Damage",
+    innerRing1: { name: "Terra Damage I", affix: "+12% Terra Skill Damage" },
+    innerRing2: { name: "Terra Damage I", affix: "+12% Terra Skill Damage" },
+    innerRing3: {
+      name: "Terra Charge Recovery I",
+      affix: "+8% Terra Charge Recovery Speed",
     },
-    innerRing2: {
-      name: "Terra Mastery I",
-      affix: "+15% Terra Skill Damage",
+    innerRing4: {
+      name: "Terra Charge Recovery I",
+      affix: "+8% Terra Charge Recovery Speed",
     },
-    innerRing3: { name: "Spell Damage I", affix: "+12% Spell Damage" },
-    innerRing4: { name: "Spell Damage I", affix: "+12% Spell Damage" },
-    innerRing5: {
-      name: "Lightning Damage I",
-      affix: "+12% Lightning Damage",
+    innerRing5: { name: "Terra Area I", affix: "+8% Terra Skill Area" },
+    innerRing6: { name: "Terra Area I", affix: "+8% Terra Skill Area" },
+    midRing1: { name: "Terra Damage II", affix: "+24% Terra Skill Damage" },
+    midRing2: {
+      name: "Terra Charge Recovery II",
+      affix: "+16% Terra Charge Recovery Speed",
     },
-    innerRing6: {
-      name: "Lightning Damage I",
-      affix: "+12% Lightning Damage",
-    },
-    midRing1: { name: "Terra Duration II", affix: "+20% Terra Skill Duration\n+15% additional Skill Area for Terra Skills" },
-    midRing2: { name: "Terra Duration II", affix: "+20% Terra Skill Duration\n+15% additional Skill Area for Terra Skills" },
-    midRing3: { name: "Terra Charge II", affix: "+30% Terra Charge generation rate\n+1 max Terra Charge" },
-    affix1: "+5% additional Terra Skill Damage",
+    midRing3: { name: "Terra Area II", affix: "+16% Terra Skill Area" },
+    affix1:
+      "While on a Terra Skill, gain 1 stack of Mirror Image every 1s. Each stack of Mirror Image grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirror Image again refreshes the duration",
     affix2:
-      "+5% additional Terra Skill Damage\n+10% additional Damage while any Terra Skill is active",
+      "While on a Terra Skill, gain 1 stack of Mirror Image every 1s. Each stack of Mirror Image grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirror Image again refreshes the duration\n+1 max Mirror Image stacks",
     affix3:
-      "+5% additional Terra Skill Damage\n+10% additional Damage while any Terra Skill is active\nTerra Skills follow the character",
+      "While on a Terra Skill, gain 1 stack of Mirror Image every 1s. Each stack of Mirror Image grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirror Image again refreshes the duration\n+4% additional Terra Skill Damage while you have Mirror Image\n+1 max Mirror Image stacks",
     affix4:
-      "+5% additional Terra Skill Damage\n+10% additional Damage while any Terra Skill is active\nTerra Skills follow the character\n+15% additional Cast Speed while any Terra Skill is active",
+      "While on a Terra Skill, gain 1 stack of Mirror Image every 1s. Each stack of Mirror Image grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirror Image again refreshes the duration\n+4% additional Terra Skill Damage while you have Mirror Image\n+2 max Mirror Image stacks",
     affix5:
-      "+7% additional Terra Skill Damage\n+15% additional Damage while any Terra Skill is active\nTerra Skills follow the character\n+20% additional Cast Speed while any Terra Skill is active",
+      "While on a Terra Skill, gain 1 stack of Mirror Image every 1s. Each stack of Mirror Image grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirror Image again refreshes the duration\n+8% additional Terra Skill Damage while you have Mirror Image\n+2 max Mirror Image stacks",
     affix6:
-      "+10% additional Terra Skill Damage\n+20% additional Damage while any Terra Skill is active\nTerra Skills follow the character\n+25% additional Cast Speed while any Terra Skill is active\nFor every Terra Charge consumed, +5% additional Damage for 4s, stacking up to 7 times",
+      "While on a Terra Skill, gain 1 stack of Mirror Image every 1s. Each stack of Mirror Image grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirror Image again refreshes the duration\n+8% additional Terra Skill Damage while you have Mirror Image\n+2 max Mirror Image stacks\n+1 max Terra Charge stacks while Mirror Image is at max stacks",
   },
 ] as const satisfies readonly Pactspirit[];

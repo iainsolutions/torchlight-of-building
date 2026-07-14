@@ -932,7 +932,7 @@ export const ActiveSkills = [
     ],
     description: [
       "Casts the skill and conjures a Flame Terra at the target location, dealing 611 Persistent Fire Damage per second.\nThe Flame Terra erupts at regular intervals, dealing 231-428 Spell Fire Damage to enemies in it.\nWhen the Flame Terra erupts, it locks onto enemies within a certain area and fires one Fire Bomb at them, dealing 231-428 Spell Fire Damage on hit.\nWhen the skill consumes Terra Charges, the number of Fire Bombs increases.",
-      "Flame Terra:\nFlame Terra lasts for 3s.\nDeals 611 Persistent Fire Damage every second for 2s.\nFor each 1 Terra Charge consumed, erupts Projectiles one more time in the duration.",
+      "Flame Terra:\nFlame Terra lasts for 6s.\nDeals 611 Persistent Fire Damage every second for 2s.\nFor each 1 Terra Charge consumed, erupts Projectiles one more time in the duration.",
       "Fire Terra Eruption:\nDeals 231-428 Spell Fire Damage.",
       "Fire Bomb:\nDeals 231-428 Spell Fire Damage.",
       "Damage Over Time statuses inflicted by the skill can't be spread (excludes Ailments)\nThe maximum stack of Terra Charge is 1.\nGain 1 stack of Terra Charge per 0.5 second.",
@@ -1151,8 +1151,8 @@ export const ActiveSkills = [
     name: "Frost Terra",
     tags: ["Spell", "Cold", "Area", "Persistent", "Terra"],
     description: [
-      "Casts this skill to generate a Frost Terra at the target spot, dealing 494 Persistent Cold Damage every second.\nTerra Charge grants additional damage to this skill.",
-      "Frost Terra:\nFrost Terra lasts for 3s\nDeals 494 Persistent Cold damage every second for 2s.\nInflicts Frostbite when this skill deals damage\nFor each Terra Charge consumed when this skill is cast, that cast deals 26% additional damage\nDamage Over Time statuses inflicted by the skill can't be spread (excludes Ailments)",
+      "Casts this skill to generate a Frost Terra at the target spot, dealing 629 Persistent Cold Damage every second.\nTerra Charge grants additional damage to this skill.",
+      "Frost Terra:\nFrost Terra lasts for 6s\nDeals 629 Persistent Cold damage every second for 2s.\nInflicts Frostbite when this skill deals damage\nFor each Terra Charge consumed when this skill is cast, that cast deals 26% additional damage\nDamage Over Time statuses inflicted by the skill can't be spread (excludes Ailments)",
       "This skill's max base Terra quantity is 1.",
       "Inflicts Frostbite when this skill deals damage\n+26% additional damage for the skill for every Terra Charge consumed\nDamage Over Time statuses inflicted by the skill can't be spread (excludes Ailments)",
     ],
@@ -1310,7 +1310,7 @@ export const ActiveSkills = [
     description: [
       "释放该技能时对指定敌人造成 202-202 SpellErosion伤害，并生成跟随该敌人的恶煞地面。\n恶煞地面每 0.65 秒对其中的敌人造成 405-405 SpellErosion伤害。\n地面蓄能使该技能的伤害额外增加。",
       "Haunting Abomination:\nDeals 202-202 Spell Erosion Damage.",
-      "Haunting Terra:\nHaunting Terra lasts 4s.\nDeals 405-405 Spell Erosion Damage to enemies within it every 0.65s. Bonuses and additional bonuses for Cast Speed are also applied to the Interval.\nHaunting Terra expands gradually over its duration, gaining +20% additional Skill Area per second.",
+      "Haunting Terra:\nHaunting Terra lasts 6s.\nDeals 405-405 Spell Erosion Damage to enemies within it every 0.65s. Bonuses and additional bonuses for Cast Speed are also applied to the Interval.\nHaunting Terra expands gradually over its duration, gaining +20% additional Skill Area per second.",
       "The maximum stacks of Terra Charge are 1.\nGain 1 stack of Terra Charge every 0.5s.\n+26% additional damage for the skill for every Terra Charge consumed",
       "This skill's max base Terra quantity is 1.",
     ],
@@ -2388,9 +2388,9 @@ export const ActiveSkills = [
     name: "Shadow Swamp",
     tags: ["Spell", "Erosion", "Area", "Persistent", "Terra"],
     description: [
-      "Casts the skill and generates Erosion Explosion at the target spot, dealing 420-420 Spell Erosion Damage to enemies within a certain area.\nThe Erosion Explosion will leave a Swamp Terra afterwards, dealing 557 Persistent Erosion Damage to enemies in it. The Swamp Terra lasts 3s.\nThe Swamp Terra can be moved by Shadows. After that, there will be another Erosion Explosion and the duration will be refreshed.",
-      "Explosion:\nDeals 420-420 Spell Erosion Damage.",
-      "Swamp Terra:\nSwamp Terra lasts for 3s\nDeals 557 Persistent Erosion Damage every second for 2s\nThe skill can only generate 1 Terra\nEnemies on a Swamp Terra are Weakened\nOn hit, Shadow Shot moves the existing Swamp Terra to the location of the hit and causes another explosion\nEach movement grants +10% additional Skill Area for the Swamp Terra\nStacks up to 1 time(s)\nFor every stack of Terra Charge consumed, the Swamp Terra gains an additional effect every time it moves: +26% additional Damage Over Time (does not apply to Ailment Damage)\nDamage Over Time statuses inflicted by the skill can't be spread (excludes Ailments)\nFor every +1 Max Terra Quantity, the number of times this effect can be stacked +2",
+      "Casts the skill and generates Erosion Explosion at the target spot, dealing 710-710 Spell Erosion Damage to enemies within a certain area.\nThe Erosion Explosion will leave a Swamp Terra afterwards, dealing 557 Persistent Erosion Damage to enemies in it. The Swamp Terra lasts 6s.\nThe Swamp Terra can be moved by Shadows. After that, there will be another Erosion Explosion and the duration will be refreshed.",
+      "Explosion:\nDeals 710-710 Spell Erosion Damage.",
+      "Swamp Terra:\nSwamp Terra lasts for 6s\nDeals 557 Persistent Erosion Damage every second for 2s\nThe skill can only generate 1 Terra\nEnemies on a Swamp Terra are Weakened\nOn hit, Shadow Shot moves the existing Swamp Terra to the location of the hit and causes another explosion\nEach movement grants +10% additional Skill Area for the Swamp Terra\nStacks up to 1 time(s)\nFor every stack of Terra Charge consumed, the Swamp Terra gains an additional effect every time it moves: +26% additional Damage Over Time (does not apply to Ailment Damage)\nDamage Over Time statuses inflicted by the skill can't be spread (excludes Ailments)",
     ],
     mainStats: ["int"],
     kinds: ["deal_damage", "dot", "hit_enemies"],
@@ -3527,8 +3527,8 @@ export const ActiveSkills = [
     name: "Thunderstorm Zone",
     tags: ["Spell", "Lightning", "Area", "Persistent", "Terra", "Hit"],
     description: [
-      "Casts the skill and generates a Thunderstorm Zone at the target spot. Every 0.8s, generates currents dealing 164-304 Spell Lightning Damage to enemies within its range.\nIf the current hits 3 or more targets, generates a lightning bolt dealing 205-380 Spell Lightning Damage to the targets hit by the current.\nThe current can hit up to 8 targets. For every target hit, +3% Skill Damage.\nThe player and the player's minions can also serve as current targets but will not take hit damage from the current.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
-      "Thunderstorm Zone:\nDeals 164-304 Spell Lightning Damage\nGenerates currents every 0.8s\nCurrent hits up to 8 targets\nFor every target hit, +3% Skill Damage\nLightning bolt: Deals 205-380 Spell Lightning Damage (triggers when current hits 3+ targets)\nLasts 6s",
+      "Casts the skill and generates a Thunderstorm Zone at the target spot. Every 0.8s, generates currents dealing 164-304 Spell Lightning Damage to enemies within its range.\nIf the current hits 3 or more targets, generates a lightning bolt dealing 205-380 Spell Lightning Damage to the targets hit by the current.\nThe current can hit up to 8 targets. For every target hit, +3% additional Skill Damage.\nThe player and the player's minions can also serve as current targets but will not take hit damage from the current.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
+      "Thunderstorm Zone:\nDeals 164-304 Spell Lightning Damage\nGenerates currents every 0.8s\nCurrent hits up to 8 targets\nFor every target hit, +3% additional Skill Damage\nLightning bolt: Deals 205-380 Spell Lightning Damage (triggers when current hits 3+ targets)\nLasts 6s",
       "For every Terra Charge consumed, +26% additional Damage for this cast",
     ],
     mainStats: ["dex", "int"],
@@ -3539,8 +3539,8 @@ export const ActiveSkills = [
     name: "Thorn Domain",
     tags: ["Spell", "Physical", "Area", "Persistent", "Terra"],
     description: [
-      "Casts the skill and generates a Thorn Domain at the target spot, dealing 902 Persistent Physical Damage per second.\nFor every 100 Max Life, +1% Skill Damage, up to +40%.\nWhile the Terra persists, the character takes 20% of Max Life as True Damage per second.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
-      "Thorn Domain:\nDeals 902 Persistent Physical Damage per second\nFor every 100 Max Life, +1% Skill Damage, up to +40%\nWhile Terra persists, character takes 20% Max Life as True Damage per second\nLasts 6s",
+      "Casts the skill and generates a Thorn Domain at the target spot, dealing 902 Persistent Physical Damage per second.\nFor every 100 Max Life, +1% additional damage for this skill, up to +40%.\nWhile the Terra persists, the character takes 20% of Max Life as True Damage per second.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
+      "Thorn Domain:\nDeals 902 Persistent Physical Damage per second\nFor every 100 Max Life, +1% additional damage for this skill, up to +40%\nWhile Terra persists, character takes 20% Max Life as True Damage per second\nLasts 6s",
       "For every Terra Charge consumed, +26% additional Damage for this cast",
     ],
     mainStats: ["str"],
@@ -3561,7 +3561,15 @@ export const ActiveSkills = [
   {
     type: "Active",
     name: "Meteor",
-    tags: ["Spell", "Physical", "Area", "Persistent", "Terra", "Bombardment", "Hit"],
+    tags: [
+      "Spell",
+      "Physical",
+      "Area",
+      "Persistent",
+      "Terra",
+      "Bombardment",
+      "Hit",
+    ],
     description: [
       "Casts the skill and generates a Meteor zone at the target spot. Every 0.8s, 3 comets fall on enemies within, dealing Spell Physical Damage.\nMultiple comets can hit the same enemy. The Shotgun Effect falloff coefficient is 70%.\n80% of the Bombardment per-wave damage increase is also applied to additional Skill Damage.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
       "Meteor:\nDeals Spell Physical Damage\n3 comets fall every 0.8s\nShotgun Effect falloff coefficient: 70%\n80% of Bombardment per-wave damage increase applies to additional Skill Damage\nLasts 6s",
@@ -3596,7 +3604,7 @@ export const ActiveSkills = [
   {
     type: "Active",
     name: "Pain Elixir",
-    tags: ["Elixir", "Persistent"],
+    tags: ["Elixir", "Droplet", "Persistent", "Charging"],
     description: [
       "Lasts 3s. +56% Aggravation Effect, +56% Damage Over Time.",
       "Pain Elixir:\n+56% Aggravation Effect\n+56% Damage Over Time\nLasts 3s",
@@ -3607,7 +3615,7 @@ export const ActiveSkills = [
   {
     type: "Active",
     name: "Rainbow Butterfly Essence",
-    tags: ["Elixir", "Persistent"],
+    tags: ["Elixir", "Essence", "Persistent", "Charging"],
     description: [
       "Lasts 3s. Spell Skills gain +24% Elemental Resistance Penetration. Spell Skills inflict all Infiltration effects (Cold Infiltration, Fire Infiltration, Lightning Infiltration) when dealing damage.",
       "Rainbow Butterfly Essence:\n+24% Elemental Resistance Penetration for Spell Skills\nSpell Skills inflict all Infiltration effects when dealing damage\nLasts 3s",
