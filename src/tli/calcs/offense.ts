@@ -903,7 +903,14 @@ const filterModsByCond = (
         () => config.sagesInsightLightningActivated,
       )
       .with("sages_insight_erosion", () => config.sagesInsightErosionActivated)
-      .with("at_max_channeled_stacks", () => true)
+      .with("at_max_channeled_stacks", () => {
+        // default (undefined) = assume at max stacks
+        if (config.channeledStacks === undefined) return true;
+        const maxChannelStacks =
+          (findMod(mods, "InitialMaxChannel")?.value ?? 0) +
+          Math.round(sumByValue(filterMods(mods, "MaxChannel")));
+        return config.channeledStacks >= maxChannelStacks;
+      })
       .with("enemy_at_max_affliction", () => calcAfflictionPts(config) === 100)
       .with("enemy_is_cursed", () => {
         if (config.targetEnemyIsCursed !== undefined) {
@@ -1982,75 +1989,112 @@ const resolveModsForOffenseSkill = (
     const effectiveActiveTangles =
       config.numActiveTangles > 1 ? config.numActiveTangles : autoActiveTangles;
     normalize("active_tangle", effectiveActiveTangles);
-    // Eternal stack generators — assume max stacks if the player has a
-    // generator on gear (modeling typical map-clearing uptime).
+    // Eternal stack generators — stack count configurable; defaults to max
+    // (50; Reign 10), modeling typical map-clearing uptime. The hardcoded
+    // per-stack mods must be normalized here explicitly: normalize() only
+    // processes prenormMods (affix-parsed), never mods pushed afterwards.
     if (modExists(mods, "GeneratesEternalMorale")) {
-      normalize("eternal_morale", 50);
+      const stacks = Math.max(0, Math.min(config.eternalMoraleStacks ?? 50, 50));
+      normalize("eternal_morale", stacks);
       mods.push(
-        {
-          type: "DmgPct",
-          dmgModType: "global",
-          addn: true,
-          value: 5,
-          per: { stackable: "eternal_morale" },
-          src: "Eternal Morale (5% dmg per stack)",
-        },
-        {
-          type: "AspdPct",
-          addn: true,
-          value: 1,
-          per: { stackable: "eternal_morale" },
-          src: "Eternal Morale (1% aspd per stack)",
-        },
-        {
-          type: "CspdPct",
-          addn: true,
-          value: 1,
-          per: { stackable: "eternal_morale" },
-          src: "Eternal Morale (1% cspd per stack)",
-        },
+        ...normalizeStackables(
+          [
+            {
+              type: "DmgPct",
+              dmgModType: "global",
+              addn: true,
+              value: 5,
+              per: { stackable: "eternal_morale" },
+              src: "Eternal Morale (5% dmg per stack)",
+            },
+            {
+              type: "AspdPct",
+              addn: true,
+              value: 1,
+              per: { stackable: "eternal_morale" },
+              src: "Eternal Morale (1% aspd per stack)",
+            },
+            {
+              type: "CspdPct",
+              addn: true,
+              value: 1,
+              per: { stackable: "eternal_morale" },
+              src: "Eternal Morale (1% cspd per stack)",
+            },
+          ],
+          "eternal_morale",
+          stacks,
+        ),
       );
     }
     if (modExists(mods, "GeneratesEternalNightmare")) {
-      normalize("eternal_nightmare", 50);
+      const stacks = Math.max(
+        0,
+        Math.min(config.eternalNightmareStacks ?? 50, 50),
+      );
+      normalize("eternal_nightmare", stacks);
       mods.push(
-        {
-          type: "CritRatingPct",
-          modType: "global",
-          value: 5,
-          per: { stackable: "eternal_nightmare" },
-          src: "Eternal Nightmare (5% crit rating per stack)",
-        },
-        {
-          type: "CritDmgPct",
-          addn: true,
-          modType: "global",
-          value: 1,
-          per: { stackable: "eternal_nightmare" },
-          src: "Eternal Nightmare (1% crit dmg per stack)",
-        },
+        ...normalizeStackables(
+          [
+            {
+              type: "CritRatingPct",
+              modType: "global",
+              value: 5,
+              per: { stackable: "eternal_nightmare" },
+              src: "Eternal Nightmare (5% crit rating per stack)",
+            },
+            {
+              type: "CritDmgPct",
+              addn: true,
+              modType: "global",
+              value: 1,
+              per: { stackable: "eternal_nightmare" },
+              src: "Eternal Nightmare (1% crit dmg per stack)",
+            },
+          ],
+          "eternal_nightmare",
+          stacks,
+        ),
       );
     }
     if (modExists(mods, "GeneratesEternalShadow")) {
-      normalize("eternal_shadow", 50);
-      mods.push({
-        type: "MovementSpeedPct",
-        addn: true,
-        value: 1,
-        per: { stackable: "eternal_shadow" },
-        src: "Eternal Shadow (1% ms per stack)",
-      });
+      const stacks = Math.max(0, Math.min(config.eternalShadowStacks ?? 50, 50));
+      normalize("eternal_shadow", stacks);
+      mods.push(
+        ...normalizeStackables(
+          [
+            {
+              type: "MovementSpeedPct",
+              addn: true,
+              value: 1,
+              per: { stackable: "eternal_shadow" },
+              src: "Eternal Shadow (1% ms per stack)",
+            },
+          ],
+          "eternal_shadow",
+          stacks,
+        ),
+      );
     }
     if (modExists(mods, "GeneratesEternalReign")) {
-      normalize("eternal_reign", 10);
-      mods.push({
-        type: "DmgPct",
-        dmgModType: "global",
-        addn: true,
-        value: 10,
-        per: { stackable: "eternal_reign", multiplicative: true },
-        src: "Eternal Reign (10% more dmg per stack)",
-      });
+      const stacks = Math.max(0, Math.min(config.eternalReignStacks ?? 10, 10));
+      normalize("eternal_reign", stacks);
+      mods.push(
+        ...normalizeStackables(
+          [
+            {
+              type: "DmgPct",
+              dmgModType: "global",
+              addn: true,
+              value: 10,
+              per: { stackable: "eternal_reign", multiplicative: true },
+              src: "Eternal Reign (10% more dmg per stack)",
+            },
+          ],
+          "eternal_reign",
+          stacks,
+        ),
+      );
     }
     normalize("dance_of_frost", config.danceOfFrostStacks ?? 0);
     normalize("frostbite_rating", config.enemyFrostbittenPoints ?? 0);
@@ -3627,7 +3671,7 @@ const calcAvgSpellBurstDps = (
   const burstsPerSecMult = 1 + spellBurstChargeSpeedBonusPct / 100;
   const burstsPerSec = baseBurstsPerSec * burstsPerSecMult;
   const spellBurstDmgMult = calculateAddn(
-    filterMods(mods, "SpellBurstAdditionalDmgPct").map((m) => m.value),
+    filterMods(mods, "SpellBurstAdditionalDmgPct"),
   );
   const spellRippleMult = calcSpellRippleMult(mods);
 

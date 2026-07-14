@@ -15,6 +15,7 @@ import {
   type SupportAffix,
 } from "../core";
 import type { Mod } from "../mod";
+import { parseModKeyed } from "../mod-parser/index";
 import { buildSupportSkillAffixes } from "../storage/load-save";
 import {
   calculateOffense,
@@ -6596,8 +6597,7 @@ describe("curse cap enforcement", () => {
     const actual = results.skills["[Test] Simple Attack"];
     // Cap 1: only Timid (first in mod order) applies
     const timidMod = actual?.resolvedMods.find(
-      (m) =>
-        m.type === "DmgPct" && m.dmgModType === "hit" && m.isEnemyDebuff,
+      (m) => m.type === "DmgPct" && m.dmgModType === "hit" && m.isEnemyDebuff,
     );
     const entangledMod = actual?.resolvedMods.find(
       (m) =>
@@ -6624,8 +6624,7 @@ describe("curse cap enforcement", () => {
     const actual2 = results2.skills["[Test] Simple Attack"];
     expect(
       actual2?.resolvedMods.find(
-        (m) =>
-          m.type === "DmgPct" && m.dmgModType === "hit" && m.isEnemyDebuff,
+        (m) => m.type === "DmgPct" && m.dmgModType === "hit" && m.isEnemyDebuff,
       ),
     ).toBeDefined();
     expect(
@@ -6679,9 +6678,273 @@ describe("curse cap enforcement", () => {
     ).toBeDefined();
     expect(
       actual?.resolvedMods.find(
-        (m) =>
-          m.type === "DmgPct" && m.dmgModType === "hit" && m.isEnemyDebuff,
+        (m) => m.type === "DmgPct" && m.dmgModType === "hit" && m.isEnemyDebuff,
       ),
     ).toBeUndefined();
+  });
+});
+
+describe("same-affix additional damage rule", () => {
+  test("same-affixKey additional damage adds into one bucket", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          value: 20,
+          dmgModType: "global",
+          addn: true,
+          affixKey: "#% additional damage",
+        },
+        {
+          type: "DmgPct",
+          value: 20,
+          dmgModType: "global",
+          addn: true,
+          affixKey: "#% additional damage",
+        },
+      ]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    // Same affix adds: 100 * 1.4, not 100 * 1.2 * 1.2 = 144
+    expect(
+      results.skills["[Test] Simple Attack"]?.attackDpsSummary?.mainhand.avgHit,
+    ).toBeCloseTo(140);
+  });
+
+  test("distinct-affixKey additional damage multiplies", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          value: 20,
+          dmgModType: "global",
+          addn: true,
+          affixKey: "a",
+        },
+        {
+          type: "DmgPct",
+          value: 20,
+          dmgModType: "global",
+          addn: true,
+          affixKey: "b",
+        },
+      ]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    expect(
+      results.skills["[Test] Simple Attack"]?.attackDpsSummary?.mainhand.avgHit,
+    ).toBeCloseTo(144);
+  });
+
+  test("identical gear affix text groups end-to-end through the parser", () => {
+    // Two gear pieces with the same "+20% additional Lightning Damage" line;
+    // a lightning weapon so the lightning bucket applies.
+    const parsedLine = (text: string) => ({ text, mods: parseModKeyed(text) });
+    const loadout = initLoadout({
+      gearPage: {
+        equippedGear: {
+          mainHand: baseWeapon,
+          helmet: {
+            equipmentType: "Helmet (INT)" as const,
+            prefixes: [
+              { affixLines: [parsedLine("+20% additional Lightning Damage")] },
+            ],
+          },
+          gloves: {
+            equipmentType: "Gloves (INT)" as const,
+            prefixes: [
+              { affixLines: [parsedLine("+20% additional Lightning Damage")] },
+            ],
+          },
+        },
+        inventory: [],
+      },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "FlatDmgToAtks",
+          value: { min: 100, max: 100 },
+          dmgType: "lightning",
+        },
+      ]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    // 100 phys + 100 lightning * 1.4 (same affix adds) = 240, not 244
+    expect(
+      results.skills["[Test] Simple Attack"]?.attackDpsSummary?.mainhand.avgHit,
+    ).toBeCloseTo(240);
+  });
+});
+
+describe("at_max_channeled_stacks condition", () => {
+  const channeledLoadout = () =>
+    initLoadout({
+      gearPage: { equippedGear: {}, inventory: [] },
+      skillPage: simplePersistentSpellSkillPage(),
+      customAffixLines: affixLines([
+        { type: "InitialMaxChannel", value: 5 },
+        {
+          type: "DmgPct",
+          value: 50,
+          dmgModType: "global",
+          addn: true,
+          cond: "at_max_channeled_stacks",
+        },
+      ]),
+    });
+
+  test("defaults to at-max (mod active) when channeledStacks unset", () => {
+    const results = calculateOffense({
+      loadout: channeledLoadout(),
+      configuration: defaultConfiguration,
+    });
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+
+  test("mod active when channeledStacks equals max", () => {
+    const results = calculateOffense({
+      loadout: channeledLoadout(),
+      configuration: { ...defaultConfiguration, channeledStacks: 5 },
+    });
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+
+  test("mod excluded when channeledStacks below max", () => {
+    const results = calculateOffense({
+      loadout: channeledLoadout(),
+      configuration: { ...defaultConfiguration, channeledStacks: 4 },
+    });
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(100);
+  });
+
+  test("mod applies with no channel-stack mods and stacks 0 (0 >= 0)", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: {}, inventory: [] },
+      skillPage: simplePersistentSpellSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          value: 50,
+          dmgModType: "global",
+          addn: true,
+          cond: "at_max_channeled_stacks",
+        },
+      ]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, channeledStacks: 0 },
+    });
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+});
+
+describe("eternal stack buffs", () => {
+  const eternalInput = (
+    generator: Mod,
+    config?: Partial<Configuration>,
+  ) => ({
+    loadout: initLoadout({
+      gearPage: { equippedGear: {}, inventory: [] },
+      skillPage: simplePersistentSpellSkillPage(),
+      customAffixLines: affixLines([generator]),
+    }),
+    configuration: { ...defaultConfiguration, ...config },
+  });
+
+  test("Eternal Morale defaults to 50 stacks (5%/stack additive per)", () => {
+    const results = calculateOffense(
+      eternalInput({ type: "GeneratesEternalMorale" }),
+    );
+    // 100 * (1 + 5 * 50 / 100) = 350
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(350);
+  });
+
+  test("Eternal Morale respects configured stack count", () => {
+    const results = calculateOffense(
+      eternalInput({ type: "GeneratesEternalMorale" }, {
+        eternalMoraleStacks: 10,
+      }),
+    );
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+
+  test("Eternal Morale at 0 stacks contributes nothing", () => {
+    const results = calculateOffense(
+      eternalInput({ type: "GeneratesEternalMorale" }, {
+        eternalMoraleStacks: 0,
+      }),
+    );
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(100);
+  });
+
+  test("Eternal Morale stack config clamps to 50", () => {
+    const results = calculateOffense(
+      eternalInput({ type: "GeneratesEternalMorale" }, {
+        eternalMoraleStacks: 999,
+      }),
+    );
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(350);
+  });
+
+  test("Eternal Reign defaults to 10 multiplicative stacks", () => {
+    const results = calculateOffense(
+      eternalInput({ type: "GeneratesEternalReign" }),
+    );
+    // 100 * 1.1^10 ≈ 259.37
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(259.37, 1);
+  });
+
+  test("Eternal Reign respects configured stacks", () => {
+    const results = calculateOffense(
+      eternalInput({ type: "GeneratesEternalReign" }, {
+        eternalReignStacks: 4,
+      }),
+    );
+    // 100 * 1.1^4 ≈ 146.41
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(146.41, 1);
   });
 });
