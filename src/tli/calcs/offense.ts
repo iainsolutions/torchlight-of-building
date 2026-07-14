@@ -921,9 +921,24 @@ const filterModsByCond = (
       .with("at_max_channeled_stacks", () => {
         // default (undefined) = assume at max stacks
         if (config.channeledStacks === undefined) return true;
+        // Count only channel-stack mods whose own conditions pass, else an
+        // inactive cond-gated MaxChannel mod inflates the computed max
+        // (e.g. a left-ring-only affix equipped in the right ring slot).
+        // Recursion is bounded: the inner call sees only channel-stack mods,
+        // and any carrying this same cond are excluded.
+        const channelMods = filterModsByCond(
+          mods.filter(
+            (m) =>
+              (m.type === "InitialMaxChannel" || m.type === "MaxChannel") &&
+              m.cond !== "at_max_channeled_stacks",
+          ),
+          loadout,
+          config,
+          derivedCtx,
+        );
         const maxChannelStacks =
-          (findMod(mods, "InitialMaxChannel")?.value ?? 0) +
-          Math.round(sumByValue(filterMods(mods, "MaxChannel")));
+          (findMod(channelMods, "InitialMaxChannel")?.value ?? 0) +
+          Math.round(sumByValue(filterMods(channelMods, "MaxChannel")));
         return config.channeledStacks >= maxChannelStacks;
       })
       .with("enemy_at_max_affliction", () => calcAfflictionPts(config) === 100)
@@ -3812,10 +3827,19 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
     );
     if (perSkillContext === undefined) {
       // Skip non-implemented skills — but tell the user instead of
-      // silently omitting the skill from results.
-      warnings.push(
-        `${slot.skillName}: no per-level skill data — DPS not calculated`,
-      );
+      // silently omitting the skill from results. Buff-only actives
+      // (Ice Bond, curses) also land here: they have level data but no
+      // offense output, so don't accuse them of missing data.
+      const skillData = ActiveSkills.find((s) => s.name === slot.skillName);
+      const hasLevelValues =
+        skillData !== undefined &&
+        "levelValues" in skillData &&
+        skillData.levelValues !== undefined;
+      if (!hasLevelValues) {
+        warnings.push(
+          `${slot.skillName}: no per-level skill data — DPS not calculated`,
+        );
+      }
       continue;
     }
     const skillLevel =

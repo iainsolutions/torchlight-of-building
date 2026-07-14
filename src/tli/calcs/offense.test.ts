@@ -7083,3 +7083,153 @@ describe("skill data warnings", () => {
     expect(results.skills["Frost Spike"]?.levelDataQuality).toBe("measured");
   });
 });
+
+describe("eternal nightmare and shadow stacks", () => {
+  test("Eternal Nightmare scales crit at 50 stacks by default", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([{ type: "GeneratesEternalNightmare" }]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    const summary = results.skills["[Test] Simple Attack"]?.attackDpsSummary;
+    // 50 stacks * 5% crit rating = +250% crit rating: base 500 * 3.5 = 1750
+    // → 17.5% crit chance. Crit dmg: 50 * 1% addn = 1.5x on 150% base.
+    expect(summary?.mainhand.critChance.actual).toBeCloseTo(0.175);
+    expect(summary?.critDmgMult).toBeCloseTo(1.5 * 1.5);
+  });
+
+  test("Eternal Nightmare respects configured stacks", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([{ type: "GeneratesEternalNightmare" }]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, eternalNightmareStacks: 10 },
+    });
+    const summary = results.skills["[Test] Simple Attack"]?.attackDpsSummary;
+    // 10 stacks: crit rating 500 * 1.5 = 750 → 7.5%; crit dmg 1.1 * 1.5
+    expect(summary?.mainhand.critChance.actual).toBeCloseTo(0.075);
+    expect(summary?.critDmgMult).toBeCloseTo(1.5 * 1.1);
+  });
+
+  test("Eternal Shadow grants movement speed per stack", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([{ type: "GeneratesEternalShadow" }]),
+    });
+    const at50 = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    const at20 = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, eternalShadowStacks: 20 },
+    });
+    expect(
+      at50.skills["[Test] Simple Attack"]?.movementSpeedBonusPct,
+    ).toBeCloseTo(50);
+    expect(
+      at20.skills["[Test] Simple Attack"]?.movementSpeedBonusPct,
+    ).toBeCloseTo(20);
+  });
+});
+
+describe("buff-only skills do not trigger missing-data warnings", () => {
+  test("Ice Bond in a slot produces no warning", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: {
+          activeSkills: {
+            1: {
+              skillName: "[Test] Simple Attack" as const,
+              enabled: true,
+              level: 20,
+              supportSkills: {},
+            },
+            2: {
+              skillName: "Ice Bond" as const,
+              enabled: true,
+              level: 20,
+              supportSkills: {},
+            },
+          },
+          passiveSkills: {},
+        },
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(results.warnings).toHaveLength(0);
+  });
+});
+
+describe("channeled gate ignores condition-gated MaxChannel mods", () => {
+  test("inactive cond-gated MaxChannel does not inflate the max", () => {
+    // MaxChannel +3 gated on holding_shield (false in config): true max is 5.
+    const loadout = initLoadout({
+      gearPage: { equippedGear: {}, inventory: [] },
+      skillPage: simplePersistentSpellSkillPage(),
+      customAffixLines: affixLines([
+        { type: "InitialMaxChannel", value: 5 },
+        { type: "MaxChannel", value: 3, cond: "holding_shield" },
+        {
+          type: "DmgPct",
+          value: 50,
+          dmgModType: "global",
+          addn: true,
+          cond: "at_max_channeled_stacks",
+        },
+      ]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, channeledStacks: 5 },
+    });
+    // channeledStacks 5 >= true max 5 → at max, mod applies
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+
+  test("active unconditional MaxChannel raises the max", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: {}, inventory: [] },
+      skillPage: simplePersistentSpellSkillPage(),
+      customAffixLines: affixLines([
+        { type: "InitialMaxChannel", value: 5 },
+        { type: "MaxChannel", value: 3 },
+        {
+          type: "DmgPct",
+          value: 50,
+          dmgModType: "global",
+          addn: true,
+          cond: "at_max_channeled_stacks",
+        },
+      ]),
+    });
+    const below = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, channeledStacks: 5 },
+    });
+    const atMax = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, channeledStacks: 8 },
+    });
+    expect(
+      below.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(100);
+    expect(
+      atMax.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+});

@@ -234,3 +234,45 @@ describe("calculateAddn", () => {
     expect(calculateAddn([])).toBe(1);
   });
 });
+
+describe("calculateAddn sign and source-class rules", () => {
+  it("keeps bonus and penalty groups separate via signed keys", () => {
+    // "+7%" and "-5%" carry different affixKeys (sign preserved upstream)
+    expect(
+      calculateAddn([
+        { value: 7, affixKey: "+#% additional damage" },
+        { value: -5, affixKey: "-#% additional damage" },
+      ]),
+    ).toBeCloseTo(1.07 * 0.95);
+  });
+
+  it("floors a grouped penalty sum at -100% (no negative multiplier)", () => {
+    expect(
+      calculateAddn([
+        { value: -30, affixKey: "-#% additional hit damage" },
+        { value: -30, affixKey: "-#% additional hit damage" },
+        { value: -30, affixKey: "-#% additional hit damage" },
+        { value: -30, affixKey: "-#% additional hit damage" },
+      ]),
+    ).toBe(0);
+  });
+
+  it("same wording from different source classes multiplies", () => {
+    // Talent node vs gear affix with identical text are distinct affixes
+    expect(
+      calculateAddn([
+        { value: 20, affixKey: "+#% additional damage", src: "Gear#helmet" },
+        { value: 20, affixKey: "+#% additional damage", src: "Talent#tree1" },
+      ]),
+    ).toBeCloseTo(1.44);
+  });
+
+  it("same wording from same source class on different slots adds", () => {
+    expect(
+      calculateAddn([
+        { value: 20, affixKey: "+#% additional damage", src: "Gear#helmet" },
+        { value: 20, affixKey: "+#% additional damage", src: "Gear#gloves" },
+      ]),
+    ).toBeCloseTo(1.4);
+  });
+});

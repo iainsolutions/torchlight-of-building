@@ -37,10 +37,19 @@ export const calculateInc = (bonuses: number[]): number => {
 export interface AddnEntry {
   value: number;
   affixKey?: string;
+  src?: string;
 }
+
+// Same-wording lines from different systems (a talent node vs a gear affix)
+// are distinct affixes and must multiply — group within a source class only.
+// src is a location string like "Gear#helmet" / "Talent#tree1" / "CustomAffix".
+const addnGroupKey = (b: AddnEntry): string =>
+  `${b.src?.split("#")[0] ?? ""}|${b.affixKey}`;
 
 // TLI manual: additional bonuses of the SAME affix add together into one
 // multiplier; distinct affixes (and keyless engine-generated mods) multiply.
+// A grouped sum is floored at -100%: the multiplier can reach 0 but never
+// flips sign (per-mod multiplication could never go below 0 either).
 export const calculateAddn = (bonuses: AddnEntry[]): number => {
   let mult = 1;
   const grouped = new Map<string, number>();
@@ -48,11 +57,12 @@ export const calculateAddn = (bonuses: AddnEntry[]): number => {
     if (b.affixKey === undefined) {
       mult *= 1 + b.value / 100;
     } else {
-      grouped.set(b.affixKey, (grouped.get(b.affixKey) ?? 0) + b.value);
+      const key = addnGroupKey(b);
+      grouped.set(key, (grouped.get(key) ?? 0) + b.value);
     }
   }
   for (const sum of grouped.values()) {
-    mult *= 1 + sum / 100;
+    mult *= Math.max(0, 1 + sum / 100);
   }
   return mult;
 };

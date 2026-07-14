@@ -2,6 +2,32 @@
 
 Architectural decisions and behavior-changing fixes.
 
+## 2026-07-13 — S13 data rewrite from official patch notes (branch `s13-official-data`)
+
+- Source of truth: official Chinese SS13 notes (poster.xd.cn/r/ss13pn). Repo's
+  S13 active-skill numbers were confirmed accurate; trait tree, Terra supports,
+  legendaries, and Frost Mirror ladder were pre-release inventions — replaced
+  wholesale with official data.
+- Skill fixes: Thunderstorm +3%/target and Thorn +1%/100-life are *additional*
+  buckets; old Terra durations 3s→6s; Frost Terra 629/s; Swamp explosion 710
+  (terra-count stacking removed); Haunting Terra 6s.
+- Crimson Severance = rework/rename of Mother Goddess' Paddock (necklace);
+  pre-rework entry kept for old saves.
+- Known gaps: official notes give one roll set (corruption mirrors normal);
+  new mechanics (Extremity, Severance Mark, Bond, Mirror Stage, Divine Elegy,
+  Three Saints Doctrine) are plain text, unmodeled by the engine; Flame Blast /
+  Prismatic Arrow supports skipped (base skills absent); ~40-skill balance
+  pass + Nether King slates + Sweet Dream removal still pending.
+
+## 2026-07-13 — Review fixes to the same-affix rule
+
+- affixLineKey keeps the +/- sign: penalty riders ("-5% additional damage")
+  no longer sum with same-worded bonus affixes.
+- calculateAddn groups within source class only (Gear vs Talent vs …) and
+  floors grouped sums at -100% (multiplier can hit 0, never negative).
+- at_max_channeled_stacks gate counts only condition-passing channel mods.
+- "no per-level data" warning skips buff-only actives (Ice Bond).
+
 ## 2026-07-13 — Calc engine gap fixes (branch `fix/engine-gaps`)
 
 - **Same-affix rule** (`calculateAddn`): additional% bonuses from the SAME

@@ -4475,7 +4475,7 @@ test("parse flat damage for every stat", () => {
 describe("parseModKeyed / affixLineKey", () => {
   test("stamps roll-invariant affixKey on parsed mods", () => {
     const mods = parseModKeyed("+20% additional lightning damage");
-    expect(mods?.[0]?.affixKey).toBe("#% additional lightning damage");
+    expect(mods?.[0]?.affixKey).toBe("+#% additional lightning damage");
   });
 
   test("different rolls of the same affix share a key", () => {
@@ -4486,7 +4486,7 @@ describe("parseModKeyed / affixLineKey", () => {
 
   test("decimal rolls are masked", () => {
     expect(affixLineKey("+7.5% Life Regeneration Speed")).toBe(
-      "#% life regeneration speed",
+      "+#% life regeneration speed",
     );
   });
 
@@ -4501,4 +4501,10 @@ test("parse ailment damage enhancement (unmodeled ailment bucket)", () => {
   expect(result).toEqual([
     { type: "DmgPct", value: 10, dmgModType: "ailment", addn: true },
   ]);
+});
+
+test("affixLineKey preserves the sign: bonus and penalty affixes stay distinct", () => {
+  expect(affixLineKey("+7% additional damage")).not.toBe(
+    affixLineKey("-5% additional damage"),
+  );
 });

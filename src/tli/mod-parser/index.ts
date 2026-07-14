@@ -35,11 +35,14 @@ export const parseMod = (input: string): Mod[] | undefined => {
 // Roll-invariant identity of an affix line: same affix at different
 // rolls/tiers yields the same key. Used for the TLI same-affix rule (additional
 // bonuses of the same affix add together; distinct affixes multiply).
+// The +/- sign stays in the key: rolls never flip sign, so "+7% additional
+// damage" (bonus affix) and "-5% additional damage" (penalty rider) are
+// distinct affixes and must multiply, not sum.
 export const affixLineKey = (lineText: string): string =>
   lineText
     .trim()
     .toLowerCase()
-    .replace(/[+-]?\d+(?:\.\d+)?/g, "#");
+    .replace(/\d+(?:\.\d+)?/g, "#");
 
 // parseMod, with each resulting mod stamped with the source line's affixKey.
 // Use for player-facing affix text (gear, talents, pactspirits). Do NOT use
