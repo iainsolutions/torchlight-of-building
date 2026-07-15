@@ -2454,6 +2454,18 @@ export const allParsers = [
     type: "TerraChargeRecoverySpeedPct",
     value: c.value,
   })),
+  t("{value:+dec%} [additional] terra skill damage").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: "terra",
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} [additional] terra skill area").output((c) => ({
+    type: "SkillAreaPct",
+    value: c.value,
+    skillAreaModType: "global",
+    addn: c.additional !== undefined,
+  })),
   t("max terra quantity {value:+int}").output((c) => ({
     type: "MaxTerraQuant",
     value: c.value,
@@ -2980,12 +2992,13 @@ export const allParsers = [
   })),
 
   // Ailment Damage Enhancement — multiplicative bonus to ailment damage
-  // (trauma/ignite/wilt). Uses damage_over_time dmgModType since ailments
-  // apply as DoT.
+  // (trauma/ignite/wilt) only. Not applied yet (no ailment DPS path); kept
+  // as dmgModType "ailment" so it surfaces as unmodeled rather than wrongly
+  // boosting persistent-zone DoT, which is not ailment damage.
   t("{value:+dec%} ailment damage enhancement").output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: "damage_over_time",
+    dmgModType: "ailment",
     addn: true,
   })),
 

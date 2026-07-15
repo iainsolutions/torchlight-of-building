@@ -803,6 +803,25 @@ function CalculationsPage(): React.ReactNode {
             skillName={selectedSkill}
           />
         )}
+
+      {hasDamageStats &&
+        offenseSummary !== undefined &&
+        (offenseSummary.unmodeledMods?.length ?? 0) > 0 && (
+          <div className="rounded-lg border border-zinc-500/30 bg-zinc-900 p-3">
+            <div className="mb-1 text-sm font-semibold text-zinc-300">
+              Ailment Damage — Not Modeled
+            </div>
+            <p className="mb-2 text-xs text-zinc-500">
+              Ignite/Wilt/Trauma DPS is not calculated yet. These mods have no
+              effect on the displayed numbers.
+            </p>
+            <ModGroup
+              title="Ailment mods"
+              description="not applied to any DPS figure"
+              mods={offenseSummary.unmodeledMods ?? []}
+            />
+          </div>
+        )}
     </div>
   );
 }

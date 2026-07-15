@@ -611,6 +611,22 @@ export const SupportSkills = [
   },
   {
     type: "Support",
+    name: "Deep Guidance",
+    tags: ["Channeled"],
+    description: [
+      "Supports Channeled Skills.\n+2 to the Max Channeled Stacks for the supported skill\n+5% additional damage for the supported skill",
+      "+2 to the Max Channeled Stacks for the supported skill\n+5% additional damage for the supported skill",
+    ],
+    supportTargets: [{ tags: ["Channeled"] }],
+    cannotSupportTargets: [],
+    manaCostMultiplierPct: 110,
+    fixedAffixes: [
+      "+2 to the Max Channeled Stacks for the supported skill",
+      "+5% additional damage for the supported skill",
+    ],
+  },
+  {
+    type: "Support",
     name: "Deep Wounds",
     tags: ["Physical"],
     description: [

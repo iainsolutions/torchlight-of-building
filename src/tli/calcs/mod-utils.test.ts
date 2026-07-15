@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import type { Mod } from "../mod";
-import { assertModInvariants, normalizeStackables } from "./mod-utils";
+import {
+  assertModInvariants,
+  calculateAddn,
+  normalizeStackables,
+} from "./mod-utils";
 
 describe("assertModInvariants", () => {
   it("accepts a plain mod", () => {
@@ -180,5 +184,95 @@ describe("normalizeStackables", () => {
     const result = normalizeStackables([mod], "focus_blessing", 3);
     expect(result).toHaveLength(1);
     expect((result[0] as Extract<Mod, { value: number }>).value).toBe(30);
+  });
+});
+
+describe("calculateAddn", () => {
+  it("adds same-affixKey bonuses into one bucket", () => {
+    // Two rolls of the same affix: 1.4, not 1.2 * 1.2 = 1.44
+    expect(
+      calculateAddn([
+        { value: 20, affixKey: "+#% additional lightning damage" },
+        { value: 20, affixKey: "+#% additional lightning damage" },
+      ]),
+    ).toBeCloseTo(1.4);
+  });
+
+  it("adds same-key bonuses at different rolls", () => {
+    expect(
+      calculateAddn([
+        { value: 18, affixKey: "k" },
+        { value: 20, affixKey: "k" },
+      ]),
+    ).toBeCloseTo(1.38);
+  });
+
+  it("multiplies distinct affixKeys", () => {
+    expect(
+      calculateAddn([
+        { value: 20, affixKey: "a" },
+        { value: 20, affixKey: "b" },
+      ]),
+    ).toBeCloseTo(1.44);
+  });
+
+  it("multiplies keyless bonuses individually", () => {
+    expect(calculateAddn([{ value: 50 }, { value: 20 }])).toBeCloseTo(1.8);
+  });
+
+  it("handles mixed keyed and keyless bonuses", () => {
+    expect(
+      calculateAddn([
+        { value: 10, affixKey: "a" },
+        { value: 20, affixKey: "a" },
+        { value: 50 },
+      ]),
+    ).toBeCloseTo(1.95); // 1.3 * 1.5
+  });
+
+  it("returns 1 for empty input", () => {
+    expect(calculateAddn([])).toBe(1);
+  });
+});
+
+describe("calculateAddn sign and source-class rules", () => {
+  it("keeps bonus and penalty groups separate via signed keys", () => {
+    // "+7%" and "-5%" carry different affixKeys (sign preserved upstream)
+    expect(
+      calculateAddn([
+        { value: 7, affixKey: "+#% additional damage" },
+        { value: -5, affixKey: "-#% additional damage" },
+      ]),
+    ).toBeCloseTo(1.07 * 0.95);
+  });
+
+  it("floors a grouped penalty sum at -100% (no negative multiplier)", () => {
+    expect(
+      calculateAddn([
+        { value: -30, affixKey: "-#% additional hit damage" },
+        { value: -30, affixKey: "-#% additional hit damage" },
+        { value: -30, affixKey: "-#% additional hit damage" },
+        { value: -30, affixKey: "-#% additional hit damage" },
+      ]),
+    ).toBe(0);
+  });
+
+  it("same wording from different source classes multiplies", () => {
+    // Talent node vs gear affix with identical text are distinct affixes
+    expect(
+      calculateAddn([
+        { value: 20, affixKey: "+#% additional damage", src: "Gear#helmet" },
+        { value: 20, affixKey: "+#% additional damage", src: "Talent#tree1" },
+      ]),
+    ).toBeCloseTo(1.44);
+  });
+
+  it("same wording from same source class on different slots adds", () => {
+    expect(
+      calculateAddn([
+        { value: 20, affixKey: "+#% additional damage", src: "Gear#helmet" },
+        { value: 20, affixKey: "+#% additional damage", src: "Gear#gloves" },
+      ]),
+    ).toBeCloseTo(1.4);
   });
 });

@@ -7,7 +7,7 @@ import type {
   PactspiritRingDetails,
 } from "@/src/data/pactspirit/types";
 import type { Loadout } from "@/src/tli/core";
-import { parseMod } from "../tli/mod-parser";
+import { parseModKeyed } from "../tli/mod-parser";
 import type { RingSlotKey } from "./types";
 
 export const getPactspiritByName = (name: string): Pactspirit | undefined =>
@@ -35,18 +35,27 @@ export const getDestiniesForUndeterminedSlot = (
 export const getDestinyByName = (name: string): Destiny | undefined =>
   Destinies.find((d) => d.name === name);
 
-export const hasRanges = (affix: string): boolean => /\(\d+-\d+\)/.test(affix);
+export const hasRanges = (affix: string): boolean =>
+  /\(-?\d+(?:\.\d+)?--?\d+(?:\.\d+)?\)/.test(affix);
 
 export const craftDestinyAffix = (
   affix: string,
   percentage: number,
 ): string => {
-  return affix.replace(/\((\d+)-(\d+)\)/g, (_, minStr, maxStr) => {
-    const min = parseInt(minStr, 10);
-    const max = parseInt(maxStr, 10);
-    const value = Math.round(min + (max - min) * (percentage / 100));
-    return value.toString();
-  });
+  return affix.replace(
+    /\((-?\d+(?:\.\d+)?)-(-?\d+(?:\.\d+)?)\)/g,
+    (_, minStr: string, maxStr: string) => {
+      const min = parseFloat(minStr);
+      const max = parseFloat(maxStr);
+      const value = min + (max - min) * (percentage / 100);
+      // Integer ranges keep integer output; decimal ranges (e.g. 5-7.5) round
+      // to one decimal place.
+      const isIntRange = !minStr.includes(".") && !maxStr.includes(".");
+      return isIntRange
+        ? Math.round(value).toString()
+        : (Math.round(value * 10) / 10).toString();
+    },
+  );
 };
 
 export const formatDestinyOption = (destiny: Destiny): string =>
@@ -88,7 +97,7 @@ export const getPactspiritMainAffixModsByLevel = (
   const levelAffixText = getPactspiritLevelAffix(pactspirit, level);
   const levelAffixLines = levelAffixText
     .split("\n")
-    .map((text) => ({ text, mods: parseMod(text) }));
+    .map((text) => ({ text, mods: parseModKeyed(text) }));
 
   return levelAffixLines;
 };

@@ -275,6 +275,12 @@ export const StatsPanel = (): React.ReactNode => {
         {hasDamageStats && offenseSummary !== undefined ? (
           <>
             <StatLine label="Skill" value={selectedSkill ?? ""} />
+            {offenseSummary.levelDataQuality === "placeholder" && (
+              <p className="text-xs text-amber-400 italic">
+                Placeholder skill data: base damage does not scale with levels
+                1-20; +skill-level results are understated.
+              </p>
+            )}
             <StatLine
               label="Total DPS"
               value={formatStatValue.dps(offenseSummary.totalDps)}
@@ -461,6 +467,14 @@ export const StatsPanel = (): React.ReactNode => {
 
             <div className="h-2" />
           </>
+        ) : offenseResults.warnings.length > 0 ? (
+          <div className="mb-3 space-y-1">
+            {offenseResults.warnings.map((w) => (
+              <p key={w} className="text-sm text-amber-400">
+                {w}
+              </p>
+            ))}
+          </div>
         ) : (
           <p className="mb-3 text-sm text-zinc-400">
             Select an active skill in the Calculations tab to view damage stats.

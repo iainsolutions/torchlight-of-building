@@ -48,6 +48,15 @@ export const ConfigurationPageSchema = z
     hasCritRecently: z.boolean().catch(d.hasCritRecently),
     channeling: z.boolean().catch(d.channeling),
     channeledStacks: z.number().optional().catch(d.channeledStacks),
+    eternalMoraleStacks: z.number().optional().catch(d.eternalMoraleStacks),
+    eternalNightmareStacks: z
+      .number()
+      .optional()
+      .catch(d.eternalNightmareStacks),
+    eternalShadowStacks: z.number().optional().catch(d.eternalShadowStacks),
+    eternalReignStacks: z.number().optional().catch(d.eternalReignStacks),
+    terraChargesConsumed: z.number().optional().catch(d.terraChargesConsumed),
+    enemyInCrimsonTide: z.boolean().catch(d.enemyInCrimsonTide),
     stalkerStacks: z.number().optional().catch(d.stalkerStacks),
     sagesInsightFireActivated: z.boolean().catch(d.sagesInsightFireActivated),
     sagesInsightColdActivated: z.boolean().catch(d.sagesInsightColdActivated),

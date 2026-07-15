@@ -326,3 +326,20 @@ describe("parseSupportAffixes", () => {
     ]);
   });
 });
+
+describe("support mods stay keyless", () => {
+  test("parseSupportAffixes output carries no affixKey (supports multiply individually)", () => {
+    const result = parseSupportAffixes([
+      "Auto-used supported skills +10% additional damage",
+      "+20% additional damage for the supported skill",
+    ]);
+    const mods = result
+      .filter((r) => r !== undefined)
+      .flat()
+      .map((sm) => sm.mod);
+    expect(mods.length).toBeGreaterThan(0);
+    for (const m of mods) {
+      expect(m).not.toHaveProperty("affixKey");
+    }
+  });
+});

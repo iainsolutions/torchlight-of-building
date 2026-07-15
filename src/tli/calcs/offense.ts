@@ -63,7 +63,12 @@ import {
   emptyDmgRanges,
   multDRs,
   type NumDmgValues,
+  UNMODELED_DMG_MOD_TYPES,
 } from "./damage-calc";
+import {
+  getSkillLevelDataQuality,
+  type SkillLevelDataQuality,
+} from "../skills/level-data-quality";
 import {
   assertModInvariants,
   calcEffMult,
@@ -152,6 +157,13 @@ interface OffenseSummary {
   // Mods that didn't apply because their condition wasn't met. Lets the UI
   // show "could gain X damage if you enable Y" hints.
   unmetConditionMods: Mod[];
+  // Resolved mods whose dmgModType has no calculation path yet (ailment DPS
+  // not modeled). Contribute 0 to all displayed numbers.
+  unmodeledMods: Mod[];
+  // Whether the skill's per-level base-damage tables are real ("measured"),
+  // flat placeholders ("placeholder" — +level results understated), or
+  // absent ("missing").
+  levelDataQuality: SkillLevelDataQuality;
 }
 
 // === Stats Types and Calculations ===
@@ -786,6 +798,9 @@ export interface HeroTraitLevel {
 
 export interface OffenseResults {
   errors: string[];
+  // Non-fatal calculation caveats (e.g. skills skipped for missing
+  // per-level data). Shown to the user, unlike errors today.
+  warnings: string[];
   skills: Partial<Record<ImplementedActiveSkillName, OffenseSummary>>;
   resourcePool: ResourcePool;
   defenses: Defenses;
@@ -903,7 +918,29 @@ const filterModsByCond = (
         () => config.sagesInsightLightningActivated,
       )
       .with("sages_insight_erosion", () => config.sagesInsightErosionActivated)
-      .with("at_max_channeled_stacks", () => true)
+      .with("at_max_channeled_stacks", () => {
+        // default (undefined) = assume at max stacks
+        if (config.channeledStacks === undefined) return true;
+        // Count only channel-stack mods whose own conditions pass, else an
+        // inactive cond-gated MaxChannel mod inflates the computed max
+        // (e.g. a left-ring-only affix equipped in the right ring slot).
+        // Recursion is bounded: the inner call sees only channel-stack mods,
+        // and any carrying this same cond are excluded.
+        const channelMods = filterModsByCond(
+          mods.filter(
+            (m) =>
+              (m.type === "InitialMaxChannel" || m.type === "MaxChannel") &&
+              m.cond !== "at_max_channeled_stacks",
+          ),
+          loadout,
+          config,
+          derivedCtx,
+        );
+        const maxChannelStacks =
+          (findMod(channelMods, "InitialMaxChannel")?.value ?? 0) +
+          Math.round(sumByValue(filterMods(channelMods, "MaxChannel")));
+        return config.channeledStacks >= maxChannelStacks;
+      })
       .with("enemy_at_max_affliction", () => calcAfflictionPts(config) === 100)
       .with("enemy_is_cursed", () => {
         if (config.targetEnemyIsCursed !== undefined) {
@@ -984,6 +1021,7 @@ const filterModsByCond = (
         () => config.frostbittenHeartIsActive,
       )
       .with("at_low_life", () => config.currentLifePct < 35)
+      .with("enemy_in_crimson_tide", () => config.enemyInCrimsonTide)
       .with("is_tangle_skill", () => modExists(mods, "IsTangle"))
       .with("is_combo_finisher", () => {
         // True if any active skill slot has the "Combo" tag.
@@ -1115,6 +1153,12 @@ const resolveBuffSkillMods = (
   ];
   const resolvedMods: Mod[] = [];
 
+  // TLI: only 1 curse (+ AddnCurse mods) can be active on a target, and the
+  // same curse cannot stack with itself. Cap/dedupe curse buff application.
+  // Slot order gives active-slot curses priority over triggered ones.
+  const maxCurses = 1 + sumByValue(filterMods(loadoutMods, "AddnCurse"));
+  const appliedCurseNames = new Set<string>();
+
   const numAuraSkills = passiveSkillSlots.filter((slot) => {
     if (!slot.enabled || slot.skillName === undefined) {
       return false;
@@ -1137,6 +1181,11 @@ const resolveBuffSkillMods = (
       continue;
     }
     const buffSkillType = calcBuffSkillType(skill);
+    if (buffSkillType === "curse") {
+      if (appliedCurseNames.has(skill.name)) continue; // same curse can't stack
+      if (appliedCurseNames.size >= maxCurses) continue; // curse cap reached
+      appliedCurseNames.add(skill.name);
+    }
 
     // Get support skill mods (includes SkillEffPct, AuraEffPct, etc.)
     const supportMods = resolveSelectedSkillSupportMods(
@@ -1949,8 +1998,11 @@ const resolveModsForOffenseSkill = (
       }
     }
     const autoEnemyCurses = Math.min(curseNames.size, autoMaxCurses);
+    // Manual override is still subject to the in-game curse cap.
     const effectiveEnemyCurses =
-      config.enemyCurseCount > 0 ? config.enemyCurseCount : autoEnemyCurses;
+      config.enemyCurseCount > 0
+        ? Math.min(config.enemyCurseCount, autoMaxCurses)
+        : autoEnemyCurses;
     normalize("enemy_curse_count", effectiveEnemyCurses);
     // Self-curse count: assume same number of self curses as enemy
     // (Keen Intellect prism auto-curses player on curse-skill hit)
@@ -1968,75 +2020,119 @@ const resolveModsForOffenseSkill = (
     const effectiveActiveTangles =
       config.numActiveTangles > 1 ? config.numActiveTangles : autoActiveTangles;
     normalize("active_tangle", effectiveActiveTangles);
-    // Eternal stack generators — assume max stacks if the player has a
-    // generator on gear (modeling typical map-clearing uptime).
+    normalize("terra_charges_consumed", config.terraChargesConsumed ?? 0);
+    // Eternal stack generators — stack count configurable; defaults to max
+    // (50; Reign 10), modeling typical map-clearing uptime. The hardcoded
+    // per-stack mods must be normalized here explicitly: normalize() only
+    // processes prenormMods (affix-parsed), never mods pushed afterwards.
     if (modExists(mods, "GeneratesEternalMorale")) {
-      normalize("eternal_morale", 50);
+      const stacks = Math.max(
+        0,
+        Math.min(config.eternalMoraleStacks ?? 50, 50),
+      );
+      normalize("eternal_morale", stacks);
       mods.push(
-        {
-          type: "DmgPct",
-          dmgModType: "global",
-          addn: true,
-          value: 5,
-          per: { stackable: "eternal_morale" },
-          src: "Eternal Morale (5% dmg per stack)",
-        },
-        {
-          type: "AspdPct",
-          addn: true,
-          value: 1,
-          per: { stackable: "eternal_morale" },
-          src: "Eternal Morale (1% aspd per stack)",
-        },
-        {
-          type: "CspdPct",
-          addn: true,
-          value: 1,
-          per: { stackable: "eternal_morale" },
-          src: "Eternal Morale (1% cspd per stack)",
-        },
+        ...normalizeStackables(
+          [
+            {
+              type: "DmgPct",
+              dmgModType: "global",
+              addn: true,
+              value: 5,
+              per: { stackable: "eternal_morale" },
+              src: "Eternal Morale (5% dmg per stack)",
+            },
+            {
+              type: "AspdPct",
+              addn: true,
+              value: 1,
+              per: { stackable: "eternal_morale" },
+              src: "Eternal Morale (1% aspd per stack)",
+            },
+            {
+              type: "CspdPct",
+              addn: true,
+              value: 1,
+              per: { stackable: "eternal_morale" },
+              src: "Eternal Morale (1% cspd per stack)",
+            },
+          ],
+          "eternal_morale",
+          stacks,
+        ),
       );
     }
     if (modExists(mods, "GeneratesEternalNightmare")) {
-      normalize("eternal_nightmare", 50);
+      const stacks = Math.max(
+        0,
+        Math.min(config.eternalNightmareStacks ?? 50, 50),
+      );
+      normalize("eternal_nightmare", stacks);
       mods.push(
-        {
-          type: "CritRatingPct",
-          modType: "global",
-          value: 5,
-          per: { stackable: "eternal_nightmare" },
-          src: "Eternal Nightmare (5% crit rating per stack)",
-        },
-        {
-          type: "CritDmgPct",
-          addn: true,
-          modType: "global",
-          value: 1,
-          per: { stackable: "eternal_nightmare" },
-          src: "Eternal Nightmare (1% crit dmg per stack)",
-        },
+        ...normalizeStackables(
+          [
+            {
+              type: "CritRatingPct",
+              modType: "global",
+              value: 5,
+              per: { stackable: "eternal_nightmare" },
+              src: "Eternal Nightmare (5% crit rating per stack)",
+            },
+            {
+              type: "CritDmgPct",
+              addn: true,
+              modType: "global",
+              value: 1,
+              per: { stackable: "eternal_nightmare" },
+              src: "Eternal Nightmare (1% crit dmg per stack)",
+            },
+          ],
+          "eternal_nightmare",
+          stacks,
+        ),
       );
     }
     if (modExists(mods, "GeneratesEternalShadow")) {
-      normalize("eternal_shadow", 50);
-      mods.push({
-        type: "MovementSpeedPct",
-        addn: true,
-        value: 1,
-        per: { stackable: "eternal_shadow" },
-        src: "Eternal Shadow (1% ms per stack)",
-      });
+      const stacks = Math.max(
+        0,
+        Math.min(config.eternalShadowStacks ?? 50, 50),
+      );
+      normalize("eternal_shadow", stacks);
+      mods.push(
+        ...normalizeStackables(
+          [
+            {
+              type: "MovementSpeedPct",
+              addn: true,
+              value: 1,
+              per: { stackable: "eternal_shadow" },
+              src: "Eternal Shadow (1% ms per stack)",
+            },
+          ],
+          "eternal_shadow",
+          stacks,
+        ),
+      );
     }
     if (modExists(mods, "GeneratesEternalReign")) {
-      normalize("eternal_reign", 10);
-      mods.push({
-        type: "DmgPct",
-        dmgModType: "global",
-        addn: true,
-        value: 10,
-        per: { stackable: "eternal_reign", multiplicative: true },
-        src: "Eternal Reign (10% more dmg per stack)",
-      });
+      const stacks = Math.max(0, Math.min(config.eternalReignStacks ?? 10, 10));
+      normalize("eternal_reign", stacks);
+      mods.push(
+        ...normalizeStackables(
+          [
+            {
+              type: "DmgPct",
+              dmgModType: "global",
+              addn: true,
+              value: 10,
+              per: { stackable: "eternal_reign", multiplicative: true },
+              src: "Eternal Reign (10% more dmg per stack)",
+            },
+          ],
+          "eternal_reign",
+          stacks,
+        ),
+      );
     }
     normalize("dance_of_frost", config.danceOfFrostStacks ?? 0);
     normalize("frostbite_rating", config.enemyFrostbittenPoints ?? 0);
@@ -3613,7 +3709,7 @@ const calcAvgSpellBurstDps = (
   const burstsPerSecMult = 1 + spellBurstChargeSpeedBonusPct / 100;
   const burstsPerSec = baseBurstsPerSec * burstsPerSecMult;
   const spellBurstDmgMult = calculateAddn(
-    filterMods(mods, "SpellBurstAdditionalDmgPct").map((m) => m.value),
+    filterMods(mods, "SpellBurstAdditionalDmgPct"),
   );
   const spellRippleMult = calcSpellRippleMult(mods);
 
@@ -3681,6 +3777,7 @@ const calcAvgSpellBurstDps = (
 // Calculates offense for all enabled implemented skills
 export const calculateOffense = (input: OffenseInput): OffenseResults => {
   const errors: string[] = [];
+  const warnings: string[] = [];
   const { loadout, configuration: config } = input;
   const heroTraitResult = calculateHeroTraitMods(loadout);
   const loadoutMods = [...collectMods(loadout), ...heroTraitResult.mods];
@@ -3731,7 +3828,21 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       resourcePool,
     );
     if (perSkillContext === undefined) {
-      continue; // Skip non-implemented skills
+      // Skip non-implemented skills — but tell the user instead of
+      // silently omitting the skill from results. Buff-only actives
+      // (Ice Bond, curses) also land here: they have level data but no
+      // offense output, so don't accuse them of missing data.
+      const skillData = ActiveSkills.find((s) => s.name === slot.skillName);
+      const hasLevelValues =
+        skillData !== undefined &&
+        "levelValues" in skillData &&
+        skillData.levelValues !== undefined;
+      if (!hasLevelValues) {
+        warnings.push(
+          `${slot.skillName}: no per-level skill data — DPS not calculated`,
+        );
+      }
+      continue;
     }
     const skillLevel =
       (slot.level || 20) +
@@ -3852,6 +3963,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       "target_enemy_is_elite",
       "target_enemy_is_in_proximity",
       "target_enemy_frozen_recently",
+      "enemy_in_crimson_tide",
     ]);
     const enemyStackables = new Set([
       "enemy_curse_count",
@@ -3889,6 +4001,11 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
     const tooltipDps =
       (tooltipSpellDps?.avgDps ?? 0) + (tooltipAttackDps?.avgDps ?? 0);
 
+    const unmodeledMods = mods.filter(
+      (m) =>
+        m.type === "DmgPct" && UNMODELED_DMG_MOD_TYPES.includes(m.dmgModType),
+    );
+
     skills[slot.skillName as ImplementedActiveSkillName] = {
       attackDpsSummary: attackHitSummary,
       slashStrikeDpsSummary,
@@ -3903,11 +4020,14 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       tangleSummary,
       resolvedMods: mods,
       unmetConditionMods: derivedOffenseCtx.unmetConditionMods,
+      unmodeledMods,
+      levelDataQuality: getSkillLevelDataQuality(perSkillContext.skill),
     };
   }
 
   return {
     errors,
+    warnings,
     skills,
     resourcePool,
     defenses,

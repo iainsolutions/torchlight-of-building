@@ -12,6 +12,7 @@ export const CONDITION_TO_CONFIG_FLIP: Partial<
   Record<Condition, (config: Configuration) => Configuration>
 > = {
   enemy_frostbitten: (c) => ({ ...c, enemyFrostbittenEnabled: true }),
+  enemy_in_crimson_tide: (c) => ({ ...c, enemyInCrimsonTide: true }),
   realm_of_mercury: (c) => ({ ...c, realmOfMercuryEnabled: true }),
   has_focus_blessing: (c) => ({ ...c, hasFocusBlessing: true }),
   has_agility_blessing: (c) => ({ ...c, hasAgilityBlessing: true }),

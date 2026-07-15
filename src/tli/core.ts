@@ -136,6 +136,18 @@ export interface Configuration {
   channeling: boolean;
   // Defaults to max channeled stacks
   channeledStacks?: number;
+  // default to max (50)
+  eternalMoraleStacks?: number;
+  // default to max (50)
+  eternalNightmareStacks?: number;
+  // default to max (50)
+  eternalShadowStacks?: number;
+  // default to max (10)
+  eternalReignStacks?: number;
+  // Terra Charges consumed by the cast being calculated. Default 0.
+  terraChargesConsumed?: number;
+  // Enemy inside Selena's Red Tide (Spiral of Shattered Dreams). Default false.
+  enemyInCrimsonTide: boolean;
   // default to max
   stalkerStacks?: number;
   // default to false
@@ -290,6 +302,12 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   hasCritRecently: false,
   channeling: false,
   channeledStacks: undefined,
+  eternalMoraleStacks: undefined,
+  eternalNightmareStacks: undefined,
+  eternalShadowStacks: undefined,
+  eternalReignStacks: undefined,
+  terraChargesConsumed: undefined,
+  enemyInCrimsonTide: false,
   stalkerStacks: undefined,
   sagesInsightFireActivated: false,
   sagesInsightColdActivated: false,

@@ -34,11 +34,37 @@ export const calculateInc = (bonuses: number[]): number => {
   return R.pipe(bonuses, R.sum()) / 100;
 };
 
-export const calculateAddn = (bonuses: number[]): number => {
-  return R.pipe(
-    bonuses,
-    R.reduce((b1, b2) => b1 * (1 + b2 / 100), 1),
-  );
+export interface AddnEntry {
+  value: number;
+  affixKey?: string;
+  src?: string;
+}
+
+// Same-wording lines from different systems (a talent node vs a gear affix)
+// are distinct affixes and must multiply — group within a source class only.
+// src is a location string like "Gear#helmet" / "Talent#tree1" / "CustomAffix".
+const addnGroupKey = (b: AddnEntry): string =>
+  `${b.src?.split("#")[0] ?? ""}|${b.affixKey}`;
+
+// TLI manual: additional bonuses of the SAME affix add together into one
+// multiplier; distinct affixes (and keyless engine-generated mods) multiply.
+// A grouped sum is floored at -100%: the multiplier can reach 0 but never
+// flips sign (per-mod multiplication could never go below 0 either).
+export const calculateAddn = (bonuses: AddnEntry[]): number => {
+  let mult = 1;
+  const grouped = new Map<string, number>();
+  for (const b of bonuses) {
+    if (b.affixKey === undefined) {
+      mult *= 1 + b.value / 100;
+    } else {
+      const key = addnGroupKey(b);
+      grouped.set(key, (grouped.get(key) ?? 0) + b.value);
+    }
+  }
+  for (const sum of grouped.values()) {
+    mult *= Math.max(0, 1 + sum / 100);
+  }
+  return mult;
 };
 
 type ModTypeWithNumericValue = Extract<Mod, { value: number }>["type"];
@@ -50,18 +76,22 @@ export function calcEffMult<T extends ModTypeWithNumericValue>(
   modType: T,
 ): number;
 // Overload 2: Calculate directly from array of {value, addn?}
-export function calcEffMult<T extends { value: number; addn?: boolean }>(
-  mods: T[],
-): number;
+export function calcEffMult<
+  T extends { value: number; addn?: boolean; affixKey?: string },
+>(mods: T[]): number;
 // Implementation
 export function calcEffMult(mods: unknown[], modType?: Mod["type"]): number {
   const filtered =
     modType !== undefined ? filterMods(mods as Mod[], modType) : mods;
-  const typed = filtered as { value: number; addn?: boolean }[];
+  const typed = filtered as {
+    value: number;
+    addn?: boolean;
+    affixKey?: string;
+  }[];
   const incMods = typed.filter((m) => m.addn === undefined || m.addn === false);
   const addnMods = typed.filter((m) => m.addn === true);
   const inc = calculateInc(incMods.map((m) => m.value));
-  const addn = calculateAddn(addnMods.map((m) => m.value));
+  const addn = calculateAddn(addnMods);
   return (1 + inc) * addn;
 }
 

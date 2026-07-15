@@ -367,6 +367,7 @@ const DMG_MOD_TYPE_RULES: Record<DmgModType, DmgModTypeRule> = {
   spell: { tag: "Spell" },
   melee: { tag: "Melee" },
   area: { tag: "Area" },
+  terra: { tag: "Terra" },
   channeled: { tag: "Channeled" },
   shadow_strike_skill: { tag: "Shadow Strike" },
   slash_strike_skill: { tag: "Slash-Strike" },
@@ -385,6 +386,14 @@ const DMG_MOD_TYPE_RULES: Record<DmgModType, DmgModTypeRule> = {
   slash_strike_skill_ailment: "never", // todo
   ailment: "never", // todo
 };
+
+// Dmg mod types that are parsed but not applied anywhere yet (no ailment DPS
+// path). Surfaced to the UI as "not modeled" instead of silently dropped.
+export const UNMODELED_DMG_MOD_TYPES: DmgModType[] = (
+  Object.entries(DMG_MOD_TYPE_RULES) as [DmgModType, DmgModTypeRule][]
+)
+  .filter(([, rule]) => rule === "never")
+  .map(([t]) => t);
 
 export const dmgModTypesForSkill = (skill: BaseActiveSkill): DmgModType[] => {
   const result: DmgModType[] = [];
@@ -415,7 +424,7 @@ export const calculateDmgInc = (mods: ModT<"DmgPct">[]): number => {
 };
 
 export const calculateDmgAddn = (mods: ModT<"DmgPct">[]): number => {
-  return calculateAddn(mods.filter((m) => m.addn).map((m) => m.value));
+  return calculateAddn(mods.filter((m) => m.addn));
 };
 
 // === Damage Pool Calculations ===
@@ -585,6 +594,7 @@ export function applyDmgBonusesAndPen(
         cond: m.cond,
         condThreshold: m.condThreshold,
         src: m.src,
+        affixKey: m.affixKey,
       });
     }
   }
@@ -838,7 +848,7 @@ export const calculateCritDmg = (
     modTypes.includes(m.modType),
   );
   const inc = calculateInc(mods.filter((m) => !m.addn).map((v) => v.value));
-  const addn = calculateAddn(mods.filter((m) => m.addn).map((v) => v.value));
+  const addn = calculateAddn(mods.filter((m) => m.addn));
 
   return (1.5 + inc) * addn;
 };

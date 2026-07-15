@@ -5,6 +5,7 @@ export const DMG_MOD_TYPES = [
   "area_ailment",
   "attack",
   "spell",
+  "terra",
   "physical",
   "cold",
   "lightning",

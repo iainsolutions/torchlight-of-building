@@ -4,6 +4,7 @@ import {
   type CoreTalentName,
   CoreTalentNames,
 } from "@/src/data/core-talent/types";
+import { Destinies } from "@/src/data/destiny/destinies";
 import type { HeroName, HeroTraitName } from "@/src/data/hero-trait/types";
 import {
   type HyperlinkName,
@@ -31,6 +32,7 @@ import {
   getTargetAreaPositions,
   reflectPosition,
 } from "@/src/lib/inverse-image-utils";
+import { craftDestinyAffix } from "@/src/lib/pactspirit-utils";
 import {
   extractAdditionalEffect,
   extractReplacementName,
@@ -46,6 +48,7 @@ import type {
   GearPage as SaveDataGearPage,
   HeroMemory as SaveDataHeroMemory,
   HeroPage as SaveDataHeroPage,
+  InstalledDestiny as SaveDataInstalledDestiny,
   PactspiritPage as SaveDataPactspiritPage,
   PactspiritSlot as SaveDataPactspiritSlot,
   PlacedInverseImage as SaveDataPlacedInverseImage,
@@ -94,7 +97,7 @@ import type {
   UndeterminedFate,
   UndeterminedFateSlotState,
 } from "../core";
-import { parseMod } from "../mod-parser/index";
+import { parseModKeyed } from "../mod-parser/index";
 import { parseSupportAffixes } from "../skills/support-mod-templates";
 import {
   convertAffixTextToAffix,
@@ -118,7 +121,7 @@ const convertBaseStats = (
 ): BaseStats => {
   const lines = baseStatText.split(/\n/);
   const baseStatLines = lines.map((lineText) => {
-    const mods = parseMod(lineText);
+    const mods = parseModKeyed(lineText);
     return { text: lineText, mods: mods?.map((mod) => ({ ...mod, src })) };
   });
   return { name, baseStatLines, src };
@@ -205,7 +208,7 @@ const convertAffix = (
           voraxLegendaryName,
           affixLines: talentLines.map((text) => ({
             text,
-            mods: parseMod(text)?.map((mod) => ({ ...mod, src })),
+            mods: parseModKeyed(text)?.map((mod) => ({ ...mod, src })),
           })),
           src,
           maxDivinity,
@@ -218,7 +221,7 @@ const convertAffix = (
       const description = Hyperlinks[hyperlinkName];
       const descriptionLines = description.split("\n");
       const affixLines: AffixLine[] = descriptionLines.map((lineText) => {
-        const mods = parseMod(lineText);
+        const mods = parseModKeyed(lineText);
         return { text: lineText, mods: mods?.map((mod) => ({ ...mod, src })) };
       });
       return {
@@ -235,7 +238,7 @@ const convertAffix = (
     // Strip per-line bracket prefix (e.g. blendAffix has "[Malign Embrace] ..."
     // on every line, but extractBracketPrefix above only removed it from the first).
     const { text: cleanedLine } = extractBracketPrefix(lineText);
-    const mods = parseMod(cleanedLine);
+    const mods = parseModKeyed(cleanedLine);
     return { text: lineText, mods: mods?.map((mod) => ({ ...mod, src })) };
   });
 
@@ -279,7 +282,7 @@ const convertCoreTalent = (
   const lines = talent.affix.split("\n");
   const affixLines: AffixLine[] = lines.map((text) => ({
     text,
-    mods: parseMod(text)?.map((mod) => ({ ...mod, src })),
+    mods: parseModKeyed(text)?.map((mod) => ({ ...mod, src })),
   }));
   return { specialName: talentName, affixLines, src };
 };
@@ -287,7 +290,7 @@ const convertCoreTalent = (
 const convertCustomAffixLines = (lines: string[] | undefined): AffixLine[] => {
   if (lines === undefined || lines.length === 0) return [];
   return lines.map((lineText) => {
-    const mods = parseMod(lineText);
+    const mods = parseModKeyed(lineText);
     return {
       text: lineText,
       mods: mods?.map((mod) => ({ ...mod, src: "CustomAffix" })),
@@ -434,7 +437,7 @@ const extractReplacementCoreTalent = (
     .split("\n")
     .map((text) => ({
       text,
-      mods: parseMod(text)?.map((mod) => ({ ...mod, src })),
+      mods: parseModKeyed(text)?.map((mod) => ({ ...mod, src })),
     }));
   return { specialName: hyperlinkName, affixLines, src };
 };
@@ -734,6 +737,34 @@ const getPactspiritByName = (name: string): Pactspirit | undefined =>
 
 const UNDETERMINED_FATE_DEFAULT_TEXT = "+6% damage\n+6% minion damage";
 
+// Save data normally carries the resolved affix text (the UI resolves ranges
+// at install time). If it's blank (e.g. programmatically generated saves),
+// resolve from destiny data by name+type at the midpoint roll. Name alone is
+// ambiguous: many destiny names exist as both Micro and Medium Fate.
+const resolveDestinyAffixText = (
+  installed: SaveDataInstalledDestiny,
+): string => {
+  if (installed.resolvedAffix.trim() !== "") {
+    return installed.resolvedAffix;
+  }
+  const destiny = Destinies.find(
+    (d) => d.name === installed.destinyName && d.type === installed.destinyType,
+  );
+  if (destiny === undefined) {
+    return installed.resolvedAffix;
+  }
+  return craftDestinyAffix(destiny.affix, 50);
+};
+
+const convertInstalledDestiny = (
+  installed: SaveDataInstalledDestiny,
+  src: string,
+): InstalledDestiny => ({
+  destinyName: installed.destinyName,
+  destinyType: installed.destinyType,
+  affix: convertAffix(resolveDestinyAffixText(installed), src),
+});
+
 const convertUndeterminedFate = (
   saveDataFate: SaveDataUndeterminedFate,
   slotIndex: number,
@@ -748,11 +779,10 @@ const convertUndeterminedFate = (
     let installedDestiny: InstalledDestiny | undefined;
 
     if (saveSlot?.installedDestiny !== undefined) {
-      installedDestiny = {
-        destinyName: saveSlot.installedDestiny.destinyName,
-        destinyType: saveSlot.installedDestiny.destinyType,
-        affix: convertAffix(saveSlot.installedDestiny.resolvedAffix, src),
-      };
+      installedDestiny = convertInstalledDestiny(
+        saveSlot.installedDestiny,
+        src,
+      );
     }
 
     slots.push({ slotType: "micro", installedDestiny, defaultAffix });
@@ -765,11 +795,10 @@ const convertUndeterminedFate = (
     let installedDestiny: InstalledDestiny | undefined;
 
     if (saveSlot?.installedDestiny !== undefined) {
-      installedDestiny = {
-        destinyName: saveSlot.installedDestiny.destinyName,
-        destinyType: saveSlot.installedDestiny.destinyType,
-        affix: convertAffix(saveSlot.installedDestiny.resolvedAffix, src),
-      };
+      installedDestiny = convertInstalledDestiny(
+        saveSlot.installedDestiny,
+        src,
+      );
     }
 
     slots.push({ slotType: "medium", installedDestiny, defaultAffix });
@@ -799,11 +828,10 @@ const convertPactspiritSlot = (
     let installedDestiny: InstalledDestiny | undefined;
 
     if (saveDataRing.installedDestiny) {
-      installedDestiny = {
-        destinyName: saveDataRing.installedDestiny.destinyName,
-        destinyType: saveDataRing.installedDestiny.destinyType,
-        affix: convertAffix(saveDataRing.installedDestiny.resolvedAffix, src),
-      };
+      installedDestiny = convertInstalledDestiny(
+        saveDataRing.installedDestiny,
+        src,
+      );
     }
 
     const originalRingName = pactspirit[ringKey].name;

@@ -15,6 +15,7 @@ import {
   type SupportAffix,
 } from "../core";
 import type { Mod } from "../mod";
+import { parseModKeyed } from "../mod-parser/index";
 import { buildSupportSkillAffixes } from "../storage/load-save";
 import {
   calculateOffense,
@@ -6451,5 +6452,919 @@ describe("combo attack damage ([Test] Combo Attack)", () => {
     expect(baseSummary).toBeDefined();
     if (baseSummary === undefined) return;
     expect(summary.avgDps).toBeCloseTo(baseSummary.avgDps * 2, 0);
+  });
+});
+
+describe("curse cap enforcement", () => {
+  test("enemyCurseCount config is clamped to curse cap (base 1)", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          dmgModType: "global",
+          addn: true,
+          value: 25,
+          per: { stackable: "enemy_curse_count", multiplicative: true },
+        },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, enemyCurseCount: 5 },
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    // Cap is 1 (no AddnCurse mods): 100 * 1.25, not 100 * 1.25^5
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(125);
+  });
+
+  test("AddnCurse mods raise the clamp", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          dmgModType: "global",
+          addn: true,
+          value: 25,
+          per: { stackable: "enemy_curse_count", multiplicative: true },
+        },
+        { type: "AddnCurse", value: 2 },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, enemyCurseCount: 5 },
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    // Cap 3: 100 * 1.25^3 = 195.31
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(195.31, 1);
+  });
+
+  test("manual enemyCurseCount below cap is respected", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          dmgModType: "global",
+          addn: true,
+          value: 25,
+          per: { stackable: "enemy_curse_count", multiplicative: true },
+        },
+        { type: "AddnCurse", value: 2 },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, enemyCurseCount: 2 },
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    // 100 * 1.25^2 = 156.25
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(156.25);
+  });
+
+  test("self_curse_count clamped identically", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          dmgModType: "global",
+          addn: true,
+          value: 25,
+          per: { stackable: "self_curse_count", multiplicative: true },
+        },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, enemyCurseCount: 5 },
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(125);
+  });
+
+  test("duplicate TriggersSkill curse applies debuff once", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        { type: "TriggersSkill", skillName: "Timid", level: 20 },
+        { type: "TriggersSkill", skillName: "Timid", level: 20 },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    const timidMods = actual?.resolvedMods.filter(
+      (m) =>
+        m.type === "DmgPct" &&
+        m.dmgModType === "hit" &&
+        m.addn === true &&
+        m.isEnemyDebuff === true,
+    );
+    expect(timidMods).toHaveLength(1);
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(139);
+  });
+
+  test("curse debuffs capped at 1+AddnCurse across distinct curses", () => {
+    const twoCurses = affixLines([
+      { type: "TriggersSkill", skillName: "Timid", level: 20 },
+      { type: "TriggersSkill", skillName: "Entangled Pain", level: 20 },
+    ]);
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: twoCurses,
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    // Cap 1: only Timid (first in mod order) applies
+    const timidMod = actual?.resolvedMods.find(
+      (m) => m.type === "DmgPct" && m.dmgModType === "hit" && m.isEnemyDebuff,
+    );
+    const entangledMod = actual?.resolvedMods.find(
+      (m) =>
+        m.type === "DmgPct" &&
+        m.dmgModType === "damage_over_time" &&
+        m.isEnemyDebuff,
+    );
+    expect(timidMod).toBeDefined();
+    expect(entangledMod).toBeUndefined();
+
+    // With +1 curse cap, both apply
+    const loadout2 = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: [
+        ...twoCurses,
+        ...affixLines([{ type: "AddnCurse", value: 1 }]),
+      ],
+    });
+    const results2 = calculateOffense({
+      loadout: loadout2,
+      configuration: defaultConfiguration,
+    });
+    const actual2 = results2.skills["[Test] Simple Attack"];
+    expect(
+      actual2?.resolvedMods.find(
+        (m) => m.type === "DmgPct" && m.dmgModType === "hit" && m.isEnemyDebuff,
+      ),
+    ).toBeDefined();
+    expect(
+      actual2?.resolvedMods.find(
+        (m) =>
+          m.type === "DmgPct" &&
+          m.dmgModType === "damage_over_time" &&
+          m.isEnemyDebuff,
+      ),
+    ).toBeDefined();
+  });
+
+  test("active-slot curse takes priority over triggered curse", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: {
+        activeSkills: {
+          1: {
+            skillName: "[Test] Simple Attack" as const,
+            enabled: true,
+            level: 20,
+            supportSkills: {},
+          },
+          2: {
+            skillName: "Entangled Pain" as const,
+            enabled: true,
+            level: 20,
+            supportSkills: {},
+          },
+        },
+        passiveSkills: {},
+      },
+      customAffixLines: affixLines([
+        { type: "TriggersSkill", skillName: "Timid", level: 20 },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+    // Cap 1: Entangled Pain (active slot) wins over triggered Timid
+    expect(
+      actual?.resolvedMods.find(
+        (m) =>
+          m.type === "DmgPct" &&
+          m.dmgModType === "damage_over_time" &&
+          m.isEnemyDebuff,
+      ),
+    ).toBeDefined();
+    expect(
+      actual?.resolvedMods.find(
+        (m) => m.type === "DmgPct" && m.dmgModType === "hit" && m.isEnemyDebuff,
+      ),
+    ).toBeUndefined();
+  });
+});
+
+describe("same-affix additional damage rule", () => {
+  test("same-affixKey additional damage adds into one bucket", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          value: 20,
+          dmgModType: "global",
+          addn: true,
+          affixKey: "#% additional damage",
+        },
+        {
+          type: "DmgPct",
+          value: 20,
+          dmgModType: "global",
+          addn: true,
+          affixKey: "#% additional damage",
+        },
+      ]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    // Same affix adds: 100 * 1.4, not 100 * 1.2 * 1.2 = 144
+    expect(
+      results.skills["[Test] Simple Attack"]?.attackDpsSummary?.mainhand.avgHit,
+    ).toBeCloseTo(140);
+  });
+
+  test("distinct-affixKey additional damage multiplies", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          value: 20,
+          dmgModType: "global",
+          addn: true,
+          affixKey: "a",
+        },
+        {
+          type: "DmgPct",
+          value: 20,
+          dmgModType: "global",
+          addn: true,
+          affixKey: "b",
+        },
+      ]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    expect(
+      results.skills["[Test] Simple Attack"]?.attackDpsSummary?.mainhand.avgHit,
+    ).toBeCloseTo(144);
+  });
+
+  test("identical gear affix text groups end-to-end through the parser", () => {
+    // Two gear pieces with the same "+20% additional Lightning Damage" line;
+    // a lightning weapon so the lightning bucket applies.
+    const parsedLine = (text: string) => ({ text, mods: parseModKeyed(text) });
+    const loadout = initLoadout({
+      gearPage: {
+        equippedGear: {
+          mainHand: baseWeapon,
+          helmet: {
+            equipmentType: "Helmet (INT)" as const,
+            prefixes: [
+              { affixLines: [parsedLine("+20% additional Lightning Damage")] },
+            ],
+          },
+          gloves: {
+            equipmentType: "Gloves (INT)" as const,
+            prefixes: [
+              { affixLines: [parsedLine("+20% additional Lightning Damage")] },
+            ],
+          },
+        },
+        inventory: [],
+      },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "FlatDmgToAtks",
+          value: { min: 100, max: 100 },
+          dmgType: "lightning",
+        },
+      ]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    // 100 phys + 100 lightning * 1.4 (same affix adds) = 240, not 244
+    expect(
+      results.skills["[Test] Simple Attack"]?.attackDpsSummary?.mainhand.avgHit,
+    ).toBeCloseTo(240);
+  });
+});
+
+describe("at_max_channeled_stacks condition", () => {
+  const channeledLoadout = () =>
+    initLoadout({
+      gearPage: { equippedGear: {}, inventory: [] },
+      skillPage: simplePersistentSpellSkillPage(),
+      customAffixLines: affixLines([
+        { type: "InitialMaxChannel", value: 5 },
+        {
+          type: "DmgPct",
+          value: 50,
+          dmgModType: "global",
+          addn: true,
+          cond: "at_max_channeled_stacks",
+        },
+      ]),
+    });
+
+  test("defaults to at-max (mod active) when channeledStacks unset", () => {
+    const results = calculateOffense({
+      loadout: channeledLoadout(),
+      configuration: defaultConfiguration,
+    });
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+
+  test("mod active when channeledStacks equals max", () => {
+    const results = calculateOffense({
+      loadout: channeledLoadout(),
+      configuration: { ...defaultConfiguration, channeledStacks: 5 },
+    });
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+
+  test("mod excluded when channeledStacks below max", () => {
+    const results = calculateOffense({
+      loadout: channeledLoadout(),
+      configuration: { ...defaultConfiguration, channeledStacks: 4 },
+    });
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(100);
+  });
+
+  test("mod applies with no channel-stack mods and stacks 0 (0 >= 0)", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: {}, inventory: [] },
+      skillPage: simplePersistentSpellSkillPage(),
+      customAffixLines: affixLines([
+        {
+          type: "DmgPct",
+          value: 50,
+          dmgModType: "global",
+          addn: true,
+          cond: "at_max_channeled_stacks",
+        },
+      ]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, channeledStacks: 0 },
+    });
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+});
+
+describe("eternal stack buffs", () => {
+  const eternalInput = (generator: Mod, config?: Partial<Configuration>) => ({
+    loadout: initLoadout({
+      gearPage: { equippedGear: {}, inventory: [] },
+      skillPage: simplePersistentSpellSkillPage(),
+      customAffixLines: affixLines([generator]),
+    }),
+    configuration: { ...defaultConfiguration, ...config },
+  });
+
+  test("Eternal Morale defaults to 50 stacks (5%/stack additive per)", () => {
+    const results = calculateOffense(
+      eternalInput({ type: "GeneratesEternalMorale" }),
+    );
+    // 100 * (1 + 5 * 50 / 100) = 350
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(350);
+  });
+
+  test("Eternal Morale respects configured stack count", () => {
+    const results = calculateOffense(
+      eternalInput(
+        { type: "GeneratesEternalMorale" },
+        { eternalMoraleStacks: 10 },
+      ),
+    );
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+
+  test("Eternal Morale at 0 stacks contributes nothing", () => {
+    const results = calculateOffense(
+      eternalInput(
+        { type: "GeneratesEternalMorale" },
+        { eternalMoraleStacks: 0 },
+      ),
+    );
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(100);
+  });
+
+  test("Eternal Morale stack config clamps to 50", () => {
+    const results = calculateOffense(
+      eternalInput(
+        { type: "GeneratesEternalMorale" },
+        { eternalMoraleStacks: 999 },
+      ),
+    );
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(350);
+  });
+
+  test("Eternal Reign defaults to 10 multiplicative stacks", () => {
+    const results = calculateOffense(
+      eternalInput({ type: "GeneratesEternalReign" }),
+    );
+    // 100 * 1.1^10 ≈ 259.37
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(259.37, 1);
+  });
+
+  test("Eternal Reign respects configured stacks", () => {
+    const results = calculateOffense(
+      eternalInput(
+        { type: "GeneratesEternalReign" },
+        { eternalReignStacks: 4 },
+      ),
+    );
+    // 100 * 1.1^4 ≈ 146.41
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(146.41, 1);
+  });
+});
+
+describe("unmodeled ailment mods", () => {
+  const withMods = (mods: Mod[]) =>
+    calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: simpleAttackSkillPage(),
+        customAffixLines: affixLines(mods),
+      }),
+      configuration: defaultConfiguration,
+    });
+
+  test("ailment DmgPct does not change attack DPS, reported unmodeled", () => {
+    const baseline = withMods([]);
+    const withAilment = withMods([
+      { type: "DmgPct", value: 50, dmgModType: "ailment", addn: true },
+    ]);
+    const skill = "[Test] Simple Attack";
+    expect(withAilment.skills[skill]?.attackDpsSummary?.avgDps).toBeCloseTo(
+      baseline.skills[skill]?.attackDpsSummary?.avgDps ?? Number.NaN,
+    );
+    expect(withAilment.skills[skill]?.unmodeledMods).toHaveLength(1);
+    expect(baseline.skills[skill]?.unmodeledMods).toHaveLength(0);
+  });
+
+  test("area_ailment and slash_strike_skill_ailment reported unmodeled", () => {
+    const results = withMods([
+      { type: "DmgPct", value: 30, dmgModType: "area_ailment", addn: true },
+      {
+        type: "DmgPct",
+        value: 30,
+        dmgModType: "slash_strike_skill_ailment",
+        addn: true,
+      },
+    ]);
+    expect(results.skills["[Test] Simple Attack"]?.unmodeledMods).toHaveLength(
+      2,
+    );
+  });
+
+  test("applied mods are not reported as unmodeled", () => {
+    const results = withMods([
+      { type: "DmgPct", value: 100, dmgModType: "global", addn: false },
+    ]);
+    const skill = results.skills["[Test] Simple Attack"];
+    expect(skill?.unmodeledMods).toHaveLength(0);
+    expect(skill?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(200);
+  });
+
+  test("damage_over_time modifier applies to persistent damage", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: simplePersistentSpellSkillPage(),
+        customAffixLines: affixLines([
+          {
+            type: "DmgPct",
+            value: 50,
+            dmgModType: "damage_over_time",
+            addn: true,
+          },
+        ]),
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+});
+
+describe("skill data warnings", () => {
+  test("enabled skill without per-level data produces a warning", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: {
+          activeSkills: {
+            1: {
+              skillName: "Aimed Shot" as const,
+              enabled: true,
+              level: 20,
+              supportSkills: {},
+            },
+          },
+          passiveSkills: {},
+        },
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(
+      results.warnings.some((w) => /Aimed Shot.*no per-level/.test(w)),
+    ).toBe(true);
+    expect(Object.keys(results.skills).includes("Aimed Shot" as never)).toBe(
+      false,
+    );
+  });
+
+  test("placeholder skill reports levelDataQuality without warning", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: simpleAttackSkillPage(),
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(results.skills["[Test] Simple Attack"]?.levelDataQuality).toBe(
+      "placeholder",
+    );
+    expect(results.warnings).toHaveLength(0);
+  });
+
+  test("measured skill reports measured quality", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: {
+          activeSkills: {
+            1: {
+              skillName: "Frost Spike" as const,
+              enabled: true,
+              level: 20,
+              supportSkills: {},
+            },
+          },
+          passiveSkills: {},
+        },
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(results.skills["Frost Spike"]?.levelDataQuality).toBe("measured");
+  });
+});
+
+describe("eternal nightmare and shadow stacks", () => {
+  test("Eternal Nightmare scales crit at 50 stacks by default", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([{ type: "GeneratesEternalNightmare" }]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    const summary = results.skills["[Test] Simple Attack"]?.attackDpsSummary;
+    // 50 stacks * 5% crit rating = +250% crit rating: base 500 * 3.5 = 1750
+    // → 17.5% crit chance. Crit dmg: 50 * 1% addn = 1.5x on 150% base.
+    expect(summary?.mainhand.critChance.actual).toBeCloseTo(0.175);
+    expect(summary?.critDmgMult).toBeCloseTo(1.5 * 1.5);
+  });
+
+  test("Eternal Nightmare respects configured stacks", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([{ type: "GeneratesEternalNightmare" }]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, eternalNightmareStacks: 10 },
+    });
+    const summary = results.skills["[Test] Simple Attack"]?.attackDpsSummary;
+    // 10 stacks: crit rating 500 * 1.5 = 750 → 7.5%; crit dmg 1.1 * 1.5
+    expect(summary?.mainhand.critChance.actual).toBeCloseTo(0.075);
+    expect(summary?.critDmgMult).toBeCloseTo(1.5 * 1.1);
+  });
+
+  test("Eternal Shadow grants movement speed per stack", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([{ type: "GeneratesEternalShadow" }]),
+    });
+    const at50 = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    const at20 = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, eternalShadowStacks: 20 },
+    });
+    expect(
+      at50.skills["[Test] Simple Attack"]?.movementSpeedBonusPct,
+    ).toBeCloseTo(50);
+    expect(
+      at20.skills["[Test] Simple Attack"]?.movementSpeedBonusPct,
+    ).toBeCloseTo(20);
+  });
+});
+
+describe("buff-only skills do not trigger missing-data warnings", () => {
+  test("Ice Bond in a slot produces no warning", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: {
+          activeSkills: {
+            1: {
+              skillName: "[Test] Simple Attack" as const,
+              enabled: true,
+              level: 20,
+              supportSkills: {},
+            },
+            2: {
+              skillName: "Ice Bond" as const,
+              enabled: true,
+              level: 20,
+              supportSkills: {},
+            },
+          },
+          passiveSkills: {},
+        },
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(results.warnings).toHaveLength(0);
+  });
+});
+
+describe("channeled gate ignores condition-gated MaxChannel mods", () => {
+  test("inactive cond-gated MaxChannel does not inflate the max", () => {
+    // MaxChannel +3 gated on holding_shield (false in config): true max is 5.
+    const loadout = initLoadout({
+      gearPage: { equippedGear: {}, inventory: [] },
+      skillPage: simplePersistentSpellSkillPage(),
+      customAffixLines: affixLines([
+        { type: "InitialMaxChannel", value: 5 },
+        { type: "MaxChannel", value: 3, cond: "holding_shield" },
+        {
+          type: "DmgPct",
+          value: 50,
+          dmgModType: "global",
+          addn: true,
+          cond: "at_max_channeled_stacks",
+        },
+      ]),
+    });
+    const results = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, channeledStacks: 5 },
+    });
+    // channeledStacks 5 >= true max 5 → at max, mod applies
+    expect(
+      results.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+
+  test("active unconditional MaxChannel raises the max", () => {
+    const loadout = initLoadout({
+      gearPage: { equippedGear: {}, inventory: [] },
+      skillPage: simplePersistentSpellSkillPage(),
+      customAffixLines: affixLines([
+        { type: "InitialMaxChannel", value: 5 },
+        { type: "MaxChannel", value: 3 },
+        {
+          type: "DmgPct",
+          value: 50,
+          dmgModType: "global",
+          addn: true,
+          cond: "at_max_channeled_stacks",
+        },
+      ]),
+    });
+    const below = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, channeledStacks: 5 },
+    });
+    const atMax = calculateOffense({
+      loadout,
+      configuration: { ...defaultConfiguration, channeledStacks: 8 },
+    });
+    expect(
+      below.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(100);
+    expect(
+      atMax.skills["[Test] Simple Persistent Spell"]?.persistentDpsSummary
+        ?.total,
+    ).toBeCloseTo(150);
+  });
+});
+
+describe("SS13 Terra skills", () => {
+  const terraSkillPage = (skillName: string) => ({
+    activeSkills: {
+      1: {
+        skillName: skillName as ImplementedActiveSkillName,
+        enabled: true,
+        level: 20,
+        supportSkills: {},
+      },
+    },
+    passiveSkills: {},
+  });
+
+  test("Thunderstorm Zone calculates hit DPS from official values", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: terraSkillPage("Thunderstorm Zone"),
+      }),
+      configuration: defaultConfiguration,
+    });
+    const skill = results.skills["Thunderstorm Zone"];
+    // avg hit (164+304)/2 = 234; 1/0.8s = 1.25 casts/s; 5% base crit @150%
+    // avgDps = 234 * 1.025 * 1.25 = 299.8125
+    expect(skill?.spellDpsSummary?.avgDps).toBeCloseTo(299.81, 1);
+    expect(skill?.levelDataQuality).toBe("placeholder");
+    expect(results.warnings).toHaveLength(0);
+  });
+
+  test("Thorn Domain calculates persistent DPS", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: terraSkillPage("Thorn Domain"),
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(
+      results.skills["Thorn Domain"]?.persistentDpsSummary?.total,
+    ).toBeCloseTo(902);
+  });
+
+  test("Terra Charges consumed multiply skill damage additively per charge", () => {
+    const base = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: terraSkillPage("Thorn Domain"),
+      }),
+      configuration: defaultConfiguration,
+    });
+    const charged = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: terraSkillPage("Thorn Domain"),
+      }),
+      configuration: { ...defaultConfiguration, terraChargesConsumed: 5 },
+    });
+    // 5 charges * +26% additional (adds within the one mod) = x2.3
+    expect(
+      charged.skills["Thorn Domain"]?.persistentDpsSummary?.total,
+    ).toBeCloseTo(
+      (base.skills["Thorn Domain"]?.persistentDpsSummary?.total ?? 0) * 2.3,
+    );
+  });
+
+  test("terra dmgModType applies only to Terra-tagged skills", () => {
+    const terraMod = affixLines([
+      { type: "DmgPct", value: 50, dmgModType: "terra", addn: true },
+    ]);
+    const terraResults = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: terraSkillPage("Thorn Domain"),
+        customAffixLines: terraMod,
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(
+      terraResults.skills["Thorn Domain"]?.persistentDpsSummary?.total,
+    ).toBeCloseTo(902 * 1.5);
+
+    // Non-Terra skill unaffected
+    const attackResults = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: simpleAttackSkillPage(),
+        customAffixLines: terraMod,
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(
+      attackResults.skills["[Test] Simple Attack"]?.attackDpsSummary?.mainhand
+        .avgHit,
+    ).toBeCloseTo(100);
+  });
+
+  test("Crimson Tide trait node applies enemy-side additional damage when toggled", () => {
+    const withTrait = (config: Configuration) =>
+      calculateOffense({
+        loadout: initLoadout({
+          gearPage: { equippedGear: {}, inventory: [] },
+          skillPage: terraSkillPage("Thorn Domain"),
+          heroPage: {
+            selectedHero:
+              "Tide Whisper Selena: Dance of the Deep (#2)" as const,
+            traits: {
+              level45: { name: "Spiral of Shattered Dreams" as const },
+            },
+            memorySlots: {},
+            memoryInventory: [],
+          },
+        }),
+        configuration: config,
+      });
+    const off = withTrait(defaultConfiguration);
+    const on = withTrait({ ...defaultConfiguration, enemyInCrimsonTide: true });
+    // No memory equipped → memoryLevel defaults 40 → trait level 3: +65%
+    expect(
+      (on.skills["Thorn Domain"]?.persistentDpsSummary?.total ?? 0) /
+        (off.skills["Thorn Domain"]?.persistentDpsSummary?.total ?? 1),
+    ).toBeCloseTo(1.65);
+  });
+
+  test("parses terra skill damage affix text", () => {
+    const mods = parseModKeyed("+20% additional Terra Skill Damage");
+    expect(mods).toHaveLength(1);
+    expect(mods?.[0]).toMatchObject({
+      type: "DmgPct",
+      value: 20,
+      dmgModType: "terra",
+      addn: true,
+    });
   });
 });
