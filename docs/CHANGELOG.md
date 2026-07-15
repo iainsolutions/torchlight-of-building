@@ -2,6 +2,18 @@
 
 Architectural decisions and behavior-changing fixes.
 
+## 2026-07-15 — tlidb SS13 beta ladder import
+
+- Real per-level tables (1-20, plateau 21-40) imported from tlidb beta
+  pages for all five damage Terra skills; Fallen Star (332-616 phys)
+  and Nether Grasp (562/s DoT + 37-37 hits/0.5s, 6s) now calculable
+  with factories. Storm Field addedDmgEffPct 90, Fallen Star 88,
+  Tidewell 134. Thunderstrike ladder stored for future modeling.
+- CONFLICTS vs patch notes, beta client values imported (verify at
+  launch): Thornfield 486/s (notes: 902), Frost Terra 484/s (notes: 629).
+- Base Terra Charge economy per tlidb: cap 1, gain 1 per 0.5s
+  (trait/gear raises cap). Skill shop unlock level 55.
+
 ## 2026-07-14 — Official English names (poster.xd.cn/r/ss13pn/?lang=en)
 
 - All S13 content renamed to official EN localization: Storm Field

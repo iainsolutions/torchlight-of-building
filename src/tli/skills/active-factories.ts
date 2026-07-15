@@ -423,6 +423,52 @@ export const activeSkillModFactories: Partial<
       },
     ],
   }),
+  "Fallen Star": (l, vals) => ({
+    offense: {
+      spellDmg: {
+        value: { min: v(vals.spellDmgMin, l), max: v(vals.spellDmgMax, l) },
+        dmgType: "physical",
+        castTime: v(vals.castTime, l),
+      },
+      addedDmgEffPct: { value: v(vals.addedDmgEffPct, l) },
+      shotgunEffFalloffPct: { value: 70 },
+    },
+    mods: [
+      {
+        type: "DmgPct",
+        dmgModType: "terra",
+        addn: true,
+        value: 26,
+        per: { stackable: "terra_charges_consumed" },
+        src: "Terra Charge (+26% additional per charge consumed)",
+      },
+    ],
+  }),
+  "Nether Grasp": (l, vals) => ({
+    offense: {
+      persistentDmg: {
+        value: v(vals.persistentDamage, l),
+        dmgType: "erosion",
+        duration: 6,
+      },
+      spellDmg: {
+        value: { min: v(vals.spellDmgMin, l), max: v(vals.spellDmgMax, l) },
+        dmgType: "erosion",
+        castTime: v(vals.castTime, l),
+      },
+      addedDmgEffPct: { value: v(vals.addedDmgEffPct, l) },
+    },
+    mods: [
+      {
+        type: "DmgPct",
+        dmgModType: "terra",
+        addn: true,
+        value: 26,
+        per: { stackable: "terra_charges_consumed" },
+        src: "Terra Charge (+26% additional per charge consumed)",
+      },
+    ],
+  }),
   Thornfield: (l, vals) => ({
     offense: {
       persistentDmg: {

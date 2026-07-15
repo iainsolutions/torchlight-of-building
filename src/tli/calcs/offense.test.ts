@@ -7259,7 +7259,7 @@ describe("SS13 Terra skills", () => {
     // avg hit (164+304)/2 = 234; 1/0.8s = 1.25 casts/s; 5% base crit @150%
     // avgDps = 234 * 1.025 * 1.25 = 299.8125
     expect(skill?.spellDpsSummary?.avgDps).toBeCloseTo(299.81, 1);
-    expect(skill?.levelDataQuality).toBe("placeholder");
+    expect(skill?.levelDataQuality).toBe("measured");
     expect(results.warnings).toHaveLength(0);
   });
 
@@ -7273,7 +7273,7 @@ describe("SS13 Terra skills", () => {
     });
     expect(
       results.skills["Thornfield"]?.persistentDpsSummary?.total,
-    ).toBeCloseTo(902);
+    ).toBeCloseTo(486);
   });
 
   test("Terra Charges consumed multiply skill damage additively per charge", () => {
@@ -7313,7 +7313,7 @@ describe("SS13 Terra skills", () => {
     });
     expect(
       terraResults.skills["Thornfield"]?.persistentDpsSummary?.total,
-    ).toBeCloseTo(902 * 1.5);
+    ).toBeCloseTo(486 * 1.5);
 
     // Non-Terra skill unaffected
     const attackResults = calculateOffense({
@@ -7389,5 +7389,48 @@ describe("unknown skill names", () => {
     expect(results.warnings.some((w) => w.includes("Some Removed Skill"))).toBe(
       true,
     );
+  });
+});
+
+describe("Fallen Star and Nether Grasp", () => {
+  const slotOf = (skillName: string) => ({
+    activeSkills: {
+      1: {
+        skillName: skillName as ImplementedActiveSkillName,
+        enabled: true,
+        level: 20,
+        supportSkills: {},
+      },
+    },
+    passiveSkills: {},
+  });
+
+  test("Fallen Star calculates comet hit DPS", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: slotOf("Fallen Star"),
+      }),
+      configuration: defaultConfiguration,
+    });
+    const skill = results.skills["Fallen Star"];
+    // per-comet avg (332+616)/2 = 474; 1/0.8 = 1.25 waves/s; 5% crit @150%
+    expect(skill?.spellDpsSummary?.avgDps).toBeCloseTo(474 * 1.025 * 1.25, 0);
+    expect(skill?.levelDataQuality).toBe("measured");
+  });
+
+  test("Nether Grasp calculates DoT plus grasp hits", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: slotOf("Nether Grasp"),
+      }),
+      configuration: defaultConfiguration,
+    });
+    const skill = results.skills["Nether Grasp"];
+    expect(skill?.persistentDpsSummary?.total).toBeCloseTo(562);
+    // grasp hits: 37 avg, every 0.5s = 2/s, with base crit
+    expect(skill?.spellDpsSummary?.avgDps).toBeCloseTo(37 * 1.025 * 2, 0);
+    expect(skill?.totalDps).toBeGreaterThan(562);
   });
 });
