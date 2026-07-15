@@ -1154,7 +1154,7 @@ export const Legendaries: readonly Legendary[] = [
     normalAffixes: [
       "+150 Max Life and Max Energy Shield",
       "+(10-20)% Skill Area",
-      "-40% Terra Charge Recovery Speed",
+      "-40% Terra Charge Restoration Speed",
       "Max Terra Charge Stacks +1",
       "+20% Movement Speed for 2 s when a Terra Skill is cast",
     ],
@@ -7373,7 +7373,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Witchdoctor's Slippers",
     baseStat: "+26 gear Energy Shield",
-    name: "Below the Styx",
+    name: "Beneath the Styx",
     normalAffixes: [
       "+(300-400) gear Energy Shield",
       "+(20-25)% additional Channeled Skill Damage for every overflowed stack of minimum channeled stacks",
@@ -7399,13 +7399,13 @@ export const Legendaries: readonly Legendary[] = [
       "+(40-50)% Defense",
       "+(8-10)% Elemental Resistance",
       "The Main Skill is supported by Lv. 25 Ground Divide",
-      "When consuming Terra Charges, gains 1 stack of Severance Mark for each stack consumed: +8% additional Terra Skill Damage (multiplies) and -12% Terra Charge Recovery Speed for each stack. Stacks up to 8 time(s). Lasts 4 s",
+      "When consuming Terra Charges, gains 1 stack of Gash for each stack consumed: +8% additional Terra Skill Damage (multiplies) and -12% Terra Charge Restoration Speed for each stack. Stacks up to 8 time(s). Lasts 4 s",
     ],
     corruptionAffixes: [
       "+(40-50)% Defense",
       "+(8-10)% Elemental Resistance",
       "The Main Skill is supported by Lv. 25 Ground Divide",
-      "When consuming Terra Charges, gains 1 stack of Severance Mark for each stack consumed: +8% additional Terra Skill Damage (multiplies) and -12% Terra Charge Recovery Speed for each stack. Stacks up to 8 time(s). Lasts 4 s",
+      "When consuming Terra Charges, gains 1 stack of Gash for each stack consumed: +8% additional Terra Skill Damage (multiplies) and -12% Terra Charge Restoration Speed for each stack. Stacks up to 8 time(s). Lasts 4 s",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Necklace",
@@ -7413,18 +7413,18 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Wind Blade Waistguard",
     baseStat: "+15 Max Life",
-    name: "Dirge",
+    name: "Pantheon's Elegy",
     normalAffixes: [
       "+6% Movement Speed",
       "-6 Skill Cost",
       "+6 All Attributes",
-      "Bears a random Divine Elegy of one of the six gods, each granting a unique enhancement (e.g. Elegy of the Titan God: +60% Max Life and Defense, +40% character size), along with secondary Elegies of lesser gods",
+      "Bears a random Dirge of the Six Gods of one of the six gods, each granting a unique enhancement (e.g. Elegy of the Titan God: +60% Max Life and Defense, +40% character size), along with secondary Elegies of lesser gods",
     ],
     corruptionAffixes: [
       "+6% Movement Speed",
       "-6 Skill Cost",
       "+6 All Attributes",
-      "Bears a random Divine Elegy of one of the six gods, each granting a unique enhancement (e.g. Elegy of the Titan God: +60% Max Life and Defense, +40% character size), along with secondary Elegies of lesser gods",
+      "Bears a random Dirge of the Six Gods of one of the six gods, each granting a unique enhancement (e.g. Elegy of the Titan God: +60% Max Life and Defense, +40% character size), along with secondary Elegies of lesser gods",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Belt",
@@ -7432,7 +7432,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Long Night Sorcerer's Mask",
     baseStat: "+146 gear Energy Shield",
-    name: "Multitudes in Urn",
+    name: "Contained Mind",
     normalAffixes: [
       "+(15-25)% Max Life and Max Energy Shield",
       "Max Minion quantity of each Synthetic Troop Skill is fixed at 1, but +(45-50)% additional Synthetic Troop Minion Damage (multiplies) for each Synthetic Troop Minion you have",
@@ -7451,7 +7451,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Moonstone Necklace",
     baseStat: "+12 Intelligence",
-    name: "Shattered Dream",
+    name: "Broken Dream",
     normalAffixes: [
       "+(70-90) Max Life",
       "+(10-15) to Max Frostbite Rating",
@@ -7469,7 +7469,7 @@ export const Legendaries: readonly Legendary[] = [
     baseItem: "Sage Wand",
     baseStat:
       "500 Critical Strike Rating1.2 Attack Speed\nAdds 20 - 20 Lightning Damage to Spells",
-    name: "Silent Incantation",
+    name: "Silent Aria",
     normalAffixes: [
       "+(40-50) Wisdom",
       "+(40-50)% Reaping Duration",
@@ -7507,7 +7507,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "All Magic Secret Robe",
     baseStat: "+140 gear Energy Shield",
-    name: "Three Saints",
+    name: "The Three Saints",
     normalAffixes: [
       "(-3-3)% Max Elemental Resistance",
       "(-6-6)% Elemental Resistance",
@@ -7526,7 +7526,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "All Magic Secret Robe",
     baseStat: "+140 gear Energy Shield",
-    name: "Urlos' Tether",
+    name: "Uros's Bond",
     normalAffixes: [
       "+(25-30)% Max Life and Max Energy Shield",
       "+(10-12)% Elemental Resistance",

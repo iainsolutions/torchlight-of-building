@@ -1170,63 +1170,63 @@ export const HeroTraits = [
     name: "Dance of the Deep",
     level: 1,
     affix:
-      "Level 1Core Terra Skills are always cast centered on you and follow you as you move\nNon-core Terra Skills cannot deal damage\n+20% Terra Skill Area\n+20% additional Terra Skill DamageLevel 2Core Terra Skills are always cast centered on you and follow you as you move\nNon-core Terra Skills cannot deal damage\n+20% Terra Skill Area\n+25% additional Terra Skill DamageLevel 3Core Terra Skills are always cast centered on you and follow you as you move\nNon-core Terra Skills cannot deal damage\n+20% Terra Skill Area\n+30% additional Terra Skill DamageLevel 4Core Terra Skills are always cast centered on you and follow you as you move\nNon-core Terra Skills cannot deal damage\n+20% Terra Skill Area\n+35% additional Terra Skill DamageLevel 5Core Terra Skills are always cast centered on you and follow you as you move\nNon-core Terra Skills cannot deal damage\n+20% Terra Skill Area\n+40% additional Terra Skill Damage\nArtificial Moon:\nCruel Red Dancing Shoes: While a core Terra Skill is active, you take True Damage per second equal to a percentage of Max Life and Energy Shield; this percentage equals 8% of your Movement Speed bonus, up to 15%\nEnemies within the core Terra Skill's area take increased damage equal to 38% of your Movement Speed bonus, up to 75%",
+      "Level 1Core Terra Skills are always cast centered on you and follow you as you move\nNon-core Terra Skills cannot deal damage\n+20% Terra Skill Area\n+20% additional Terra Skill DamageLevel 2Core Terra Skills are always cast centered on you and follow you as you move\nNon-core Terra Skills cannot deal damage\n+20% Terra Skill Area\n+25% additional Terra Skill DamageLevel 3Core Terra Skills are always cast centered on you and follow you as you move\nNon-core Terra Skills cannot deal damage\n+20% Terra Skill Area\n+30% additional Terra Skill DamageLevel 4Core Terra Skills are always cast centered on you and follow you as you move\nNon-core Terra Skills cannot deal damage\n+20% Terra Skill Area\n+35% additional Terra Skill DamageLevel 5Core Terra Skills are always cast centered on you and follow you as you move\nNon-core Terra Skills cannot deal damage\n+20% Terra Skill Area\n+40% additional Terra Skill Damage\nArtificial Moon:\nRed Shoes of Cruelty: While a core Terra Skill is active, you take True Damage per second equal to a percentage of Max Life and Energy Shield; this percentage equals 8% of your Movement Speed bonus, up to 15%\nEnemies within the core Terra Skill's area take increased damage equal to 38% of your Movement Speed bonus, up to 75%",
   },
   {
     hero: "Tide Whisper Selena: Dance of the Deep (#2)",
-    name: "Cursed Paradise",
+    name: "The Paradise I Curse",
     level: 45,
     affix:
       "Enemies within the range of your core Terra Skill receive a Lv. 1 Ominous Curse\n(+10/+15/+20/+25/+30)% additional damage against enemies affected by Ominous Curse",
   },
   {
     hero: "Tide Whisper Selena: Dance of the Deep (#2)",
-    name: "The Cycle Resisted",
+    name: "The Cycle I Resist",
     level: 45,
     affix:
       "25% of the increase/decrease on Critical Strike Rating is also applied to the Duration of your core Terra Skill\nRecasting your core Terra Skill while the previous one is still active Reaps enemies within its range for (6/7/8/9/10)% of the skill's remaining Duration",
   },
   {
     hero: "Tide Whisper Selena: Dance of the Deep (#2)",
-    name: "Spiral of Shattered Dreams",
+    name: "Dreambreaker's Gyre",
     level: 45,
     affix:
-      "While your core Terra Skill persists, generates a Red Tide that roams within the skill's area\nThe Red Tide pulls nearby enemies toward it and applies a stack of Slow to them every 0.5 s\n(+45/+55/+65/+75/+85)% additional damage taken by enemies affected by the Red Tide",
+      "While a Core Terra Skill is active, generates one Crimson Tide that continuously moves within the skill's area\nKnockback direction is reversed for nearby enemies, and the Crimson Tide applies 1 stack of Slow to them every 0.5 s\n(+50/+60/+70/+80/+90)% additional damage taken by enemies affected by the Crimson Tide",
   },
   {
     hero: "Tide Whisper Selena: Dance of the Deep (#2)",
-    name: "Layered Skirt Hem",
+    name: "Layered Hem",
     level: 60,
     affix:
-      "(+50/+75/+100/+125/+150)% Terra Charge Recovery Speed\nThe increase/decrease on Max Spell Burst is also applied to Max Terra Charge Stacks, up to (+2/+2/+3/+3/+3)",
+      "(+50/+75/+100/+125/+150)% Terra Charge Restoration Speed\nThe increase/decrease on Max Spell Burst is also applied to Max Terra Charge Stacks, up to (+2/+2/+3/+3/+3)",
   },
   {
     hero: "Tide Whisper Selena: Dance of the Deep (#2)",
-    name: "Lonely Group Dance",
+    name: "Lonely Ensemble",
     level: 60,
     affix:
-      "When casting your core Terra Skill, summons 1 Red Shadow within its area for every 1 Max Spell Burst. Interval: 1 s\nUp to (1/1/2/2/3) Red Shadow(s) can exist at the same time\n(-60/-50/-50/-40/-40)% additional damage for Red Shadows\nRed Shadows are stationary and cast your core Terra Skill once, centered on themselves",
+      "When casting your core Terra Skill, summons 1 Crimson Shade within its area for every 1 Max Spell Burst. Interval: 1 s\nUp to (2/2/3/3/3) Crimson Shade(s) can exist at the same time\n(-60/-50/-50/-40/-30)% additional damage for Terra Skills cast by Crimson Shades\nCrimson Shades are stationary and cast your core Terra Skill once, centered on themselves, then disappear after the skill ends",
   },
   {
     hero: "Tide Whisper Selena: Dance of the Deep (#2)",
-    name: "Deep Crimson Endless Dance",
+    name: "Crimson Endless Dance",
     level: 60,
     affix:
-      "When casting your core Terra Skill, randomly enters a Dance Step stance that lasts (4/5/6/7/8) s. Interval: 5 s\nCrimson Sweep: +50% Movement Speed\nPain Rebirth: Regenerates 20% of Max Life and Max Energy Shield per second\nEternal Sleep: Enemies that stay within the core Terra Skill's area for more than 0.5 s fall into Eternal Sleep for 2 s, taking +100% additional damage and becoming unable to move or attack. Eternal Sleep ends early after the enemy takes damage equal to 30% of its Max Life and can trigger at most once per monster",
+      "When casting your core Terra Skill, randomly enters a Dance Step stance that lasts (4/5/6/7/8) s. Interval: 5 s\nCrimson Dash: +50% Movement Speed\nAgonizing Revival: Regenerates 20% of Max Life and Max Energy Shield per second\nEternal Sleep: Enemies that stay within the core Terra Skill's area for more than 0.5 s fall into Eternal Sleep for 2 s, taking +100% additional damage and becoming unable to move or attack. Eternal Sleep ends early after the enemy takes damage equal to 30% of its Max Life and can trigger at most once per monster",
   },
   {
     hero: "Tide Whisper Selena: Dance of the Deep (#2)",
-    name: "Silenced Bone",
+    name: "Silencing Severance",
     level: 75,
     affix:
-      "Max Terra Charge Stacks +1\nYour core Terra Skill is automatically supported by Catalyst: Terra and cannot be supported by other Catalyst skills\nCompensates (0/5/10/15/20)% of the Mana Sealed by Catalyst: Terra",
+      "Max Terra Charge Stacks +1\nYour core Terra Skill is automatically supported by Activation Medium: Terra and cannot be supported by other Catalyst skills\nCompensates (0/5/10/15/20)% of the Mana Sealed by Activation Medium: Terra",
   },
   {
     hero: "Tide Whisper Selena: Dance of the Deep (#2)",
-    name: "Crimson-Soaked Skirt Edge",
+    name: "Drenched Hem",
     level: 75,
     affix:
-      "Catalyst: Terra Seals Life instead of Mana\nFor every 3% of Life Sealed, (+1/1.2/1.4/1.6/1.8)% additional damage for your core Terra Skill",
+      "Activation Medium: Terra Seals Life instead of Mana\nFor every 3% of Life Sealed, (+1/1.2/1.4/1.6/1.8)% additional damage for your core Terra Skill",
   },
   {
     hero: "Scent Weaver Sage: Licorice Note (#1)",

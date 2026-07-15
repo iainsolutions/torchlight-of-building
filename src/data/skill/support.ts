@@ -611,7 +611,7 @@ export const SupportSkills = [
   },
   {
     type: "Support",
-    name: "Deep Guidance",
+    name: "Channeled Depths",
     tags: ["Channeled"],
     description: [
       "Supports Channeled Skills.\n+2 to the Max Channeled Stacks for the supported skill\n+5% additional damage for the supported skill",

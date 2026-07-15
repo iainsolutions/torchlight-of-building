@@ -5,7 +5,7 @@ type ModFactory = (levelIndex: number) => Mod[];
 
 const heroTraitModFactories: Partial<Record<HeroTraitName, ModFactory>> = {
   // Tide Whisper Selena: Dance of the Deep (#2)
-  // Modelled nodes only; Red Shadows, stances, Catalyst auto-cast and the
+  // Modelled nodes only; Crimson Shades, stances, Catalyst auto-cast and the
   // duration/reap mechanics are display-text until the engine supports them.
   "Dance of the Deep": (i) => [
     {
@@ -18,7 +18,7 @@ const heroTraitModFactories: Partial<Record<HeroTraitName, ModFactory>> = {
     // global is correct for the core-Terra skill being calculated.
     { type: "SkillAreaPct", value: 20, skillAreaModType: "global" },
   ],
-  "Cursed Paradise": (i) => [
+  "The Paradise I Curse": (i) => [
     {
       type: "DmgPct",
       value: [10, 15, 20, 25, 30][i],
@@ -27,20 +27,20 @@ const heroTraitModFactories: Partial<Record<HeroTraitName, ModFactory>> = {
       cond: "enemy_is_cursed",
     },
   ],
-  "Spiral of Shattered Dreams": (i) => [
+  "Dreambreaker's Gyre": (i) => [
     {
       type: "DmgPct",
-      value: [45, 55, 65, 75, 85][i],
+      value: [50, 60, 70, 80, 90][i],
       dmgModType: "global",
       addn: true,
       isEnemyDebuff: true,
       cond: "enemy_in_crimson_tide",
     },
   ],
-  "Layered Skirt Hem": (i) => [
+  "Layered Hem": (i) => [
     { type: "TerraChargeRecoverySpeedPct", value: [50, 75, 100, 125, 150][i] },
   ],
-  "Silenced Bone": () => [{ type: "MaxTerraChargeStack", value: 1 }],
+  "Silencing Severance": () => [{ type: "MaxTerraChargeStack", value: 1 }],
   // Frostfire Gemma: Frostbitten Heart (#2)
   "Frostbitten Heart": () => [
     { type: "InflictFrostbitePct", value: 100 },
