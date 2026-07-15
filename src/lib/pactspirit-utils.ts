@@ -36,14 +36,14 @@ export const getDestinyByName = (name: string): Destiny | undefined =>
   Destinies.find((d) => d.name === name);
 
 export const hasRanges = (affix: string): boolean =>
-  /\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)/.test(affix);
+  /\(-?\d+(?:\.\d+)?--?\d+(?:\.\d+)?\)/.test(affix);
 
 export const craftDestinyAffix = (
   affix: string,
   percentage: number,
 ): string => {
   return affix.replace(
-    /\((\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)\)/g,
+    /\((-?\d+(?:\.\d+)?)-(-?\d+(?:\.\d+)?)\)/g,
     (_, minStr: string, maxStr: string) => {
       const min = parseFloat(minStr);
       const max = parseFloat(maxStr);

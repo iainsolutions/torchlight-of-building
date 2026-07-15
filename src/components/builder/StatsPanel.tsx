@@ -467,8 +467,7 @@ export const StatsPanel = (): React.ReactNode => {
 
             <div className="h-2" />
           </>
-        ) : selectedSkill !== undefined &&
-          offenseResults.warnings.length > 0 ? (
+        ) : offenseResults.warnings.length > 0 ? (
           <div className="mb-3 space-y-1">
             {offenseResults.warnings.map((w) => (
               <p key={w} className="text-sm text-amber-400">
