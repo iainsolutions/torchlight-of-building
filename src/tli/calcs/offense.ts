@@ -1452,6 +1452,11 @@ const resolvePerSkillMods = (
     return undefined;
   }
   const skill = findActiveSkill(skillSlot.skillName as ActiveSkillName);
+  // Unknown skill name (e.g. stale save with a renamed/removed skill):
+  // degrade to the missing-data warning path instead of crashing.
+  if (skill === undefined) {
+    return undefined;
+  }
 
   // Skip non-implemented skills (those without levelValues)
   if (!("levelValues" in skill) || skill.levelValues === undefined) {

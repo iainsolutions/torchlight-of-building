@@ -7366,3 +7366,28 @@ describe("SS13 Terra skills", () => {
     });
   });
 });
+
+describe("unknown skill names", () => {
+  test("unknown active skill name warns instead of crashing", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: {
+          activeSkills: {
+            1: {
+              skillName: "Some Removed Skill" as ImplementedActiveSkillName,
+              enabled: true,
+              level: 20,
+              supportSkills: {},
+            },
+          },
+          passiveSkills: {},
+        },
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(results.warnings.some((w) => w.includes("Some Removed Skill"))).toBe(
+      true,
+    );
+  });
+});
