@@ -788,7 +788,7 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
 
           <label className="text-right text-zinc-50">
             Enemy in Crimson Tide
-            <InfoTooltip text="Enemy affected by the Crimson Tide (Selena: Dreambreaker's Gyre) — +45-85% additional damage taken." />
+            <InfoTooltip text="Enemy affected by the Crimson Tide (Selena: Dreambreaker's Gyre) — +50-90% additional damage taken." />
           </label>
           <input
             type="checkbox"

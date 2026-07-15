@@ -1191,7 +1191,7 @@ export const HeroTraits = [
     name: "Dreambreaker's Gyre",
     level: 45,
     affix:
-      "While your core Terra Skill persists, generates a Crimson Tide that roams within the skill's area\nThe Crimson Tide pulls nearby enemies toward it and applies a stack of Slow to them every 0.5 s\n(+45/+55/+65/+75/+85)% additional damage taken by enemies affected by the Crimson Tide",
+      "While a Core Terra Skill is active, generates one Crimson Tide that continuously moves within the skill's area\nKnockback direction is reversed for nearby enemies, and the Crimson Tide applies 1 stack of Slow to them every 0.5 s\n(+50/+60/+70/+80/+90)% additional damage taken by enemies affected by the Crimson Tide",
   },
   {
     hero: "Tide Whisper Selena: Dance of the Deep (#2)",
@@ -1205,7 +1205,7 @@ export const HeroTraits = [
     name: "Lonely Ensemble",
     level: 60,
     affix:
-      "When casting your core Terra Skill, summons 1 Crimson Shade within its area for every 1 Max Spell Burst. Interval: 1 s\nUp to (1/1/2/2/3) Crimson Shade(s) can exist at the same time\n(-60/-50/-50/-40/-40)% additional damage for Crimson Shades\nCrimson Shades are stationary and cast your core Terra Skill once, centered on themselves",
+      "When casting your core Terra Skill, summons 1 Crimson Shade within its area for every 1 Max Spell Burst. Interval: 1 s\nUp to (2/2/3/3/3) Crimson Shade(s) can exist at the same time\n(-60/-50/-50/-40/-30)% additional damage for Terra Skills cast by Crimson Shades\nCrimson Shades are stationary and cast your core Terra Skill once, centered on themselves, then disappear after the skill ends",
   },
   {
     hero: "Tide Whisper Selena: Dance of the Deep (#2)",

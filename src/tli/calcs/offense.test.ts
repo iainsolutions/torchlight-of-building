@@ -7348,11 +7348,11 @@ describe("SS13 Terra skills", () => {
       });
     const off = withTrait(defaultConfiguration);
     const on = withTrait({ ...defaultConfiguration, enemyInCrimsonTide: true });
-    // No memory equipped → memoryLevel defaults 40 → trait level 3: +65%
+    // No memory equipped → memoryLevel defaults 40 → trait level 3: +70%
     expect(
       (on.skills["Thornfield"]?.persistentDpsSummary?.total ?? 0) /
         (off.skills["Thornfield"]?.persistentDpsSummary?.total ?? 1),
-    ).toBeCloseTo(1.65);
+    ).toBeCloseTo(1.7);
   });
 
   test("parses terra skill damage affix text", () => {

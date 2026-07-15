@@ -30,7 +30,7 @@ const heroTraitModFactories: Partial<Record<HeroTraitName, ModFactory>> = {
   "Dreambreaker's Gyre": (i) => [
     {
       type: "DmgPct",
-      value: [45, 55, 65, 75, 85][i],
+      value: [50, 60, 70, 80, 90][i],
       dmgModType: "global",
       addn: true,
       isEnemyDebuff: true,
