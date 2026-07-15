@@ -1021,6 +1021,7 @@ const filterModsByCond = (
         () => config.frostbittenHeartIsActive,
       )
       .with("at_low_life", () => config.currentLifePct < 35)
+      .with("enemy_in_crimson_tide", () => config.enemyInCrimsonTide)
       .with("is_tangle_skill", () => modExists(mods, "IsTangle"))
       .with("is_combo_finisher", () => {
         // True if any active skill slot has the "Combo" tag.
@@ -2019,6 +2020,7 @@ const resolveModsForOffenseSkill = (
     const effectiveActiveTangles =
       config.numActiveTangles > 1 ? config.numActiveTangles : autoActiveTangles;
     normalize("active_tangle", effectiveActiveTangles);
+    normalize("terra_charges_consumed", config.terraChargesConsumed ?? 0);
     // Eternal stack generators — stack count configurable; defaults to max
     // (50; Reign 10), modeling typical map-clearing uptime. The hardcoded
     // per-stack mods must be normalized here explicitly: normalize() only
@@ -3961,6 +3963,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       "target_enemy_is_elite",
       "target_enemy_is_in_proximity",
       "target_enemy_frozen_recently",
+      "enemy_in_crimson_tide",
     ]);
     const enemyStackables = new Set([
       "enemy_curse_count",

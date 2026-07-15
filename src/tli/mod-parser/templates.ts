@@ -2454,6 +2454,18 @@ export const allParsers = [
     type: "TerraChargeRecoverySpeedPct",
     value: c.value,
   })),
+  t("{value:+dec%} [additional] terra skill damage").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: "terra",
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} [additional] terra skill area").output((c) => ({
+    type: "SkillAreaPct",
+    value: c.value,
+    skillAreaModType: "global",
+    addn: c.additional !== undefined,
+  })),
   t("max terra quantity {value:+int}").output((c) => ({
     type: "MaxTerraQuant",
     value: c.value,

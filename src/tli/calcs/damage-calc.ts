@@ -367,6 +367,7 @@ const DMG_MOD_TYPE_RULES: Record<DmgModType, DmgModTypeRule> = {
   spell: { tag: "Spell" },
   melee: { tag: "Melee" },
   area: { tag: "Area" },
+  terra: { tag: "Terra" },
   channeled: { tag: "Channeled" },
   shadow_strike_skill: { tag: "Shadow Strike" },
   slash_strike_skill: { tag: "Slash-Strike" },

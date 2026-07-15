@@ -55,6 +55,8 @@ export const ConfigurationPageSchema = z
       .catch(d.eternalNightmareStacks),
     eternalShadowStacks: z.number().optional().catch(d.eternalShadowStacks),
     eternalReignStacks: z.number().optional().catch(d.eternalReignStacks),
+    terraChargesConsumed: z.number().optional().catch(d.terraChargesConsumed),
+    enemyInCrimsonTide: z.boolean().catch(d.enemyInCrimsonTide),
     stalkerStacks: z.number().optional().catch(d.stalkerStacks),
     sagesInsightFireActivated: z.boolean().catch(d.sagesInsightFireActivated),
     sagesInsightColdActivated: z.boolean().catch(d.sagesInsightColdActivated),

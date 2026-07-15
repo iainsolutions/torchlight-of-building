@@ -144,6 +144,10 @@ export interface Configuration {
   eternalShadowStacks?: number;
   // default to max (10)
   eternalReignStacks?: number;
+  // Terra Charges consumed by the cast being calculated. Default 0.
+  terraChargesConsumed?: number;
+  // Enemy inside Selena's Red Tide (Spiral of Shattered Dreams). Default false.
+  enemyInCrimsonTide: boolean;
   // default to max
   stalkerStacks?: number;
   // default to false
@@ -302,6 +306,8 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   eternalNightmareStacks: undefined,
   eternalShadowStacks: undefined,
   eternalReignStacks: undefined,
+  terraChargesConsumed: undefined,
+  enemyInCrimsonTide: false,
   stalkerStacks: undefined,
   sagesInsightFireActivated: false,
   sagesInsightColdActivated: false,

@@ -7233,3 +7233,138 @@ describe("channeled gate ignores condition-gated MaxChannel mods", () => {
     ).toBeCloseTo(150);
   });
 });
+
+describe("SS13 Terra skills", () => {
+  const terraSkillPage = (skillName: string) => ({
+    activeSkills: {
+      1: {
+        skillName: skillName as ImplementedActiveSkillName,
+        enabled: true,
+        level: 20,
+        supportSkills: {},
+      },
+    },
+    passiveSkills: {},
+  });
+
+  test("Thunderstorm Zone calculates hit DPS from official values", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: terraSkillPage("Thunderstorm Zone"),
+      }),
+      configuration: defaultConfiguration,
+    });
+    const skill = results.skills["Thunderstorm Zone"];
+    // avg hit (164+304)/2 = 234; 1/0.8s = 1.25 casts/s; 5% base crit @150%
+    // avgDps = 234 * 1.025 * 1.25 = 299.8125
+    expect(skill?.spellDpsSummary?.avgDps).toBeCloseTo(299.81, 1);
+    expect(skill?.levelDataQuality).toBe("placeholder");
+    expect(results.warnings).toHaveLength(0);
+  });
+
+  test("Thorn Domain calculates persistent DPS", () => {
+    const results = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: terraSkillPage("Thorn Domain"),
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(
+      results.skills["Thorn Domain"]?.persistentDpsSummary?.total,
+    ).toBeCloseTo(902);
+  });
+
+  test("Terra Charges consumed multiply skill damage additively per charge", () => {
+    const base = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: terraSkillPage("Thorn Domain"),
+      }),
+      configuration: defaultConfiguration,
+    });
+    const charged = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: terraSkillPage("Thorn Domain"),
+      }),
+      configuration: { ...defaultConfiguration, terraChargesConsumed: 5 },
+    });
+    // 5 charges * +26% additional (adds within the one mod) = x2.3
+    expect(
+      charged.skills["Thorn Domain"]?.persistentDpsSummary?.total,
+    ).toBeCloseTo(
+      (base.skills["Thorn Domain"]?.persistentDpsSummary?.total ?? 0) * 2.3,
+    );
+  });
+
+  test("terra dmgModType applies only to Terra-tagged skills", () => {
+    const terraMod = affixLines([
+      { type: "DmgPct", value: 50, dmgModType: "terra", addn: true },
+    ]);
+    const terraResults = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: {}, inventory: [] },
+        skillPage: terraSkillPage("Thorn Domain"),
+        customAffixLines: terraMod,
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(
+      terraResults.skills["Thorn Domain"]?.persistentDpsSummary?.total,
+    ).toBeCloseTo(902 * 1.5);
+
+    // Non-Terra skill unaffected
+    const attackResults = calculateOffense({
+      loadout: initLoadout({
+        gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+        skillPage: simpleAttackSkillPage(),
+        customAffixLines: terraMod,
+      }),
+      configuration: defaultConfiguration,
+    });
+    expect(
+      attackResults.skills["[Test] Simple Attack"]?.attackDpsSummary?.mainhand
+        .avgHit,
+    ).toBeCloseTo(100);
+  });
+
+  test("Crimson Tide trait node applies enemy-side additional damage when toggled", () => {
+    const withTrait = (config: Configuration) =>
+      calculateOffense({
+        loadout: initLoadout({
+          gearPage: { equippedGear: {}, inventory: [] },
+          skillPage: terraSkillPage("Thorn Domain"),
+          heroPage: {
+            selectedHero:
+              "Tide Whisper Selena: Dance of the Deep (#2)" as const,
+            traits: {
+              level45: { name: "Spiral of Shattered Dreams" as const },
+            },
+            memorySlots: {},
+            memoryInventory: [],
+          },
+        }),
+        configuration: config,
+      });
+    const off = withTrait(defaultConfiguration);
+    const on = withTrait({ ...defaultConfiguration, enemyInCrimsonTide: true });
+    // No memory equipped → memoryLevel defaults 40 → trait level 3: +65%
+    expect(
+      (on.skills["Thorn Domain"]?.persistentDpsSummary?.total ?? 0) /
+        (off.skills["Thorn Domain"]?.persistentDpsSummary?.total ?? 1),
+    ).toBeCloseTo(1.65);
+  });
+
+  test("parses terra skill damage affix text", () => {
+    const mods = parseModKeyed("+20% additional Terra Skill Damage");
+    expect(mods).toHaveLength(1);
+    expect(mods?.[0]).toMatchObject({
+      type: "DmgPct",
+      value: 20,
+      dmgModType: "terra",
+      addn: true,
+    });
+  });
+});

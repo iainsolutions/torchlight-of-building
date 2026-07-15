@@ -141,6 +141,7 @@ export const Stackables = [
   "enemy_curse_count",
   "enemy_ailment_count",
   "active_tangle",
+  "terra_charges_consumed",
   "self_curse_count",
   "eternal_morale",
   "eternal_nightmare",
@@ -266,6 +267,7 @@ export const Conditions = [
   "frostbitten_heart_is_active",
   "at_low_life",
   "is_tangle_skill",
+  "enemy_in_crimson_tide",
   "is_combo_finisher",
 ] as const;
 

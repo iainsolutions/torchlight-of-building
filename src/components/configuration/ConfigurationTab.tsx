@@ -777,6 +777,27 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
           />
 
           <label className="text-right text-zinc-50">
+            Terra Charges Consumed
+            <InfoTooltip text="Terra Charges consumed by the calculated cast (+26% additional damage each on S13 Terra skills). Default 0." />
+          </label>
+          <NumberInput
+            value={config.terraChargesConsumed}
+            onChange={(v) => onUpdate({ terraChargesConsumed: v })}
+            min={0}
+          />
+
+          <label className="text-right text-zinc-50">
+            Enemy in Crimson Tide
+            <InfoTooltip text="Enemy affected by the Red Tide (Selena: Spiral of Shattered Dreams) — +45-85% additional damage taken." />
+          </label>
+          <input
+            type="checkbox"
+            checked={config.enemyInCrimsonTide}
+            onChange={(e) => onUpdate({ enemyInCrimsonTide: e.target.checked })}
+            className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 accent-amber-500"
+          />
+
+          <label className="text-right text-zinc-50">
             Eternal Reign Stacks
             <InfoTooltip text="Defaults to max (10)." />
           </label>

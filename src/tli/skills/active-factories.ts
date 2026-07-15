@@ -380,6 +380,68 @@ export const activeSkillModFactories: Partial<
       { type: "Taunts" },
     ],
   }),
+  // === SS13 Terra skills (official patch-note values) ===
+  // Shared: +26% additional damage per Terra Charge consumed
+  // (config.terraChargesConsumed drives the stackable).
+  "Thunderstorm Zone": (l, vals) => ({
+    offense: {
+      spellDmg: {
+        value: { min: v(vals.spellDmgMin, l), max: v(vals.spellDmgMax, l) },
+        dmgType: "lightning",
+        castTime: v(vals.castTime, l),
+      },
+      addedDmgEffPct: { value: v(vals.addedDmgEffPct, l) },
+    },
+    mods: [
+      {
+        type: "DmgPct",
+        dmgModType: "terra",
+        addn: true,
+        value: 26,
+        per: { stackable: "terra_charges_consumed" },
+        src: "Terra Charge (+26% additional per charge consumed)",
+      },
+    ],
+  }),
+  "Tidal Spring": (l, vals) => ({
+    offense: {
+      spellDmg: {
+        value: { min: v(vals.spellDmgMin, l), max: v(vals.spellDmgMax, l) },
+        dmgType: "cold",
+        castTime: v(vals.castTime, l),
+      },
+      addedDmgEffPct: { value: v(vals.addedDmgEffPct, l) },
+    },
+    mods: [
+      {
+        type: "DmgPct",
+        dmgModType: "terra",
+        addn: true,
+        value: 26,
+        per: { stackable: "terra_charges_consumed" },
+        src: "Terra Charge (+26% additional per charge consumed)",
+      },
+    ],
+  }),
+  "Thorn Domain": (l, vals) => ({
+    offense: {
+      persistentDmg: {
+        value: v(vals.persistentDamage, l),
+        dmgType: "physical",
+        duration: 6,
+      },
+    },
+    mods: [
+      {
+        type: "DmgPct",
+        dmgModType: "terra",
+        addn: true,
+        value: 26,
+        per: { stackable: "terra_charges_consumed" },
+        src: "Terra Charge (+26% additional per charge consumed)",
+      },
+    ],
+  }),
   "Entangled Pain": (l, vals) => ({
     buffMods: [
       {
