@@ -3944,36 +3944,36 @@ export const Pactspirits = [
   {
     type: "Spell",
     rarity: "Legendary",
-    name: "Frost Mirror",
+    name: "Icemirror",
     innerRing1: { name: "Terra Damage I", affix: "+12% Terra Skill Damage" },
     innerRing2: { name: "Terra Damage I", affix: "+12% Terra Skill Damage" },
     innerRing3: {
       name: "Terra Charge Recovery I",
-      affix: "+8% Terra Charge Recovery Speed",
+      affix: "+8% Terra Charge Restoration Speed",
     },
     innerRing4: {
       name: "Terra Charge Recovery I",
-      affix: "+8% Terra Charge Recovery Speed",
+      affix: "+8% Terra Charge Restoration Speed",
     },
     innerRing5: { name: "Terra Area I", affix: "+8% Terra Skill Area" },
     innerRing6: { name: "Terra Area I", affix: "+8% Terra Skill Area" },
     midRing1: { name: "Terra Damage II", affix: "+24% Terra Skill Damage" },
     midRing2: {
       name: "Terra Charge Recovery II",
-      affix: "+16% Terra Charge Recovery Speed",
+      affix: "+16% Terra Charge Restoration Speed",
     },
     midRing3: { name: "Terra Area II", affix: "+16% Terra Skill Area" },
     affix1:
-      "While on a Terra Skill, gain 1 stack of Mirror Image every 1s. Each stack of Mirror Image grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirror Image again refreshes the duration",
+      "While on a Terra Skill, gain 1 stack of Mirrored Shade every 1s. Each stack of Mirrored Shade grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirrored Shade again refreshes the duration",
     affix2:
-      "While on a Terra Skill, gain 1 stack of Mirror Image every 1s. Each stack of Mirror Image grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirror Image again refreshes the duration\n+1 max Mirror Image stacks",
+      "While on a Terra Skill, gain 1 stack of Mirrored Shade every 1s. Each stack of Mirrored Shade grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirrored Shade again refreshes the duration\n+1 max Mirrored Shade stacks",
     affix3:
-      "While on a Terra Skill, gain 1 stack of Mirror Image every 1s. Each stack of Mirror Image grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirror Image again refreshes the duration\n+4% additional Terra Skill Damage while you have Mirror Image\n+1 max Mirror Image stacks",
+      "While on a Terra Skill, gain 1 stack of Mirrored Shade every 1s. Each stack of Mirrored Shade grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirrored Shade again refreshes the duration\n+4% additional Terra Skill Damage while you have Mirrored Shade\n+1 max Mirrored Shade stacks",
     affix4:
-      "While on a Terra Skill, gain 1 stack of Mirror Image every 1s. Each stack of Mirror Image grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirror Image again refreshes the duration\n+4% additional Terra Skill Damage while you have Mirror Image\n+2 max Mirror Image stacks",
+      "While on a Terra Skill, gain 1 stack of Mirrored Shade every 1s. Each stack of Mirrored Shade grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirrored Shade again refreshes the duration\n+4% additional Terra Skill Damage while you have Mirrored Shade\n+2 max Mirrored Shade stacks",
     affix5:
-      "While on a Terra Skill, gain 1 stack of Mirror Image every 1s. Each stack of Mirror Image grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirror Image again refreshes the duration\n+8% additional Terra Skill Damage while you have Mirror Image\n+2 max Mirror Image stacks",
+      "While on a Terra Skill, gain 1 stack of Mirrored Shade every 1s. Each stack of Mirrored Shade grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirrored Shade again refreshes the duration\n+8% additional Terra Skill Damage while you have Mirrored Shade\n+2 max Mirrored Shade stacks",
     affix6:
-      "While on a Terra Skill, gain 1 stack of Mirror Image every 1s. Each stack of Mirror Image grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirror Image again refreshes the duration\n+8% additional Terra Skill Damage while you have Mirror Image\n+2 max Mirror Image stacks\n+1 max Terra Charge stacks while Mirror Image is at max stacks",
+      "While on a Terra Skill, gain 1 stack of Mirrored Shade every 1s. Each stack of Mirrored Shade grants +4% additional Terra Skill Damage for 2s, stacking up to 3 times. Gaining Mirrored Shade again refreshes the duration\n+8% additional Terra Skill Damage while you have Mirrored Shade\n+2 max Mirrored Shade stacks\n+1 max Terra Charge stacks while Mirrored Shade is at max stacks",
   },
 ] as const satisfies readonly Pactspirit[];

@@ -383,7 +383,7 @@ export const activeSkillModFactories: Partial<
   // === SS13 Terra skills (official patch-note values) ===
   // Shared: +26% additional damage per Terra Charge consumed
   // (config.terraChargesConsumed drives the stackable).
-  "Thunderstorm Zone": (l, vals) => ({
+  "Storm Field": (l, vals) => ({
     offense: {
       spellDmg: {
         value: { min: v(vals.spellDmgMin, l), max: v(vals.spellDmgMax, l) },
@@ -403,7 +403,7 @@ export const activeSkillModFactories: Partial<
       },
     ],
   }),
-  "Tidal Spring": (l, vals) => ({
+  Tidewell: (l, vals) => ({
     offense: {
       spellDmg: {
         value: { min: v(vals.spellDmgMin, l), max: v(vals.spellDmgMax, l) },
@@ -423,7 +423,7 @@ export const activeSkillModFactories: Partial<
       },
     ],
   }),
-  "Thorn Domain": (l, vals) => ({
+  Thornfield: (l, vals) => ({
     offense: {
       persistentDmg: {
         value: v(vals.persistentDamage, l),

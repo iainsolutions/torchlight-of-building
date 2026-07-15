@@ -2454,6 +2454,11 @@ export const allParsers = [
     type: "TerraChargeRecoverySpeedPct",
     value: c.value,
   })),
+  // Official SS13 EN phrasing; same stat as recovery speed
+  t("{value:+dec%} terra charge restoration speed").output((c) => ({
+    type: "TerraChargeRecoverySpeedPct",
+    value: c.value,
+  })),
   t("{value:+dec%} [additional] terra skill damage").output((c) => ({
     type: "DmgPct",
     value: c.value,

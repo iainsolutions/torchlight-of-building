@@ -146,7 +146,7 @@ export interface Configuration {
   eternalReignStacks?: number;
   // Terra Charges consumed by the cast being calculated. Default 0.
   terraChargesConsumed?: number;
-  // Enemy inside Selena's Red Tide (Spiral of Shattered Dreams). Default false.
+  // Enemy inside Selena's Crimson Tide (Dreambreaker's Gyre). Default false.
   enemyInCrimsonTide: boolean;
   // default to max
   stalkerStacks?: number;

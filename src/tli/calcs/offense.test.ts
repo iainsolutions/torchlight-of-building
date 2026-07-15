@@ -7247,15 +7247,15 @@ describe("SS13 Terra skills", () => {
     passiveSkills: {},
   });
 
-  test("Thunderstorm Zone calculates hit DPS from official values", () => {
+  test("Storm Field calculates hit DPS from official values", () => {
     const results = calculateOffense({
       loadout: initLoadout({
         gearPage: { equippedGear: {}, inventory: [] },
-        skillPage: terraSkillPage("Thunderstorm Zone"),
+        skillPage: terraSkillPage("Storm Field"),
       }),
       configuration: defaultConfiguration,
     });
-    const skill = results.skills["Thunderstorm Zone"];
+    const skill = results.skills["Storm Field"];
     // avg hit (164+304)/2 = 234; 1/0.8s = 1.25 casts/s; 5% base crit @150%
     // avgDps = 234 * 1.025 * 1.25 = 299.8125
     expect(skill?.spellDpsSummary?.avgDps).toBeCloseTo(299.81, 1);
@@ -7263,16 +7263,16 @@ describe("SS13 Terra skills", () => {
     expect(results.warnings).toHaveLength(0);
   });
 
-  test("Thorn Domain calculates persistent DPS", () => {
+  test("Thornfield calculates persistent DPS", () => {
     const results = calculateOffense({
       loadout: initLoadout({
         gearPage: { equippedGear: {}, inventory: [] },
-        skillPage: terraSkillPage("Thorn Domain"),
+        skillPage: terraSkillPage("Thornfield"),
       }),
       configuration: defaultConfiguration,
     });
     expect(
-      results.skills["Thorn Domain"]?.persistentDpsSummary?.total,
+      results.skills["Thornfield"]?.persistentDpsSummary?.total,
     ).toBeCloseTo(902);
   });
 
@@ -7280,22 +7280,22 @@ describe("SS13 Terra skills", () => {
     const base = calculateOffense({
       loadout: initLoadout({
         gearPage: { equippedGear: {}, inventory: [] },
-        skillPage: terraSkillPage("Thorn Domain"),
+        skillPage: terraSkillPage("Thornfield"),
       }),
       configuration: defaultConfiguration,
     });
     const charged = calculateOffense({
       loadout: initLoadout({
         gearPage: { equippedGear: {}, inventory: [] },
-        skillPage: terraSkillPage("Thorn Domain"),
+        skillPage: terraSkillPage("Thornfield"),
       }),
       configuration: { ...defaultConfiguration, terraChargesConsumed: 5 },
     });
     // 5 charges * +26% additional (adds within the one mod) = x2.3
     expect(
-      charged.skills["Thorn Domain"]?.persistentDpsSummary?.total,
+      charged.skills["Thornfield"]?.persistentDpsSummary?.total,
     ).toBeCloseTo(
-      (base.skills["Thorn Domain"]?.persistentDpsSummary?.total ?? 0) * 2.3,
+      (base.skills["Thornfield"]?.persistentDpsSummary?.total ?? 0) * 2.3,
     );
   });
 
@@ -7306,13 +7306,13 @@ describe("SS13 Terra skills", () => {
     const terraResults = calculateOffense({
       loadout: initLoadout({
         gearPage: { equippedGear: {}, inventory: [] },
-        skillPage: terraSkillPage("Thorn Domain"),
+        skillPage: terraSkillPage("Thornfield"),
         customAffixLines: terraMod,
       }),
       configuration: defaultConfiguration,
     });
     expect(
-      terraResults.skills["Thorn Domain"]?.persistentDpsSummary?.total,
+      terraResults.skills["Thornfield"]?.persistentDpsSummary?.total,
     ).toBeCloseTo(902 * 1.5);
 
     // Non-Terra skill unaffected
@@ -7335,13 +7335,11 @@ describe("SS13 Terra skills", () => {
       calculateOffense({
         loadout: initLoadout({
           gearPage: { equippedGear: {}, inventory: [] },
-          skillPage: terraSkillPage("Thorn Domain"),
+          skillPage: terraSkillPage("Thornfield"),
           heroPage: {
             selectedHero:
               "Tide Whisper Selena: Dance of the Deep (#2)" as const,
-            traits: {
-              level45: { name: "Spiral of Shattered Dreams" as const },
-            },
+            traits: { level45: { name: "Dreambreaker's Gyre" as const } },
             memorySlots: {},
             memoryInventory: [],
           },
@@ -7352,8 +7350,8 @@ describe("SS13 Terra skills", () => {
     const on = withTrait({ ...defaultConfiguration, enemyInCrimsonTide: true });
     // No memory equipped → memoryLevel defaults 40 → trait level 3: +65%
     expect(
-      (on.skills["Thorn Domain"]?.persistentDpsSummary?.total ?? 0) /
-        (off.skills["Thorn Domain"]?.persistentDpsSummary?.total ?? 1),
+      (on.skills["Thornfield"]?.persistentDpsSummary?.total ?? 0) /
+        (off.skills["Thornfield"]?.persistentDpsSummary?.total ?? 1),
     ).toBeCloseTo(1.65);
   });
 

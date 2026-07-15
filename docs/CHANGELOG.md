@@ -2,6 +2,25 @@
 
 Architectural decisions and behavior-changing fixes.
 
+## 2026-07-14 — Official English names (poster.xd.cn/r/ss13pn/?lang=en)
+
+- All S13 content renamed to official EN localization: Storm Field
+  (Thunderstorm Zone), Thornfield, Tidewell, Fallen Star (Meteor),
+  Nether Grasp (Abyssal Hands), Commanding Warcry, Agony Dew, Prism
+  Butterfly Distillate; trait nodes (The Paradise I Curse,
+  Dreambreaker's Gyre, Layered Hem, Lonely Ensemble, Crimson Endless
+  Dance, Silencing Severance, Drenched Hem, The Cycle I Resist);
+  supports (Thunderclap, Torrent, Undertow, Retribution, Starfall,
+  Extermination, Ravage, Channeled Depths); legendaries (Beneath the
+  Styx, Pantheon's Elegy, Contained Mind, Broken Dream, Silent Aria,
+  The Three Saints, Uros's Bond); Icemirror pactspirit (Stage in the
+  Mirror / Mirrored Shades). Terms: Crimson Tide, Crimson Shade,
+  Activation Medium: Terra, Red Shoes of Cruelty, Gash, Thunderstrike.
+- Tags: On Hit, Barrage, Dew, Distillate, Charge (SKILL_TAGS re-sorted).
+- "Terra"/"Terra Charge" confirmed official — unchanged. New parser
+  template for official "Terra Charge Restoration Speed" phrasing;
+  pre-existing live-game data keeps "Recovery Speed" (both parse).
+
 ## 2026-07-13 — S13 data rewrite from official patch notes (branch `s13-official-data`)
 
 - Source of truth: official Chinese SS13 notes (poster.xd.cn/r/ss13pn). Repo's

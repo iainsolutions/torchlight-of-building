@@ -4508,3 +4508,8 @@ test("affixLineKey preserves the sign: bonus and penalty affixes stay distinct",
     affixLineKey("-5% additional damage"),
   );
 });
+
+test("parse terra charge restoration speed (official SS13 phrasing)", () => {
+  const result = parseMod("+44% Terra Charge Restoration Speed");
+  expect(result).toEqual([{ type: "TerraChargeRecoverySpeedPct", value: 44 }]);
+});
