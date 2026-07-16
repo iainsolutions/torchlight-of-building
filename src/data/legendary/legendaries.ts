@@ -4040,11 +4040,11 @@ export const Legendaries: readonly Legendary[] = [
     baseStat: "+170 gear Energy Shield",
     name: "Kingly Armor",
     normalAffixes: [
-      "+(5-8)% Max Life and Max Energy Shield",
+      "+(10-15)% Max Life and Max Energy Shield",
       "Max Terra Charge Stacks +2",
       "+1 Main Skill Level",
       "+(15-20)% Erosion Resistance",
-      "Terra Charge's Restoration Speed is set to (150-200)% of the default value",
+      "Terra Charge's Restoration Speed is set to (240-300)% of the default value",
       "-2% Movement Speed for every Terra Charge consumed recently. Stacks up to (5-15) time(s)",
     ],
     corruptionAffixes: [
@@ -7396,13 +7396,13 @@ export const Legendaries: readonly Legendary[] = [
     baseStat: "+3 Intelligence",
     name: "Crimson Severance",
     normalAffixes: [
-      "+(40-50)% Defense",
+      "+20% Defense",
       "+(8-10)% Elemental Resistance",
       "The Main Skill is supported by Lv. 25 Ground Divide",
       "When consuming Terra Charges, gains 1 stack of Gash for each stack consumed: +8% additional Terra Skill Damage (multiplies) and -12% Terra Charge Restoration Speed for each stack. Stacks up to 8 time(s). Lasts 4 s",
     ],
     corruptionAffixes: [
-      "+(40-50)% Defense",
+      "+20% Defense",
       "+(8-10)% Elemental Resistance",
       "The Main Skill is supported by Lv. 25 Ground Divide",
       "When consuming Terra Charges, gains 1 stack of Gash for each stack consumed: +8% additional Terra Skill Damage (multiplies) and -12% Terra Charge Restoration Speed for each stack. Stacks up to 8 time(s). Lasts 4 s",

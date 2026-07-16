@@ -3574,8 +3574,8 @@ export const ActiveSkills = [
     name: "Thornfield",
     tags: ["Spell", "Physical", "Area", "Persistent", "Terra"],
     description: [
-      "Casts the skill and generates a Thornfield at the target spot, dealing 902 Persistent Physical Damage per second.\nFor every 100 Max Life, +1% additional damage for this skill, up to +40%.\nWhile the Terra persists, the character takes 20% of Max Life as True Damage per second.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
-      "Thornfield:\nDeals 902 Persistent Physical Damage per second\nFor every 100 Max Life, +1% additional damage for this skill, up to +40%\nWhile Terra persists, character takes 20% Max Life as True Damage per second\nLasts 6s",
+      "Casts the skill and generates a Thornfield at the target spot, dealing 486 Persistent Physical Damage per second.\nFor every 100 Max Life, +1.25% additional damage for this skill, up to +100%.\nWhile the Terra persists, the character takes 20% of Max Life and 20% of Max Energy Shield as True Damage per second.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
+      "Thornfield:\nDeals 486 Persistent Physical Damage per second\nFor every 100 Max Life, +1.25% additional damage for this skill, up to +100%\nWhile Terra persists, character takes 20% Max Life and 20% Max Energy Shield as True Damage per second\nLasts 6s",
       "For every Terra Charge consumed, +26% additional Damage for this cast",
     ],
     mainStats: ["str"],

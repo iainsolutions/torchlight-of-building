@@ -2,6 +2,24 @@
 
 Architectural decisions and behavior-changing fixes.
 
+## 2026-07-15 — July 15 addendum nerfs (torchlight.xd.com/ss13pn)
+
+- Selena base trait: +20% Terra Area REMOVED; additional-damage ladder
+  now 0/5/10/15/20% (was 20-40%)
+- Dreambreaker's Gyre: Crimson Tide +35/45/55/65/75% dmg taken (was
+  50-90 in main text — addendum supersedes)
+- Crimson Endless Dance: stances 5-9s, interval 5→4s at rank, Dash
+  +33% MS, Revival 13%/s, Eternal Sleep +66% taken; Dance Step
+  duration now scales with Skill Effect Duration
+- Thornfield: 486/s confirmed final (main card's 902 superseded);
+  life scaling BUFFED 1.25%/100 Life cap +100%; now also drains 20%
+  Max ES/s. Retribution support gains matching 10% ES/s rider
+- Fallen Star: Starfall +130-150% (was 191-220)
+- Crimson Severance +20% Defense flat (was 40-50); Kingly Armor
+  +10-15% Life/ES and 240-300% restoration confirmed
+- Flagged: Fallen Star: Gravity EN shows -32~-36% vs zh +32~36% —
+  kept repo positive pending in-game check
+
 ## 2026-07-15 — tlidb SS13 beta ladder import
 
 - Real per-level tables (1-20, plateau 21-40) imported from tlidb beta

@@ -8,15 +8,13 @@ const heroTraitModFactories: Partial<Record<HeroTraitName, ModFactory>> = {
   // Modelled nodes only; Crimson Shades, stances, Catalyst auto-cast and the
   // duration/reap mechanics are display-text until the engine supports them.
   "Dance of the Deep": (i) => [
+    // Jul 15 addendum: area bonus removed; L1 grants no damage ladder.
     {
       type: "DmgPct",
-      value: [20, 25, 30, 35, 40][i],
+      value: [0, 5, 10, 15, 20][i],
       dmgModType: "terra",
       addn: true,
     },
-    // Official: +20% Terra Skill Area. No terra-scoped area type exists;
-    // global is correct for the core-Terra skill being calculated.
-    { type: "SkillAreaPct", value: 20, skillAreaModType: "global" },
   ],
   "The Paradise I Curse": (i) => [
     {
@@ -30,7 +28,7 @@ const heroTraitModFactories: Partial<Record<HeroTraitName, ModFactory>> = {
   "Dreambreaker's Gyre": (i) => [
     {
       type: "DmgPct",
-      value: [50, 60, 70, 80, 90][i],
+      value: [35, 45, 55, 65, 75][i],
       dmgModType: "global",
       addn: true,
       isEnemyDebuff: true,
