@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terra Selena Scaling Plan — TLI SS13</title>
+<style>
+  :root {
+    --paper: #f7f6f2;
+    --ink: #1d2b32;
+    --muted: #5b6b72;
+    --line: #d9d5cc;
+    --accent: #b8323e;      /* crimson tide */
+    --accent-soft: #f3e2e3;
+    --teal: #23606b;        /* abyssal */
+    --teal-soft: #e2ecee;
+    --card: #ffffff;
+    --code-bg: #edf1f0;
+    --gold: #8a6d1f;
+    --gold-soft: #f2ead2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #10181c;
+      --ink: #dce4e6;
+      --muted: #8fa1a8;
+      --line: #26343b;
+      --accent: #e05663;
+      --accent-soft: #3a2024;
+      --teal: #6db4c2;
+      --teal-soft: #16282e;
+      --card: #162126;
+      --code-bg: #0c1316;
+      --gold: #d3b158;
+      --gold-soft: #2e2817;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10181c; --ink: #dce4e6; --muted: #8fa1a8; --line: #26343b;
+    --accent: #e05663; --accent-soft: #3a2024; --teal: #6db4c2; --teal-soft: #16282e;
+    --card: #162126; --code-bg: #0c1316; --gold: #d3b158; --gold-soft: #2e2817;
+  }
+  :root[data-theme="light"] {
+    --paper: #f7f6f2; --ink: #1d2b32; --muted: #5b6b72; --line: #d9d5cc;
+    --accent: #b8323e; --accent-soft: #f3e2e3; --teal: #23606b; --teal-soft: #e2ecee;
+    --card: #ffffff; --code-bg: #edf1f0; --gold: #8a6d1f; --gold-soft: #f2ead2;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Charter, 'Iowan Old Style', Georgia, serif;
+    line-height: 1.55;
+    margin: 0;
+    padding: 2.5rem 1.25rem 5rem;
+  }
+  main { max-width: 46rem; margin: 0 auto; }
+  h1, h2, h3 {
+    font-family: 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  h1 { font-size: 2rem; font-weight: 700; margin: 0 0 .5rem; }
+  h2 {
+    font-size: 1.35rem; font-weight: 700; margin: 3rem 0 1rem;
+    padding-top: 1.25rem; border-top: 2px solid var(--line);
+  }
+  h3 { font-size: 1.05rem; font-weight: 650; margin: 1.75rem 0 .5rem; }
+  p, li { max-width: 65ch; }
+  a { color: var(--teal); }
+  .eyebrow {
+    font-family: 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+    font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: .75rem;
+  }
+  .standfirst { font-size: 1.05rem; color: var(--muted); margin: 0 0 1.5rem; }
+  .statusbar {
+    display: flex; flex-wrap: wrap; gap: .5rem 1.5rem;
+    font-family: 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+    font-size: .8rem; color: var(--muted);
+    border-block: 1px solid var(--line); padding: .6rem 0; margin-bottom: 2rem;
+  }
+  .statusbar b { color: var(--ink); font-weight: 600; }
+  .chip {
+    display: inline-block; font-family: 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+    font-size: .66rem; font-weight: 700; letter-spacing: .06em;
+    padding: .1rem .45rem; border-radius: 3px; vertical-align: .12em;
+  }
+  .chip.confirmed { background: var(--teal-soft); color: var(--teal); }
+  .chip.official { background: var(--gold-soft); color: var(--gold); }
+  .chip.rumored   { background: var(--accent-soft); color: var(--accent); }
+  pre, code { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px;
+    padding: .9rem 1.1rem; overflow-x: auto; font-size: .85rem; line-height: 1.5;
+  }
+  code { font-size: .88em; }
+  .callout {
+    background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0; padding: .85rem 1.1rem; margin: 1.25rem 0;
+  }
+  .callout p { margin: 0; }
+  .lever {
+    background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+    padding: 1.1rem 1.3rem; margin: 1rem 0;
+  }
+  .lever h3 { margin: 0 0 .35rem; display: flex; gap: .6rem; align-items: baseline; flex-wrap: wrap; }
+  .lever .rank {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    color: var(--accent); font-weight: 700; font-size: .95rem;
+  }
+  .lever .mag { color: var(--muted); font-weight: 500; font-size: .85rem; font-family: 'Avenir Next', 'Segoe UI', system-ui, sans-serif; }
+  .lever ul { margin: .5rem 0 0; padding-left: 1.15rem; }
+  .lever li { margin: .3rem 0; font-size: .95rem; }
+  table {
+    border-collapse: collapse; font-size: .88rem; width: 100%;
+    font-variant-numeric: tabular-nums;
+  }
+  .tablewrap { overflow-x: auto; margin: 1rem 0; }
+  th, td { text-align: left; padding: .45rem .75rem; border-bottom: 1px solid var(--line); }
+  th {
+    font-family: 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+    font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+  }
+  .sources { font-size: .88rem; color: var(--muted); }
+  .sources li { margin: .3rem 0; }
+  ol.gaps li { margin: .5rem 0; }
+</style>
+
+<main>
+  <div class="eyebrow">Torchlight: Infinite · SS13 Afterlight · launches Jul 16 2026</div>
+  <h1>Terra Selena — what to scale &amp; how to scale it</h1>
+  <p class="standfirst">Damage-multiplier strategy for Tide Whisper Selena, "Dance of the Deep." Compiled from the official SS13 patch notes (poster.xd.cn), the game manual, tlidb, Bmlegolas's min-max guide, and the torchlight-of-building calc engine. Rev 3 — official English names (poster.xd.cn ?lang=en).</p>
+  <div class="statusbar">
+    <span><b>99</b> research findings · <b>13/14</b> verified</span>
+    <span><b>6-section</b> official-notes diff completed</span>
+    <span>tags: <span class="chip confirmed">CONFIRMED</span> <span class="chip official">OFFICIAL</span> <span class="chip rumored">UNVERIFIED</span></span>
+  </div>
+
+  <div class="callout"><p><b>Provenance (rev 2, Jul 13):</b> the official Chinese patch notes confirm the repo's <b>active-skill numbers verbatim</b> (Thunderstorm 164-304 / 205-380 / 8 targets / +3% additional per hit; Thorn 902/s; +26%/charge; 70% falloff). But the repo's <b>trait tree, supports, legendaries, and pactspirit ladder were fabricated</b> — the official versions below replace them. <span class="chip official">OFFICIAL</span> = straight from poster.xd.cn/r/ss13pn (machine-translated; verify in-game at launch).</p></div>
+
+  <h2>1 · The damage math</h2>
+  <pre>Damage = Base
+       × (1 + Σ all "increased" %)        ← ONE additive bucket
+       × (1 + additional₁) × (1 + additional₂) × …   ← each its own multiplier
+       × enemy-side "takes additional" debuffs        ← more separate buckets</pre>
+  <p><span class="chip confirmed">CONFIRMED</span> Three rules govern everything:</p>
+  <ul>
+    <li><b>All "increased" pools into one additive bucket.</b> On a sheet already at 400% increased, +30% more ≈ ×1.06 — additive dilution.</li>
+    <li><b>Every distinct "additional" entry is its own multiplier.</b> ×1.27 × 1.27 = ×1.61. <i>Same-named</i> additional affixes add within one entry — two "+20% additional lightning" rolls = ×1.4, not ×1.44.</li>
+    <li><b>Enemy-side debuffs are extra buckets:</b> curses, Affliction (cap 100 = ×2.0 on DoT), Frostbite (cap 120), penetration, and now <b>Crimson Tide +35-75% additional damage taken</b> <span class="chip official">OFFICIAL</span>.</li>
+  </ul>
+  <p><b>Why this is the whole strategy:</b> ten distinct ×1.3 buckets = ×13.8. The same investment as +300% increased on an endgame sheet ≈ ×1.6. Hunt <i>new buckets</i>, not bigger numbers in old ones.</p>
+
+  <div class="callout"><p><b>Hit vs DoT — decisive for Terra.</b> <span class="chip confirmed">CONFIRMED</span> DoT can't crit or double-damage; it scales via Affliction + Reaping. The new Terra actives are mixed: Thunderstorm/Tidal/Meteor tick <i>hits</i> (crit lives); Thornfield and Nether Grasp are persistent DoT. Allocate crit only to hit-based zones. Cast speed doesn't tick zones faster without explicit opt-in text. New SS13 zones last 6s base; old Terras were buffed 3s→6s.</p></div>
+
+  <h2>2 · Ranked levers</h2>
+
+  <div class="lever"><h3><span class="rank">#1</span> Dance of the Deep trait tree <span class="mag">largest single lever</span> <span class="chip official">OFFICIAL</span></h3>
+    <ul>
+      <li><b>Base kit:</b> +5-20% <i>additional</i> Terra damage from trait level 2 (Jul 15 addendum removed the L1 grant and the +20% area); core Terra follows you; <b>non-core Terra can't deal damage</b>; +26% additional per Ground Charge consumed (printed on each skill).</li>
+      <li><b>Dreambreaker's Gyre → Crimson Tide:</b> roaming entity in your zone; affected enemies take <b>+35/45/55/65/75% additional damage</b> — the single biggest enemy-side bucket in the kit.</li>
+      <li><b>The Paradise I Curse:</b> auto lvl-1 Ominous curse in zone, +10-30% additional vs cursed. <b>The Cycle Resisted:</b> 25% of crit rating changes also scale core-Terra duration; recast = Reap 6-10% of remaining duration.</li>
+      <li><b>Layered Hem:</b> +50-150% charge recovery; Spell Burst cap increases mirror onto charge cap (+2/2/3/3/3). <b>Lonely Group Dance:</b> Red Shadow phantoms recast your core skill (cap 1-3, -60→-40% dmg). <b>Deep Crimson Endless Dance:</b> random stances incl. Eternal Sleep (+66% dmg taken, 2s).</li>
+      <li><b>Catalyst: Terra nodes:</b> auto-cast at full charges (+30% additional), mana- or life-seal variants. <b>Cruel Red Dancing Shoes</b> (moon affix): enemies take increased dmg = 38% of your movement-speed bonus (cap 75%) at cost of self true-damage — movement speed becomes a damage stat.</li>
+    </ul>
+  </div>
+
+  <div class="lever"><h3><span class="rank">#2</span> +Active skill levels <span class="mag">~2.2-2.7×</span> <span class="chip confirmed">CONFIRMED</span></h3>
+    <ul>
+      <li>Steep base growth to lvl 20, then +10%/lvl multiplicative (21-30), +8%/lvl (31+); +8-12 levels gearable (necklace/gloves/shield/chest/legendaries).</li>
+      <li>Flame Tyrant's Steps rework: +1 Terra skill level per 20% fire res (max 3-5) <span class="chip official">OFFICIAL</span>.</li>
+    </ul>
+  </div>
+
+  <div class="lever"><h3><span class="rank">#3</span> Five support slots <span class="mag">~2-3×</span> <span class="chip official">OFFICIAL</span></h3>
+    <ul>
+      <li>Real SS13 Terra supports center on <b>Spell Burst stack consumption</b>: Thunderclap (+167% to the bolt per stack consumed, +32-36% addl), Torrent hit-payoff/Crush (+100% per stack), Annihilation (+191-220% wave at 50 charges), Conduction (+5 current targets, +6.5-7%/enemy), Sacrifice (+2%/stack multiplicative), Retribution (+24-26% ×3 stacks for 10% life/s), Extermination (center +20% taken), Undertow (+1 torrent per 2 charges, -6→-3%).</li>
+      <li>Max Spell Burst stacks now double-dips: burst payoffs + charge cap via Layered Hem — a new cross-system scaling stat.</li>
+      <li>Energy 500+ to fill all slots (Bmlegolas); empty slot = missing multiplier layer.</li>
+    </ul>
+  </div>
+
+  <div class="lever"><h3><span class="rank">#4</span> Legendary uniques <span class="mag">~1.5-2×</span> <span class="chip official">OFFICIAL</span></h3>
+    <ul>
+      <li><b>Real S13 Terra items:</b> Crimson Severance rework (per charge consumed +8% dmg ×8 stacks, core skill gains 25-level Terra support branch); King Soul Armor (+240-300% charge recovery); Flame Tyrant's Steps (+Terra levels via fire res). Staff/wand exalted suffix: +26-35% <b>ground damage deepening</b> — a brand-new bucket.</li>
+      <li>Generic additional-bucket items (mana-stacking +105%, Insight +30%) still apply.</li>
+      <li>Note: earlier leak items "Silent Monologue/Below the Styx as Terra gear" were wrong — official versions are dodge/channel items.</li>
+    </ul>
+  </div>
+
+  <div class="lever"><h3><span class="rank">#5</span> Enemy-side damage-taken <span class="mag">now the star</span> <span class="chip official">OFFICIAL</span></h3>
+    <ul>
+      <li><b>Crimson Tide +35-75% additional taken</b> + <b>Eternal Sleep +66% taken</b> (stance) + The Paradise I Curse auto-curse + Extermination center +20% — Dance of the Deep is unusually rich in enemy-side buckets; they multiply with everything player-side.</li>
+      <li>Classic menu still applies: Affliction ×2.0 on DoT components, Frostbite (cold), res shred/pen.</li>
+    </ul>
+  </div>
+
+  <div class="lever"><h3><span class="rank">#6</span> Slates / pactspirit / prisms / memories <span class="mag">~1.1-1.4× each</span></h3>
+    <ul>
+      <li><b>Nether King slates</b> <span class="chip official">OFFICIAL</span>: Judgment (connection-line nodes +70%), Corruption (branded talents projected at 20%), Exile (random stances incl. sleep +100% taken). Prairie copy ≈ +35% addl (Bmlegolas).</li>
+      <li><b>Icemirror pactspirit</b> <span class="chip official">OFFICIAL</span>: +24/12% Terra dmg smalls, charge recovery + range; <b>Stage in the Mirror</b>: +4% Terra dmg/stack (→+8% at L5), ×3 stacks, L6 +1 charge cap at full stacks.</li>
+      <li>Haze Prism ≈ +12% addl +3 skill pts; movement-speed prism (+1% addl per +5% MS) — extra on-theme with Dancing Shoes.</li>
+    </ul>
+  </div>
+
+  <div class="lever"><h3><span class="rank">#7</span> Crafted gear + uptime <span class="mag">base layer</span></h3>
+    <ul>
+      <li>Weapon first (T2→T1→Priceless); increased% dilutes past ~300-500% total — prefer new buckets. Dream affixes <b>removed in SS13</b> <span class="chip official">OFFICIAL</span>.</li>
+      <li>Charge-economy affixes: staff/wand suffix +113-150% charge recovery; scepter/helmet exalted +stacks with +5-8% addl.</li>
+      <li>Movement speed is now triple-duty: Dancing Shoes damage-taken amp, Deep Sea uptime, prism addl.</li>
+    </ul>
+  </div>
+
+  <h3>Anti-patterns</h3>
+  <ul>
+    <li>Crit/double-damage on persistent components (Thorn, Abyssal) — hit-based zones only.</li>
+    <li>Same-bucket stacking: increased% dilution; same-named additional affixes add, not multiply.</li>
+    <li>Non-core Terra skills deal no damage under Dance of the Deep — one core skill, build around it.</li>
+    <li>Ignoring energy/uptime — both zero out whole buckets.</li>
+  </ul>
+
+  <h2>3 · Synergy engines</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Engine</th><th>Status</th><th>Core loop</th></tr>
+    <tr><td><b>Charge dump</b></td><td><span class="chip official">OFFICIAL</span></td><td>Bank Ground Charges (recovery-speed stat, Layered Hem, gear) → cast consumes all → +26%/charge + Crimson Severance +8%×8 + Spell-Burst support payoffs (+100-167%/stack). Catalyst: Terra automates it.</td></tr>
+    <tr><td><b>Crimson Tide vulnerability</b></td><td><span class="chip official">OFFICIAL</span></td><td>Spiral node: +35-75% additional taken on everything in your zone; stack with Eternal Sleep (+100%), The Paradise I Curse, Extermination center.</td></tr>
+    <tr><td><b>Spell Burst cross-scaling</b></td><td><span class="chip official">OFFICIAL</span></td><td>Max-burst-stack investment pays twice: support consume-payoffs + charge cap mirror. Red Shadows also scale off max burst stacks.</td></tr>
+    <tr><td><b>Movement-speed stacking</b></td><td><span class="chip official">OFFICIAL</span></td><td>Dancing Shoes (dmg taken = 38% of MS bonus, cap 75%) + MS prism + stance +50% MS + mobile-zone uptime.</td></tr>
+    <tr><td><b>Element/debuff pairing</b></td><td><span class="chip confirmed">CONFIRMED</span> pattern</td><td>Cold→Frostbite (Tidal), Erosion→Affliction+Reap (Abyssal), Lightning→Shock (Thunderstorm), Physical→life-stack (Thorn).</td></tr>
+  </table></div>
+  <p><b>Format pressure:</b> Divine Ascent = 3-min floors → favors charge-dump burst. SS13 nerfs attack-crit heroes (Carino, Erika) while Terra rises.</p>
+
+  <h2>4 · Builder data + evaluation plan</h2>
+  <ol>
+    <li><b>Data correction (from official notes, can start now):</b> active-skill block is accurate except two bucket fixes (Thunderstorm +3%/target and Thorn +1%/100-life are <i>additional</i>, not increased) + missing Droplet/Essence/Charging tags. <b>Rewrite required:</b> Selena trait tree (8 real nodes), all 10 Terra supports, S13 legendaries (6 of 8 real items absent), Icemirror ladder (Stage in the Mirror). <b>Propagate:</b> old Terra durations 3s→6s + new base damages (Frost 629, Swamp 710), remove Sweet Dream affixes, add ground-damage-deepening bucket, Nether King slates, ~40-skill balance pass.</li>
+    <li><b>Engine status:</b> 6 verified gaps fixed on <code>fix/engine-gaps</code> (destiny resolution, curse cap, same-affix rule, eternal stacks ×1-stack bug, ailment surfacing, level-data warnings); 998 tests green.</li>
+    <li><b>Then sweep:</b> baseline Selena save → single-lever perturbation via the 10x harness: trait nodes, charge count at cast, Crimson Tide on/off, supports, +levels, moving vs stationary, crit (hit-zones only).</li>
+  </ol>
+
+  <h3>DPS benchmarks (Bmlegolas)</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Content</th><th>Entry</th><th>Comfortable</th></tr>
+    <tr><td>Traveler 7</td><td>~50M</td><td>100–300M</td></tr>
+    <tr><td>Timemark 8</td><td>~1B</td><td>~2B (T8-1 at ~6B)</td></tr>
+    <tr><td>Traveler 8</td><td>10–15B</td><td>20–30B</td></tr>
+    <tr><td>Profound</td><td>~100B</td><td>~200B</td></tr>
+  </table></div>
+
+  <h2>5 · Sources</h2>
+  <ul class="sources">
+    <li><b>Official SS13 patch notes</b> — <a href="https://poster.xd.cn/r/ss13pn/">poster.xd.cn/r/ss13pn</a> — trait tree, skills, supports, legendaries, pactspirits, balance pass (Chinese; translations verified across multiple fetches)</li>
+    <li>Game manual (Torch Codex mirror) — <a href="https://legacy.torchcodex.com/latest/en/manual.html">legacy.torchcodex.com</a> — formula, same-affix rule, crit, DoT exclusions</li>
+    <li>tlidb — <a href="https://tlidb.com/en/Damage_Calculation">Damage_Calculation</a>, <a href="https://tlidb.com/en/Shotgun_Effect">Shotgun_Effect</a></li>
+    <li>Bmlegolas — <a href="https://docs.google.com/document/d/1UNFsSiKmwtocqi94nrRjDvhLrVdgjde1FkReTZxfEZU">Progression &amp; Min-Max Guide (SS13)</a> — lever magnitudes, benchmarks</li>
+    <li>Local repo: <code>torchlight-of-building</code> — calc engine + S13 skill data (skills confirmed by official notes; traits/supports/legendaries pending rewrite)</li>
+  </ul>
+</main>
+</html>

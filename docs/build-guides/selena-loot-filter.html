@@ -1,0 +1,153 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Storm Field Selena — Loot Filter Spec</title>
+<style>
+  :root {
+    --paper: #f7f6f2; --ink: #1d2b32; --muted: #5b6b72; --line: #d9d5cc;
+    --accent: #b8323e; --accent-soft: #f3e2e3;
+    --teal: #23606b; --teal-soft: #e2ecee;
+    --card: #ffffff; --code-bg: #edf1f0;
+    --gold: #8a6d1f; --gold-soft: #f2ead2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #10181c; --ink: #dce4e6; --muted: #8fa1a8; --line: #26343b;
+      --accent: #e05663; --accent-soft: #3a2024;
+      --teal: #6db4c2; --teal-soft: #16282e;
+      --card: #162126; --code-bg: #0c1316;
+      --gold: #d3b158; --gold-soft: #2e2817;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10181c; --ink: #dce4e6; --muted: #8fa1a8; --line: #26343b;
+    --accent: #e05663; --accent-soft: #3a2024; --teal: #6db4c2; --teal-soft: #16282e;
+    --card: #162126; --code-bg: #0c1316; --gold: #d3b158; --gold-soft: #2e2817;
+  }
+  :root[data-theme="light"] {
+    --paper: #f7f6f2; --ink: #1d2b32; --muted: #5b6b72; --line: #d9d5cc;
+    --accent: #b8323e; --accent-soft: #f3e2e3; --teal: #23606b; --teal-soft: #e2ecee;
+    --card: #ffffff; --code-bg: #edf1f0; --gold: #8a6d1f; --gold-soft: #f2ead2;
+  }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.5; margin: 0; padding: 2rem 1.25rem 4rem;
+  }
+  main { max-width: 50rem; margin: 0 auto; }
+  h1 { font-size: 1.6rem; font-weight: 700; margin: 0 0 .25rem; line-height: 1.15; text-wrap: balance; }
+  h2 {
+    font-size: .78rem; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin: 1.5rem 0 .6rem;
+  }
+  .eyebrow {
+    font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin-bottom: .5rem;
+  }
+  .standfirst { color: var(--muted); font-size: .92rem; margin: 0 0 1.25rem; max-width: 62ch; }
+  .panel {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 1rem 1.25rem; margin-bottom: 1rem;
+  }
+  table { border-collapse: collapse; width: 100%; font-size: .87rem; }
+  th, td { text-align: left; padding: .4rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  td:first-child { white-space: nowrap; font-weight: 600; }
+  ul { margin: .25rem 0 0; padding-left: 1.2rem; }
+  li { margin: .3rem 0; font-size: .92rem; max-width: 62ch; }
+  b.hot { color: var(--accent); }
+  .style-big { color: var(--gold); font-weight: 700; }
+  .style-show { color: var(--teal); font-weight: 600; }
+  .style-hide { color: var(--muted); text-decoration: line-through; }
+  .note {
+    background: var(--teal-soft); border-radius: 8px; padding: .7rem 1rem;
+    font-size: .88rem; margin: 1rem 0;
+  }
+  .footnote { color: var(--muted); font-size: .78rem; margin-top: 1.25rem; }
+</style>
+
+<main>
+  <div class="eyebrow">TLI SS13 Afterlight · Storm Field Selena · in-game custom filter recipe</div>
+  <h1>💎 Loot filter — in-game setup recipe</h1>
+  <p class="standfirst">Build this in-game: Filter → Create Custom, or clone the Advanced template and layer these rules on top. Rules evaluate top-down: put SHOW/style rules above HIDE rules. Legend: <span class="style-big">BIG</span> = large icon + beam + sound · <span class="style-show">SHOW</span> = normal · <span class="style-hide">HIDE</span>.</p>
+
+  <div class="panel">
+    <h2 style="margin-top:0">Fast path — patch Allie's filters instead of building from scratch</h2>
+    <p style="font-size:.92rem">Import a ready-made base from <a href="https://tlicompendium.com/en/build-guides/allies-selena-2-s13-starter-guide">Allie's Selena 2 guide</a> (in-game Filter → enter code), then apply the delta below and save as your own copy:</p>
+    <table>
+      <tr><th>Stage</th><th>Base code (Allie)</th></tr>
+      <tr><td>Campaign/Early</td><td><code>p_gcp_lowa|sklm7O-JEfCGagAAAAAADA</code></td></tr>
+      <tr><td>T7/Midgame</td><td><code>p_gcp_lowa|IKknbWRWEfCxkAAAAAAAIA</code></td></tr>
+      <tr><td>T8/Endgame</td><td><code>p_gcp_lowa|RwC9v2RCEfCxkAAAAAAAIA</code></td></tr>
+    </table>
+    <p style="font-size:.9rem;margin-top:.6rem"><b>Delta to apply (theirs is Nether Grasp/DoT-tuned):</b></p>
+    <ul>
+      <li><b>Swap affix highlights:</b> remove erosion/DoT/Affliction alert rules → add BIG rules for <b class="hot">additional Lightning Damage · Lightning Skill Level · Critical Strike Rating/Damage</b> (keep their additional Spell/Terra + Terra Charge rules — shared)</li>
+      <li><b>Add name-alerts:</b> the 14 build legendaries from the Always-on panel above (theirs won't flag Law of Greed, Genius Battlegear, the Thunderlight pair, Thunder Jawbone)</li>
+      <li><b>Keep:</b> their currency, energy, base-type, and ilvl staging — same archetype, same economy</li>
+      <li>Once edited, use Share on your copy — that mints your own code for alts</li>
+    </ul>
+  </div>
+
+  <div class="note"><b>League-start warning:</b> keep the filter loose for days 1-3 — early-economy rares and off-build legendaries all sell. Apply the aggressive HIDE rules only from T7 (Stage 3), and tighten again at T8.</div>
+
+  <div class="panel">
+    <h2 style="margin-top:0">Always on — every stage</h2>
+    <table>
+      <tr><th>Rule</th><th>Match</th><th>Style</th></tr>
+      <tr><td>Currency</td><td>Flame Elementium, Flame Sand, all Embers, corrosion/crafting materials</td><td><span class="style-big">BIG</span></td></tr>
+      <tr><td>All Legendaries</td><td>rarity = Legendary (any)</td><td><span class="style-big">BIG</span> — everything sells at league start</td></tr>
+      <tr><td>Build legendaries (new S13)</td><td>name: <b class="hot">Crimson Severance · King Soul Armor · Flame Tyrant's Steps · The Three Saints · Silent Aria · Broken Dream</b></td><td><span class="style-big">BIG</span> + distinct color/sound</td></tr>
+      <tr><td>Build legendaries (existing)</td><td>name: <b class="hot">Law of Greed · Genius Battlegear · Shadow of Thunderlight's Fury · Shadow of Thunderlight's Eyes · Thunder Jawbone · Brainwave Emitter · Surging Inspiration · Air Treaders</b></td><td><span class="style-big">BIG</span> + same color/sound as above</td></tr>
+      <tr><td>Skill items</td><td>active/support skill drops, esp. Magnificent/Noble supports</td><td><span class="style-show">SHOW</span></td></tr>
+      <tr><td>Systems</td><td>Hero Memories · Divinity Slates · Pactspirit items · Prisms · Beacons · Pedigrees · Starlight/Corners</td><td><span class="style-show">SHOW</span></td></tr>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2 style="margin-top:0">Stage 1 — campaign → T4 (loose)</h2>
+    <table>
+      <tr><th>Rule</th><th>Match</th><th>Style</th></tr>
+      <tr><td>INT weapons</td><td>type: Wand · Tin Staff · Scepter, rarity ≥ Magic</td><td><span class="style-show">SHOW</span></td></tr>
+      <tr><td>INT armor</td><td>Helmet/Chest/Gloves/Boots (INT), rarity ≥ Magic</td><td><span class="style-show">SHOW</span></td></tr>
+      <tr><td>Jewelry</td><td>Ring · Necklace · Belt · Spirit Ring (all)</td><td><span class="style-show">SHOW</span></td></tr>
+      <tr><td>Off-stat bases</td><td>STR/DEX armor, melee/bow weapons, rarity ≤ Rare</td><td><span class="style-hide">HIDE</span> from Act 5 onward</td></tr>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2 style="margin-top:0">Stage 2 — T5-T6 (energy hunt)</h2>
+    <table>
+      <tr><th>Rule</th><th>Match</th><th>Style</th></tr>
+      <tr><td>High-energy gear</td><td>affix contains: <b>Energy</b> (any tier, any base)</td><td><span class="style-big">BIG</span> — energy unlocks support slots; bad stats don't matter</td></tr>
+      <tr><td>Rare INT gear</td><td>rarity = Rare, INT bases, item level 68+</td><td><span class="style-show">SHOW</span></td></tr>
+      <tr><td>Low bases</td><td>rarity ≤ Rare, item level &lt; 68, non-jewelry</td><td><span class="style-hide">HIDE</span></td></tr>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2 style="margin-top:0">Stage 3 — T7+ (ilvl 82 re-gear)</h2>
+    <table>
+      <tr><th>Rule</th><th>Match</th><th>Style</th></tr>
+      <tr><td>Crafting bases</td><td>item level ≥ 82, type: Wand · Tin Staff · Scepter · INT armor · Ring · Necklace · Belt</td><td><span class="style-big">BIG</span></td></tr>
+      <tr><td>S-tier affixes</td><td>affix contains any of: <b class="hot">additional Lightning Damage · additional Spell Damage · additional Terra Skill Damage · Lightning Skill Level · Spell Skill Level · Terra Charge</b></td><td><span class="style-big">BIG</span> regardless of base</td></tr>
+      <tr><td>A-tier affixes</td><td>affix contains: Spell Burst · Critical Strike Rating · Critical Strike Damage · Cast Speed · Elemental Resistance Penetration</td><td><span class="style-show">SHOW</span>, small highlight</td></tr>
+      <tr><td>Defense fixers</td><td>affix: Elemental Resistance / Max Life / Energy Shield, tier ≤ T2</td><td><span class="style-show">SHOW</span> on jewelry + armor</td></tr>
+      <tr><td>Everything else rare</td><td>rarity = Rare, item level &lt; 82, no matching affix</td><td><span class="style-hide">HIDE</span></td></tr>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2 style="margin-top:0">Stage 4 — T8+ (tight)</h2>
+    <table>
+      <tr><th>Rule</th><th>Match</th><th>Style</th></tr>
+      <tr><td>T1-capable weapons</td><td>item level ≥ 86, Wand · Tin Staff · Scepter</td><td><span class="style-big">BIG</span></td></tr>
+      <tr><td>Corrosion bases</td><td>Necklace (corrosion-capable) — the +1 Curse / +2 Skill Level chase</td><td><span class="style-big">BIG</span></td></tr>
+      <tr><td>Sub-86 weapons</td><td>item level &lt; 86 weapons, any rarity below Legendary</td><td><span class="style-hide">HIDE</span></td></tr>
+      <tr><td>Rares w/o hits</td><td>rarity = Rare with zero S/A-tier affix matches</td><td><span class="style-hide">HIDE</span></td></tr>
+    </table>
+  </div>
+
+  <div class="note"><b>Don't forget:</b> keep a pet following you at all times — auto-loot only works with a summoned pet. Saved custom filters live in the Collection tab; switch between the loose and tight stages from there as you progress.</div>
+
+  <p class="footnote">Companions: ⚡ league-start card (skills/affixes/defenses) · 🌊 scaling deep-dive. Filter mechanics: <a href="https://tlidb.com/en/Filter">tlidb Filter</a> / <a href="https://tlidb.com/de/Share_Filter">Share Filter</a>. Affix names use official SS13 EN localization — if a rule finds nothing in the affix picker, check for "Restoration" vs "Recovery" wording at launch.</p>
+</main>
+</html>

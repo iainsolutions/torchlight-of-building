@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Storm Field Selena — League-Start Card</title>
+<style>
+  :root {
+    --paper: #f7f6f2; --ink: #1d2b32; --muted: #5b6b72; --line: #d9d5cc;
+    --accent: #b8323e; --accent-soft: #f3e2e3;
+    --teal: #23606b; --teal-soft: #e2ecee;
+    --card: #ffffff; --code-bg: #edf1f0;
+    --gold: #8a6d1f; --gold-soft: #f2ead2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #10181c; --ink: #dce4e6; --muted: #8fa1a8; --line: #26343b;
+      --accent: #e05663; --accent-soft: #3a2024;
+      --teal: #6db4c2; --teal-soft: #16282e;
+      --card: #162126; --code-bg: #0c1316;
+      --gold: #d3b158; --gold-soft: #2e2817;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10181c; --ink: #dce4e6; --muted: #8fa1a8; --line: #26343b;
+    --accent: #e05663; --accent-soft: #3a2024; --teal: #6db4c2; --teal-soft: #16282e;
+    --card: #162126; --code-bg: #0c1316; --gold: #d3b158; --gold-soft: #2e2817;
+  }
+  :root[data-theme="light"] {
+    --paper: #f7f6f2; --ink: #1d2b32; --muted: #5b6b72; --line: #d9d5cc;
+    --accent: #b8323e; --accent-soft: #f3e2e3; --teal: #23606b; --teal-soft: #e2ecee;
+    --card: #ffffff; --code-bg: #edf1f0; --gold: #8a6d1f; --gold-soft: #f2ead2;
+  }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.5; margin: 0; padding: 2rem 1.25rem 4rem;
+  }
+  main { max-width: 52rem; margin: 0 auto; }
+  h1 { font-size: 1.6rem; font-weight: 700; margin: 0 0 .25rem; line-height: 1.15; text-wrap: balance; }
+  h2 {
+    font-size: .78rem; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin: 0 0 .6rem;
+  }
+  .eyebrow {
+    font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin-bottom: .5rem;
+  }
+  .standfirst { color: var(--muted); font-size: .92rem; margin: 0 0 1.5rem; max-width: 60ch; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1rem; }
+  .panel {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+  }
+  .panel.wide { grid-column: 1 / -1; }
+  table { border-collapse: collapse; width: 100%; font-size: .88rem; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: .4rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  td:first-child { white-space: nowrap; font-weight: 600; }
+  ol, ul { margin: .25rem 0 0; padding-left: 1.2rem; }
+  li { margin: .35rem 0; font-size: .92rem; max-width: 60ch; }
+  .tier { font-weight: 700; color: var(--teal); }
+  b.hot { color: var(--accent); }
+  .chip {
+    display: inline-block; font-size: .66rem; font-weight: 700; letter-spacing: .06em;
+    padding: .08rem .4rem; border-radius: 3px; vertical-align: .1em;
+    background: var(--gold-soft); color: var(--gold);
+  }
+  .rule {
+    background: var(--accent-soft); border-radius: 8px; padding: .8rem 1rem;
+    font-size: .95rem; font-weight: 600; margin-top: 1rem; max-width: none;
+  }
+  .footnote { color: var(--muted); font-size: .78rem; margin-top: 1.25rem; }
+  code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: .85em; background: var(--code-bg); padding: .05rem .3rem; border-radius: 3px; }
+</style>
+
+<main>
+  <div class="eyebrow">TLI SS13 Afterlight · league start Jul 16 · Tide Whisper Selena — Dance of the Deep</div>
+  <h1>⚡ Storm Field Selena — league-start reference card</h1>
+  <p class="standfirst">Print-and-play checklist: what to press, what to buy, what keeps you alive. All names are official EN localization; numbers current through the July 15 addendum.</p>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>Skill panel</h2>
+      <table>
+        <tr><th>Slot</th><th>Skill</th><th>Notes</th></tr>
+        <tr><td>Main</td><td><b class="hot">Storm Field</b> (unlocks L55)</td><td>currents 0.8s (cast-speed scaled) · 8 targets · Thunderstrike on 3+ hits (you + minions count) · 90% added-dmg eff · level with Frost Terra → swap at 55</td></tr>
+        <tr><td>Supports</td><td>Thunderclap → Conduction</td><td>slot 3 &amp; 5; then +additional Lightning / Area / Spell dmg supports</td></tr>
+        <tr><td>Move</td><td>Blink</td><td>slot 2 (earliest passive slot)</td></tr>
+        <tr><td>Elixir</td><td>Prism Butterfly Distillate</td><td>+24% elemental pen for spells + all Infiltrations</td></tr>
+        <tr><td>Auras L50+</td><td>Lightning / Spell dmg auras</td><td>Precise versions + Activation Mediums later</td></tr>
+        <tr><td>Summon</td><td><b class="hot">Summon Grim Phantom</b> → Module: Medium Ember Automaton (late)</td><td>Mobile power source: you + boss + 2 bodies = 4 current targets → Thunderstrike every tick, +12% additional. Grim Phantom auto-resummons every 1s (self-replacing); swap to tankier Automatons when Modules unlock. Zero investment</td></tr>
+        <tr><td>Curse</td><td>none needed</td><td>The Paradise I Curse auto-applies Ominous in zone</td></tr>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2>Trait order</h2>
+      <ol>
+        <li><b>Dance of the Deep</b> base — zone follows you; +5-20% additional Terra dmg from L2 (Jul 15 nerf)</li>
+        <li>L45: <b>The Paradise I Curse</b> — auto-Ominous + 10-30% additional vs cursed (Don's order, post-nerf)</li>
+        <li>L60: <b class="hot">The Cycle I Resist</b> — <b>generic crit chance</b> scales Terra duration; recast-Reaps become the late-game carry (scale w/ Reap Duration + crit chance)</li>
+        <li>L75: <b>Dreambreaker's Gyre</b> — Crimson Tide +35-75% additional taken</li>
+        <li>Layered Hem / Silencing Severance (auto-cast) per slot availability</li>
+      </ol>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:.6rem">Loop: bank Terra Charges → cast consumes all → <b>+26% additional per charge</b> + Thunderclap +167%/Spell-Burst stack on the Thunderstrike. Base charge economy (tlidb beta): <b>cap 1, gain 1 per 0.5s</b> — cap raises via Layered Hem mirror, Silencing Severance, gear.</p>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:.4rem"><b>Alternative route (Allie's starter):</b> Nether Grasp DoT — Cycle I Resist Reaps (crit rating double-dips: crit + duration→Reap), Gyre early → Paradise + Cycle + crit at 75, Psychic/Blur defense (Chain behind the Curtain · Eternal Sea Fog · Folklore of Locking Fingers · Valerie's Night Stroll), STR-stack Fallen Star pivot post-PT8. Automation claimed from L45.</p>
+    </div>
+
+    <div class="panel wide">
+      <h2>Item affixes for damage — buy/craft priority</h2>
+      <ol>
+        <li><span class="tier">S</span> — <b class="hot">"+X% <u>additional</u> Lightning / Spell / Terra Skill Damage"</b> — the word <i>additional</i> is everything; differently-worded affixes each multiply</li>
+        <li><span class="tier">S</span> — <b>+Skill Levels</b>: "+X Lightning/Spell Skill Level" (necklace +3-4 · gloves +2-4 · shield +5 · corrosion chest +2). Each level past 20 = +10% multiplicative</li>
+        <li><span class="tier">S</span> — <b>Terra Charge stack cap +X</b> · <b>Terra Charge Restoration Speed</b> (staff/wand suffix to +150%)</li>
+        <li><span class="tier">A</span> — <b>Terra Damage Enhancement</b> (staff/wand exalted suffix +26-35% — new S13 bucket) · <b>Elemental/Lightning Res Penetration</b></li>
+        <li><span class="tier">A</span> — <b>Max Spell Burst stacks</b> — double-dips: Thunderclap payoff <i>and</i> Layered Hem charge-cap mirror</li>
+        <li><span class="tier">A</span> — <b>Crit rating → 100% chance, then crit damage</b> (Storm Field is hit-based; crit fully works)</li>
+        <li><span class="tier">B</span> — <b>Movement Speed</b> — Red Shoes of Cruelty converts 38% of MS bonus into enemy damage-taken (cap 75%): MS is a damage stat</li>
+        <li><span class="tier">B</span> — Flat lightning-to-spells · increased% Spell/Lightning (strong early, dilutes past ~300-400% total)</li>
+        <li><span class="tier">B</span> — <b>Energy on gear → 500+ total</b> — an empty support slot is a missing multiplier</li>
+        <li><span class="tier">B</span> — <b>INT</b> (+0.5% additional damage per point — stacker angle) · <b>generic Crit Chance</b> (scales Cycle's duration + Reaps) · scepter "Reaps 0.13-0.18s of DoT" affix (DoT route)</li>
+      </ol>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:.6rem"><b>New S13 legendaries:</b> Crimson Severance (necklace — Gash stacks per charge) · King Soul Armor (+240-300% charge restoration) · Flame Tyrant's Steps (+Terra levels via fire res) · The Three Saints (element-level chest)</p>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:.4rem"><b>Existing legendaries (Spell Burst triple-dip):</b> <b>Law of Greed</b> (trinket — +30-40% dmg per Max Spell Burst, to +320%; Max Burst also feeds Thunderclap + Layered Hem) · <b>Genius Battlegear</b> (chest — +40% spell crit rating per burst charge consumed ×10) · <b>Shadow of Thunderlight's Fury</b>/<b>Eyes</b> (1H pair — spell/crit/Lucky + lightning skill level) · <b>Thunder Jawbone</b> (helmet — +15-20% additional Lightning) · Brainwave Emitter (+1 Max Burst) · Air Treaders (+80% MS on your Terra → Red Shoes fuel). <b class="hot">Trap:</b> Cold Sanctuary Prosthetics — non-core Terra deals no damage under this trait</p>
+    </div>
+
+    <div class="panel wide">
+      <h2>Talent trees &amp; core talents</h2>
+      <table>
+        <tr><th>Page</th><th>Tree</th><th>Why</th></tr>
+        <tr><td>Confirmed structure</td><td>God tree + class tree + 2 more; <b>Magister not among Selena's options</b> (both Allie's and Don's planners: Psychic/Prophet/Lich/Warlock)</td><td>—</td></tr>
+        <tr><td>Storm Field (hit)</td><td><b class="hot">Goddess of Knowledge · Psychic · Lich</b> (+4th open)</td><td>Knowledge: burst charge speed + S13-buffed spell core · Psychic: Blur/Torment + defense · Lich: <b>Off The Beaten Track</b> (more 50% auras; supports become mana-cost reducers) + skill levels + seal compensation</td></tr>
+        <tr><td>DoT route (Don)</td><td><b>Goddess of Deception · Psychic · Prophet · Lich</b></td><td>Deception: Affliction + Subtle Impact (Blur) · Prophet: Frostbite to 100 (Extreme Coldness) · same Psychic/Lich cores</td></tr>
+      </table>
+      <ul style="margin-top:.6rem">
+        <li><b>Core talents:</b> <b class="hot">Insight</b> (+30% additional Spell) · <b class="hot">Conductive</b> (Numbed becomes +11% additional Lightning <i>taken</i> — enemy-side bucket, pairs with Assassin's Numbed-on-hit) · <b>Play Safe</b> (cast speed also drives Spell Burst charge speed) · <b>Penetrating</b> (auto-Infiltrations on element hits) · <b>Bunch</b> (+3% additional spell per Focus Blessing — Magister feeds it)</li>
+        <li><b>Seasonal layer:</b> Nether King's Divinity Slates socket into the talent grid (Judgment / Contamination / Banishment) — evaluate at launch</li>
+        <li><b>Caveat:</b> S13's talent balance pass isn't imported yet (Arcanist/Sorcerer nerfs, Knowledge buff, possible new Terra nodes) — re-check trees in-game day 1</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h2>Defenses</h2>
+      <ul>
+        <li><b>Elemental resistances to 60% cap first</b> — non-negotiable</li>
+        <li><b>4,000+ Life/ES combined</b> for Traveler 7; scale from there</li>
+        <li>Life% / ES% on every piece + a regen/leech layer</li>
+        <li>S13 systems: Deflection 6%/layer (cap 4-10) · Evasion capped 75%</li>
+        <li><b class="hot">Self-damage watch:</b> Red Shoes ticks true damage (8% of MS bonus/s, cap 15%); Thornfield/Retribution burn 10-20% max Life/s — regen must cover anything you take. Storm Field itself has no self-cost</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h2>Progression checkpoints</h2>
+      <table>
+        <tr><th>Stage</th><th>Do</th></tr>
+        <tr><td>Campaign</td><td><b class="hot">Frost Terra from level 1</b> (old Terra skills aren't L55-gated — the trait engine works all campaign) + Compound Tonic · Star Stalker · Arcane Circle · <b>Shadow Dash</b> (2 charges, reset per zone); <b>all 6 Treasure Troves</b> (skill pts + legendaries; final trove = Main-Stat #1 memory); memory #1 from Act 3 Lion Boss (equip at 45); memory #2 from Dragon Boss — <b class="hot">lock it if under 60</b>; L34 passive · L50 auras</td></tr>
+        <tr><td>T1-T4</td><td>craft only when slowed (weak/energy pieces); <b>dump Fine Embers by T4</b> (last tier)</td></tr>
+        <tr><td>T5-T6</td><td>skip T3 crafts (T2 cost, worse outcome); memory #3 from L75+ zones — take <b>movement speed</b> (Red Shoes fuel); <b>God of War void chart</b> (15 pts = GoW every map)</td></tr>
+        <tr><td>T7</td><td><b>first major breakpoint</b> — <b class="hot">scrap inventory on entry</b>, then full re-gear ilvl 82+/T2, weapons first; 6-link main via energy; Restrain support to fit auras; purple memories → 30 = <b>+1 Hero Trait</b>; slates w/ 1 legendary "additional" affix; clear region bosses 7-0/1/2; <b class="hot">finalize talents before L91</b> (respec stops being free)</td></tr>
+        <tr><td>T8+</td><td>ilvl 86 / T1 weapons · Modules drop from bosses (automaton upgrade) · orange memories · Pedigree w/ 1 main talent · cheap Corner/Starlight w/ 1 affix · precise auras while cheap · ~1B DPS entry, Trav 8 at 10-30B · Profound ~100-200B</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="rule">Rule of thumb at the trade house: <b>"additional" beats "increased" · a new bucket beats a bigger old one · an empty support slot costs more than any affix.</b></div>
+
+  <p class="footnote">Sources: official SS13 patch notes (poster.xd.cn/r/ss13pn, EN) · TLI game manual · Bmlegolas Progression &amp; Min-Max Guide · torchlight-of-building calc engine. Companion deep-dive: the Terra Selena scaling report artifact. Verify Fallen Star / Nether Grasp numbers post-launch (bases not in notes) whether Crimson Shades count as current targets, and Fallen Star: Gravity's damage sign (EN -32~-36% vs zh +32~36%). Thornfield 486/Nether 562 confirmed final by the Jul 15 addendum.</p>
+</main>
+</html>
