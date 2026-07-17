@@ -3574,14 +3574,13 @@ export const ActiveSkills = [
     name: "Thornfield",
     tags: ["Spell", "Physical", "Area", "Persistent", "Terra"],
     description: [
-      "Casts the skill and generates a Thornfield at the target spot, dealing 486 Persistent Physical Damage per second.\nFor every 100 Max Life, +1.25% additional damage for this skill, up to +100%.\nWhile the Terra persists, the character takes 20% of Max Life and 20% of Max Energy Shield as True Damage per second.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
-      "Thornfield:\nDeals 486 Persistent Physical Damage per second\nFor every 100 Max Life, +1.25% additional damage for this skill, up to +100%\nWhile Terra persists, character takes 20% Max Life and 20% Max Energy Shield as True Damage per second\nLasts 6s",
+      "Casts the skill and generates a Thornfield at the target spot, dealing 486 Persistent Physical Damage every second for 2s (a 2s DoT status per application).\nDamage Over Time statuses inflicted by this skill can't be spread (excludes Ailments).\nFor every 100 Max Life, +1.25% additional damage for this skill, up to +100%.\nWhile the Terra persists, the character takes 20% of Max Life and 20% of Max Energy Shield as True Damage per second.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
+      "Thornfield:\nDeals 486 Persistent Physical Damage every second for 2s\nFor every 100 Max Life, +1.25% additional damage for this skill, up to +100%\nWhile Terra persists, character takes 20% Max Life and 20% Max Energy Shield as True Damage per second\nLasts 6s",
       "For every Terra Charge consumed, +26% additional Damage for this cast",
     ],
     mainStats: ["str"],
     levelValues: {
-      // tlidb SS13 beta ladder: 486/s at L20 (patch notes said 902 —
-      // beta client value imported; verify at launch).
+      // tlidb launch-client ladder: 486/s at L20 (confirmed at launch).
       persistentDamage: [
         9, 10, 13, 17, 22, 27, 31, 39, 51, 61, 79, 92, 112, 131, 156, 168, 198,
         273, 407, 486, 486, 486, 486, 486, 486, 486, 486, 486, 486, 486, 486,
@@ -3640,7 +3639,7 @@ export const ActiveSkills = [
     ],
     description: [
       "Casts the skill and generates a Meteor zone at the target spot. Every 0.8s, 3 comets fall on enemies within, dealing Spell Physical Damage.\nMultiple comets can hit the same enemy. The Shotgun Effect falloff coefficient is 70%.\n80% of the Bombardment per-wave damage increase is also applied to additional Skill Damage.\nFor every Terra Charge consumed, +26% additional Damage for this cast.",
-      "Fallen Star:\nDeals Spell Physical Damage\n3 comets fall every 0.8s\nShotgun Effect falloff coefficient: 70%\n80% of Bombardment per-wave damage increase applies to additional Skill Damage\nLasts 6s",
+      "Fallen Star:\nDeals Spell Physical Damage\n3 comets fall every 0.8s\nShotgun Effect falloff coefficient: 70%\n80% of the damage increase per Barrage Wave of this skill is also applied to Comet Damage\nLasts 6s",
       "For every Terra Charge consumed, +26% additional Damage for this cast",
     ],
     mainStats: ["int"],
